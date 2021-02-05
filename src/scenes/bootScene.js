@@ -16,7 +16,7 @@ preload () {
   
 async onLoadComplete (loader, totalComplete, totalFailed) {
   console.log('COMPLETE: totalComplete:', totalComplete, ', totalFailed:', totalFailed);
-  await ApiAdapter.instance.startGameAsync();
+  await ApiAdapter.instance.startGameAsync(this);
 }
 
 create () {

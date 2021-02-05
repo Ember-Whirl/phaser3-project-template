@@ -48,7 +48,7 @@ export default class ApiAdapter extends Singleton {
     }
   }
 
-  async startGameAsync () {
+  async startGameAsync (scene) {
     switch (this.platform) {
       case 'Facebook': {
         await FBI.instance.startGameAsync()
@@ -64,6 +64,7 @@ export default class ApiAdapter extends Singleton {
 
       }
     }
+    scene.scene.start('MainScene')
   }
 
   getEntryPointData () {

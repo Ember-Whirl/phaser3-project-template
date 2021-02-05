@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import DimensionManager from '../scripts/managers/standard-managers/dimensionManager';
 
 export default class MainScene extends Phaser.Scene {
     constructor () {
@@ -6,19 +7,15 @@ export default class MainScene extends Phaser.Scene {
     }
 
     preload () {
+        DimensionManager.instance.init(this);
         this.load.image('logo', 'src/assets/logo.png');
     }
       
     create () {
-        const logo = this.add.image(400, 150, 'logo');
-      
-        this.tweens.add({
-            targets: logo,
-            y: 450,
-            duration: 2000,
-            ease: "Power2",
-            yoyo: true,
-            loop: -1
-        });
+    }
+
+    createBackground() {
+        const center = DimensionManager.instance.center;
+        this.background = this.add.image(center.x, center.y, 'logo');
     }
 }
