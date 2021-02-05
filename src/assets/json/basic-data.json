@@ -1,0 +1,28 @@
+{
+  "firstLogin": "2020-05-22T17:29:49",
+  "lastLogin": "2020-05-22T17:29:49",
+  "settings": {
+    "musicOn": true,
+    "soundOn": true
+  },
+  "inventory": {
+    "coins": 0,
+    "gems": 0,
+    "abilities": [0, 0, 0, 0] 
+  },
+  "stage": [
+    {
+      "turrets": [
+        [0, 1, 1, "basic"]
+      ],
+      "upgrades": [0, 0, 0, 0]
+    }
+  ],
+  "playerStats": {
+    "currentLevel": 1,
+    "experience": 0,
+    "totalPlayTime": 0,
+    "totalLogins": 0
+  },
+  "highscore": "[]"
+}
