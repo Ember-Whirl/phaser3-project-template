@@ -3,7 +3,8 @@
 // get lenght
 // save all
 
-import Singleton from "../utilities/singleton";
+import Singleton from "../../singleton";
+
 
 // parse data
 export default class StorageManager extends Singleton {

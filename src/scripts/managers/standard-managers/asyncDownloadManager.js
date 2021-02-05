@@ -1,4 +1,4 @@
-import Singleton from "../utilities/singleton";
+import Singleton from "../../singleton";
 
 export default class AsyncDownloadManager extends Singleton{
   constructor () {

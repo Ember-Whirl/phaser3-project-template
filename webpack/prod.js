@@ -23,5 +23,13 @@ module.exports = merge(base, {
         }
       })
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      __platform__: JSON.stringify("Web"),
+      __DEV__: true,
+      CANVAS_RENDERER: JSON.stringify(true),
+      WEBGL_RENDERER: JSON.stringify(true)
+    }),
+  ]
 });

@@ -1,4 +1,4 @@
-import Singleton from "../../utilities/singleton";
+import Singleton from "../../singleton";
 
 export default class WebStorage extends Singleton{
   constructor() {

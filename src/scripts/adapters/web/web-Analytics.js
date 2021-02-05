@@ -1,5 +1,5 @@
 /* globals __platform__, __DEV__*/
-import Singleton from "../../utilities/singleton";
+import Singleton from "../../singleton";
 
 export default class WebAnalyticsManager extends Singleton {
   constructor() {

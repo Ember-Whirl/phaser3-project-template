@@ -1,5 +1,6 @@
 /* globals __platform__, __DEV__*/
-import Singleton from "../../utilities/singleton";
+
+import Singleton from "../../singleton";
 import FBI from "./FBI";
 
 export default class FBAnalytics extends Singleton {

@@ -1,11 +1,11 @@
 /* globals __platform__, __DEV__ */
-import AnalyticsManager from '../managers/analyticsManager'
 import StorageManager from '../managers/standard-managers/storageManager'
 import FacebookStorage from '../adapters/facebook/fb-storage'
 import WebStorage from '../adapters/web/web-storage'
 import AsyncDownloadManager from '../managers/standard-managers/asyncDownloadManager'
 import FBI from '../adapters/facebook/FBI'
 import Singleton from '../singleton'
+import AnalyticsManager from '../managers/standard-managers/analyticsManager'
 
 export default class ApiAdapter extends Singleton {
   constructor () {
@@ -14,6 +14,7 @@ export default class ApiAdapter extends Singleton {
   }
 
   setPlatform () {
+    console.log(__platform__ );
     this.platform = ''
     if (__platform__ === 'Facebook' || (__DEV__ && FBI.instance.fBInstantExists)) this.platform = 'Facebook'
     else this.platform = __platform__

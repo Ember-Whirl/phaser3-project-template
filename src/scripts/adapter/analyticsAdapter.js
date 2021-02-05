@@ -1,5 +1,6 @@
 /* globals __platform__, __DEV__*/
-import Singleton from "../utilities/singleton";
+
+import Singleton from "../singleton";
 import fbAnalytics from "../adapters/facebook/fb-Analytics";
 import webAnalytics from "../adapters/web/web-Analytics";
 import FBI from "../adapters/facebook/FBI";

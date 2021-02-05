@@ -1,9 +1,7 @@
 /* globals __platform__, __DEV__ */
 import Phaser from 'phaser';
-import { load } from 'webfontloader';
-import AnalyticsManager from '../../managers/analyticsManager';
-import EventManager from '../../managers/eventManager';
-import Singleton from '../../utilities/singleton';
+import AnalyticsManager from '../../managers/standard-managers/analyticsManager';
+import Singleton from '../../singleton';
 
 export default class FBI extends Singleton {
   constructor() {
@@ -33,7 +31,7 @@ export default class FBI extends Singleton {
   async startGameAsync() {
     try {
       if (!this.fBInstantExists) return;
-        FBInstant.onPause(() => EventManager.instance.dispatch('onPause'))
+        // FBInstant.onPause(() => EventManager.instance.dispatch('onPause'))
         await FBInstant.startGameAsync();
         this.supportedAPIs = FBInstant.getSupportedAPIs();
     } catch (error) {
