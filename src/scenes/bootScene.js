@@ -6,7 +6,7 @@ constructor () {
 }
 
 preload () {
-  this.load.image('logo', 'src/assets/logo.png');
+  this.load.image('background', 'src/assets/background.png');
 
   
   this.load.on('complete', (loader, totalComplete, totalFailed) => {

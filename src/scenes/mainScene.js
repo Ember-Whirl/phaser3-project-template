@@ -8,7 +8,7 @@ export default class MainScene extends Phaser.Scene {
 
     preload () {
         DimensionManager.instance.init(this);
-        this.load.image('logo', 'src/assets/logo.png');
+        this.createBackground();
     }
       
     create () {
@@ -16,6 +16,6 @@ export default class MainScene extends Phaser.Scene {
 
     createBackground() {
         const center = DimensionManager.instance.center;
-        this.background = this.add.image(center.x, center.y, 'logo');
+        this.background = this.add.image(center.x, center.y, 'background');
     }
 }
