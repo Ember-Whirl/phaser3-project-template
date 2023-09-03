@@ -13,6 +13,7 @@ const config = {
     height: 720,
     OrientationType: 'LANDSCAPE',
     scene: [BootScene, MainScene],
+    antialiasGL: false,
     parent: 'content'
 };
 
