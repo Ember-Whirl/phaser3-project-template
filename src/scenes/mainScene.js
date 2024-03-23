@@ -17,5 +17,8 @@ export default class MainScene extends Phaser.Scene {
     createBackground() {
         const center = DimensionManager.instance.center;
         this.background = this.add.image(center.x, center.y, 'background');
+
+        // this.octopus = this.add.spine(300, 300, 'skeleton')
+        // this.octopus.play('animation', true)
     }
 }

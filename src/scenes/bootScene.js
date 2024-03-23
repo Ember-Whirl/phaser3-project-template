@@ -8,6 +8,9 @@ constructor () {
 preload () {
   this.load.image('background', 'src/assets/background.png');
 
+  this.load.setPath('src/assets/spines')
+  this.load.spine('skeleton', 'skeleton.json', ['skeleton.atlas'], true)
+
   
   this.load.on('complete', (loader, totalComplete, totalFailed) => {
     this.onLoadComplete(loader, totalComplete, totalFailed);

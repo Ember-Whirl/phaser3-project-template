@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import BootScene from './scenes/bootScene'
 import MainScene from './scenes/mainScene'
 import "regenerator-runtime/runtime.js";
+import * as SpinePlugin from '../node_modules/phaser/plugins/spine/dist/SpinePlugin.js';
+
 
 const config = {
     type: Phaser.AUTO,
@@ -14,7 +16,16 @@ const config = {
     OrientationType: 'LANDSCAPE',
     scene: [BootScene, MainScene],
     antialiasGL: false,
-    parent: 'content'
+    parent: 'content',
+    plugins: {
+      scene: [
+        {
+          key: 'SpinePlugin',
+          plugin: window.SpinePlugin,
+          mapping: 'spine',
+        }
+      ]
+    }
 };
 
 const game = new Phaser.Game(config);
