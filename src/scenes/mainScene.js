@@ -18,17 +18,6 @@ export default class MainScene extends Phaser.Scene {
         this.mainScreen = new MainScreen(this)
         this.add.existing(this.mainScreen)
         EnemySpawner.instance.init(this)
-    
-    
-    }
-
-
-    createBackground() {
-        const center = DimensionManager.instance.center;
-        this.background = this.add.image(center.x, center.y, 'background');
-
-        // this.octopus = this.add.spine(300, 300, 'skeleton')
-        // this.octopus.play('animation', true)
     }
 
     update() {

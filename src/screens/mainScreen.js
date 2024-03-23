@@ -24,11 +24,16 @@ export default class MainScreen extends Phaser.GameObjects.Container {
         this.updateGoldBalanceText()
         this.createCastle()
 
+        // this.octopus = this.scene.add.spine(300, 300, 'skeleton')
+        // this.octopus.play('animation', true)
+
+        // this.octopus.setScale(-1, 1)
+
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelLost, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelWon, this)
         EventManager.instance.add('LevelManager:levelStarted', this.onlevelStart, this)
         EventManager.instance.add('EnemySpawner:newWaveSpawned', this.updateWaveText, this)
-
+        EventManager.instance.add('update', this.update, this)
     }
 
     createBackground() {
@@ -38,7 +43,8 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
     createCastle() {
         this.castle = new Castle(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2, 300)
-        this.add(this.castle)
+        this.scene.add.existing(this.castle)
+        this.castle.setDepth(this.castle.y)
     }
 
     createPlayerLivesText() {
@@ -85,5 +91,9 @@ export default class MainScreen extends Phaser.GameObjects.Container {
     onLevelEnd() {
         this.playerLivesText.setVisible(false)
         this.goldBalanceText.setVisible(false)
+    }
+
+    update() {
+
     }
 }

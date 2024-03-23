@@ -1,7 +1,7 @@
 {
     "enemyTypes": [
-        {"maximumHealth": 100, "movementSpeed": 2, "damage": 1, "attackSpeed": 2},
-        {"maximumHealth": 100, "movementSpeed": 5, "damage": 2, "attackSpeed": 1}
+        {"imageKey": "slime0", "maximumHealth": 100, "movementSpeed": 2, "damage": 1, "attackSpeed": 2},
+        {"imageKey": "slime1", "maximumHealth": 100, "movementSpeed": 5, "damage": 2, "attackSpeed": 1}
 
     ]
 }

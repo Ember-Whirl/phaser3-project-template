@@ -3,11 +3,13 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 
 export default class Enemy extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal) {
+    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal) {
         super(scene);
         this.scene = scene
         this.x = x
         this.y = y
+
+        this.imageKey = imageKey
 
         this.maximumHealth = maximumHealth
         this.health = this.maximumHealth
@@ -27,6 +29,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
         this.spawn()
 
+        console.log('here', this)
+
+
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('restart', this.killEnemy, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
@@ -34,9 +39,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     createEnemyVisual() {
-        this.enemy = this.scene.add.image(0, 0, 'circle');
-        this.enemy.setTint(0X00563B)
-        this.enemy.setScale(0.5)
+        this.enemy = this.scene.add.image(0, 0, this.imageKey);
+        this.enemy.setScale(1)
         this.enemy.setVisible(false)
         this.add(this.enemy)
     }
@@ -113,10 +117,15 @@ export default class Enemy extends Phaser.GameObjects.Container {
             EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
             this.attackSpeedCounter = 0
         }
+        this.setDepth(this.y)
     }
 
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
+
+        if (direction.x < 0) this.enemy.setScale(1, 1)
+        if (direction.x > 0) this.enemy.setScale(-1, 1)
+
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()
         else {
@@ -125,6 +134,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
             this.setNewPosition(this, newPosition)
             this.distanceToGoal = this.getDistanceToGoal()
         }
+
+        
     }
 
     calculateDirection(object, target) {

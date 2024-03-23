@@ -10,6 +10,8 @@ preload () {
   this.load.image('circle', 'src/assets/circle.png');
   this.load.image('square', 'src/assets/square.png');
   this.load.image('castle', 'src/assets/Castle.png')
+  this.load.image('slime0', 'src/assets/slime-0.png')
+  this.load.image('slime1', 'src/assets/slime-1.png')
   this.load.json('enemyWaves', 'src/assets/json/enemyWaves.json');
   this.load.json('enemyTypes', 'src/assets/json/enemyTypes.json');
 

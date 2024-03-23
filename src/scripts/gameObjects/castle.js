@@ -27,7 +27,7 @@ export default class Castle extends Phaser.GameObjects.Container {
     }
 
     createCastleVisual() {
-        this.castle = this.scene.add.image(0, 0, 'castle');
+        this.castle = this.scene.add.image(0, -25, 'castle');
         this.castle.setScale(1)
         this.add(this.castle)
     }
