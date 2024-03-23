@@ -3,7 +3,7 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 
 export default class Enemy extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, maximumHealth, movementSpeed, damagePerHit, goal, enemyID) {
+    constructor(scene, x, y, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -13,10 +13,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.health = this.maximumHealth
         this.movementSpeed = movementSpeed
         this.damagePerHit = damagePerHit
-        //this.levelEnemies = levelEnemies
+        this.attackSpeed = attackSpeed
         this.goal = goal
-        this.enemyID = enemyID
         this.distanceToGoal = 0
+
+        this.attackSpeedCounter = 0
 
         this.dead = false
 
@@ -27,6 +28,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.spawn()
 
         EventManager.instance.add('update', this.update, this)
+        EventManager.instance.add('restart', this.killEnemy, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
@@ -101,13 +103,15 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     update() {
-        //console.log(' enemy update ', this.spawned)
         if (this.spawned && !this.dealingDamage) {
             this.moveTowardsGoal()
         }
 
-        if (this.dealingDamage) {
-            // console.log(' hit')
+        if (this.dealingDamage) this.attackSpeedCounter++
+
+        if (this.dealingDamage && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
+            EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
+            this.attackSpeedCounter = 0
         }
     }
 

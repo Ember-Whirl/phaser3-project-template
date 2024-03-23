@@ -17,6 +17,8 @@ export default class EnemySpawner extends Singleton {
 
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('Enemy:enemyDied', this.enemyDied, this)
+        EventManager.instance.add('restart', this.startWavesFromBeginning, this)
+
 
 
         this.startWavesFromBeginning()
@@ -28,6 +30,10 @@ export default class EnemySpawner extends Singleton {
             if (this.waveSpawnTimer <= 0) {
                 this.startNewWave()
             }
+        }
+
+        if (!this.enemyWavesData.waves[this.waveToSpawn] && this.enemyCount <= 0){
+            console.log('Player won!!!!')
         }
     }
 
@@ -42,6 +48,7 @@ export default class EnemySpawner extends Singleton {
     }
 
     startNewWave() {
+        EventManager.instance.dispatch('EnemySpawner:newWaveSpawned')
 
         for (let i = 0; i < this.enemyWavesData.waves[this.waveToSpawn].enemies.length; i++) {
             const enemyType = this.enemyWavesData.waves[this.waveToSpawn].enemies[i];
@@ -57,7 +64,7 @@ export default class EnemySpawner extends Singleton {
 
     spawnEnemy(enemyType) {
         console.log('enemy spawned ', enemyType)
-        this.enemy = new Enemy(this.scene, 0, 0, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, this.scene.mainScreen.castle, 0)
+        this.enemy = new Enemy(this.scene, 0, 0, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle)
         this.scene.mainScreen.add(this.enemy)
 
         this.enemyCount++

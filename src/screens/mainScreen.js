@@ -19,20 +19,26 @@ export default class MainScreen extends Phaser.GameObjects.Container {
         this.createBackground()
         this.createPlayerLivesText()
         this.createGoldBalanceText()
+        this.createWaveText()
         this.updatePlayerLivesText()
         this.updateGoldBalanceText()
-
-        this.castle = new Castle(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2)
-        this.add(this.castle)
+        this.createCastle()
 
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelLost, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelWon, this)
         EventManager.instance.add('LevelManager:levelStarted', this.onlevelStart, this)
+        EventManager.instance.add('EnemySpawner:newWaveSpawned', this.updateWaveText, this)
+
     }
 
     createBackground() {
         this.background = this.scene.add.image(this.center.x, this.center.y, 'background');
         this.background.setTint(0xDBBA8F)
+    }
+
+    createCastle() {
+        this.castle = new Castle(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2, 300)
+        this.add(this.castle)
     }
 
     createPlayerLivesText() {
@@ -52,6 +58,15 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
     updateGoldBalanceText() {
         this.goldBalanceText.text = 'Gold: ' + 5
+    }
+
+    createWaveText() {
+        this.waveText = new Text(this.scene, 100, 150, '', ETextStyle.GAMEPLAYVALUES)
+        this.add(this.waveText)
+    }
+
+    updateWaveText() {
+        this.waveText.text = 'Wave: ' + (EnemySpawner.instance.waveToSpawn + 1)
     }
 
     onlevelStart() {
