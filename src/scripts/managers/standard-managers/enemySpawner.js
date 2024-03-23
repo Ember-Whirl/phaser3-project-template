@@ -11,13 +11,14 @@ export default class EnemySpawner extends Singleton {
         this.scene = scene
 
         this.waveToSpawn = 0
+        this.gameInProgress = false
 
         this.enemyWavesData = this.scene.cache.json.get('enemyWaves')
         this.enemyTypesData = this.scene.cache.json.get('enemyTypes')
 
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('Enemy:enemyDied', this.enemyDied, this)
-        EventManager.instance.add('restart', this.startWavesFromBeginning, this)
+        EventManager.instance.add('restart', this.stopWaveSpawning, this)
 
 
 
@@ -32,12 +33,13 @@ export default class EnemySpawner extends Singleton {
             }
         }
 
-        if (!this.enemyWavesData.waves[this.waveToSpawn] && this.enemyCount <= 0){
+        if (!this.enemyWavesData.waves[this.waveToSpawn] && this.enemyCount <= 0) {
             console.log('Player won!!!!')
         }
     }
 
     startWavesFromBeginning() {
+        this.gameInProgress = true
 
         console.log(this.enemyTypesData.enemyTypes[0])
         //this.startNewWave()
@@ -47,7 +49,13 @@ export default class EnemySpawner extends Singleton {
         this.waveSpawnTimer = this.enemyWavesData.waves[this.waveToSpawn].waveSpawnTimer
     }
 
+    stopWaveSpawning() {
+        this.gameInProgress = false
+    }
+
     startNewWave() {
+        if (!this.gameInProgress) return
+
         EventManager.instance.dispatch('EnemySpawner:newWaveSpawned')
 
         for (let i = 0; i < this.enemyWavesData.waves[this.waveToSpawn].enemies.length; i++) {
@@ -63,6 +71,8 @@ export default class EnemySpawner extends Singleton {
     }
 
     spawnEnemy(enemyType) {
+        if (!this.gameInProgress) return
+
         console.log('enemy spawned ', enemyType)
         this.enemy = new Enemy(this.scene, 0, 0, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle)
         this.scene.mainScreen.add(this.enemy)
