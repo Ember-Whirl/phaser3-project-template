@@ -6,6 +6,7 @@ import { ETextStyle } from '../scripts/ETextStyles';
 import Text from '../scripts/text';
 import Enemy from '../scripts/gameObjects/enemy';
 import Castle from '../scripts/gameObjects/castle';
+import EnemySpawner from '../scripts/managers/standard-managers/enemySpawner';
 
 
 export default class MainScreen extends Phaser.GameObjects.Container {
@@ -21,16 +22,8 @@ export default class MainScreen extends Phaser.GameObjects.Container {
         this.updatePlayerLivesText()
         this.updateGoldBalanceText()
 
-        this.castle = new Castle(this.scene, DimensionManager.instance.width/2, DimensionManager.instance.height/2)
+        this.castle = new Castle(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2)
         this.add(this.castle)
-
-        this.enemy = new Enemy(this.scene, -100, 1000, 100, 2, 4, this.castle, 0)
-        this.add(this.enemy)
-
-  
-
-        // this.createLevelSelect()
-        // this.createLevelStartButton()
 
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelLost, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelWon, this)

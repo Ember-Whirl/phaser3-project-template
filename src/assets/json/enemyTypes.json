@@ -1,0 +1,7 @@
+{
+    "enemyTypes": [
+        {"maximumHealth": 100, "movementSpeed": 2, "damage": 1},
+        {"maximumHealth": 100, "movementSpeed": 5, "damage": 1}
+
+    ]
+}

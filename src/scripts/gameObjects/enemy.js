@@ -51,18 +51,63 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     setToStartPosition() {
-        this.x = 100
-        this.y = 100
+        let spawnPosition = this.generateRandomPosition()
+        console.log(' position ', spawnPosition)
+        this.x = spawnPosition.x
+        this.y = spawnPosition.y
+    }
+
+    generateRandomPosition() {
+        const rectangleWidth = 1280; // adjust as needed
+        const rectangleHeight = 720; // adjust as needed
+        const offset = this.enemy.width > this.enemy.height ? this.enemy.width + 25 : this.enemy.height + 25
+
+        // Calculate the perimeter of the rectangle
+        const perimeter = 2 * (rectangleWidth + rectangleHeight);
+
+        // Generate a random position along the perimeter
+        const randomPositionOnPerimeter = Math.random() * perimeter;
+
+        let x, y;
+
+        // Randomly choose whether to place the position on horizontal or vertical sides
+        if (randomPositionOnPerimeter < rectangleWidth) {
+            // Random position on top or bottom side
+            x = randomPositionOnPerimeter;
+            y = Math.random() < 0.5 ? 0 : rectangleHeight;
+        } else {
+            // Random position on left or right side
+            y = randomPositionOnPerimeter - rectangleWidth;
+            x = Math.random() < 0.5 ? 0 : rectangleWidth;
+        }
+
+        // Calculate the distance from the generated point to the rectangle's border
+        const distanceToBorderX = x === 0 ? x + offset : rectangleWidth - x + offset;
+        const distanceToBorderY = y === 0 ? y + offset : rectangleHeight - y + offset;
+
+        // Adjust the position based on the calculated distance
+        if (x === 0) {
+            x -= offset;
+        } else if (x === rectangleWidth) {
+            x += offset;
+        }
+        if (y === 0) {
+            y -= offset;
+        } else if (y === rectangleHeight) {
+            y += offset;
+        }
+
+        return { x, y: Math.min(y, rectangleHeight + offset) };
     }
 
     update() {
-        console.log(' enemy update ', this.spawned)
+        //console.log(' enemy update ', this.spawned)
         if (this.spawned && !this.dealingDamage) {
             this.moveTowardsGoal()
         }
 
         if (this.dealingDamage) {
-            console.log(' hit')
+            // console.log(' hit')
         }
     }
 
@@ -176,6 +221,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     killEnemy() {
+        EventManager.instance.dispatch('Enemey:enemyDied')
         this.removeAllEvents()
         this.destroy(true)
         this.dead = true

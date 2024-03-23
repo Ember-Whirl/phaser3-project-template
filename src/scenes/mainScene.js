@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import DimensionManager from '../scripts/managers/standard-managers/dimensionManager';
 import EventManager from '../scripts/managers/standard-managers/eventManager';
 import MainScreen from '../screens/mainScreen';
+import EnemySpawner from '../scripts/managers/standard-managers/enemySpawner';
 
 export default class MainScene extends Phaser.Scene {
     constructor () {
@@ -16,7 +17,11 @@ export default class MainScene extends Phaser.Scene {
     create () {
         this.mainScreen = new MainScreen(this)
         this.add.existing(this.mainScreen)
+        EnemySpawner.instance.init(this)
+    
+    
     }
+
 
     createBackground() {
         const center = DimensionManager.instance.center;

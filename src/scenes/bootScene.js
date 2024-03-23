@@ -9,6 +9,10 @@ preload () {
   this.load.image('background', 'src/assets/background.png');
   this.load.image('circle', 'src/assets/circle.png');
   this.load.image('square', 'src/assets/square.png');
+  this.load.json('enemyWaves', 'src/assets/json/enemyWaves.json');
+  this.load.json('enemyTypes', 'src/assets/json/enemyTypes.json');
+
+
 
 
   this.load.setPath('src/assets/spines')
