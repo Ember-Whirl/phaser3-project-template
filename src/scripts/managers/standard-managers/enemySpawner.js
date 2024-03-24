@@ -13,6 +13,9 @@ export default class EnemySpawner extends Singleton {
         this.waveToSpawn = 0
         this.gameInProgress = false
 
+        this.spawnedEnemies = []
+        this.nextEnemyID = 0
+
         this.enemyWavesData = this.scene.cache.json.get('enemyWaves')
         this.enemyTypesData = this.scene.cache.json.get('enemyTypes')
 
@@ -69,13 +72,29 @@ export default class EnemySpawner extends Singleton {
     spawnEnemy(enemyType) {
         if (!this.gameInProgress) return
 
-        this.enemy = new Enemy(this.scene, 0, 0, enemyType.imageKey, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle)
-        this.scene.add.existing(this.enemy)
+        let enemy = new Enemy(this.scene, 0, 0, enemyType.imageKey, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
+        this.scene.add.existing(enemy)
 
         this.enemyCount++
+        this.nextEnemyID++
+
+
+        this.spawnedEnemies.push(enemy)
     }
 
-    enemyDied() {
+    enemyDied(ID) {
         this.enemyCount--
+        this.removeEnemyWithID(ID)
+    }
+
+    removeEnemyWithID(enemyID) {
+        for (let i = 0; i < this.spawnedEnemies.length; i++) {
+            const enemy = this.spawnedEnemies[i].enemy
+            
+            if (enemy.enemyID === enemyID) {
+                this.spawnedEnemies.splice(i, 1)
+                break
+            }
+        }
     }
 }

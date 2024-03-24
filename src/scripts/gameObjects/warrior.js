@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
+import EnemySpawner from '../managers/standard-managers/enemySpawner';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, spawnPosition) {
+    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, spawnPosition) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -16,6 +17,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.movementSpeed = movementSpeed
         this.damagePerHit = damagePerHit
         this.attackSpeed = attackSpeed
+        this.range = range
         this.spawnPosition = spawnPosition
 
         this.attackSpeedCounter = 0
@@ -24,7 +26,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.spawned = false
         this.dragging = false
-
+        this.enemySpotted = false
 
         this.createWarriorVisual()
 
@@ -37,7 +39,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.warrior.on(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
 
-
+        this.showRange()
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('restart', this.killWarrior, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
@@ -56,6 +58,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.dragging = true
         this.pointer = pointer
+
+        this.removeSpottedEnemy()
 
         this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
         this.warrior.on(Phaser.Input.Events.POINTER_UP, this.stopDrag, this)
@@ -130,14 +134,39 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     update() {
-        if (this.spawned && !this.dealingDamage && !this.dragging) {
-            this.moveTowardsGoal()
-        }
-
-        if (this.dragging && this.pointer){
+        if (this.dragging && this.pointer) {
             this.x = this.pointer.x
             this.y = this.pointer.y
         }
+
+        if (!this.enemySpotted && !this.dragging) {
+            let enemyToAttack = null
+
+            for (let i = 0; i < EnemySpawner.instance.spawnedEnemies.length; i++) {
+                const enemy = EnemySpawner.instance.spawnedEnemies[i]
+
+                console.log('checking enemy',enemy, this.isInRange(enemy))
+
+    
+                if (this.isInRange(enemy) && !enemy.isOutOfScreen()) {
+
+                    if (!enemyToAttack || enemyToAttack && this.getDistance(this, enemyToAttack) > this.getDistance(this, enemy)) {
+                        enemyToAttack = enemy
+                    } 
+                }
+            }
+    
+            console.log('enemytoAttack',enemyToAttack)
+
+            if (enemyToAttack) this.spotEnemy(enemyToAttack)
+        }
+
+        if (this.spawned && this.enemySpotted && !this.dealingDamage && !this.dragging) {
+            this.moveTowardsGoal()
+        }
+
+
+
 
 
         // if (this.dealingDamage) this.attackSpeedCounter++
@@ -145,7 +174,44 @@ export default class Warrior extends Phaser.GameObjects.Container {
         // if (this.dealingDamage && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
         //     this.attackSpeedCounter = 0
         // }
+
+
+
         this.setDepth(this.y)
+    }
+
+    spotEnemy(enemyToAttack) {
+        this.spottedEnemy = enemyToAttack
+        this.enemySpotted = true
+        this.goal = this.spottedEnemy
+        this.spottedEnemy.setSpotted(true, this)
+    }
+
+    removeSpottedEnemy() {
+        if (!this.spottedEnemy) return
+        this.enemySpotted = false
+        this.goal = null
+        this.spottedEnemy.setSpotted(false, this)
+        this.spottedEnemy = null
+
+    }
+
+    isInRange(enemy) {
+        return this.getDistance(this.getWorldPosition(this, { x: this.x, y: this.y }), this.getWorldPosition(enemy, { x: enemy.x, y: enemy.y })) < this.range
+    }
+
+    getWorldPosition(target, positionToAddTo = { x: 0, y: 0 }) {
+        if (target.parentContainer) {
+            positionToAddTo.x += target.parentContainer.x
+            positionToAddTo.y += target.parentContainer.y
+            return this.getWorldPosition(target.parentContainer, positionToAddTo)
+        }
+        else return positionToAddTo
+    }
+
+    getDistance(object, target) {
+        let direction = this.calculateDirection(object, target)
+        return this.calculateDistance(direction)
     }
 
     moveTowardsGoal() {
@@ -176,12 +242,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     goalReached(distance) {
-        return distance <= 1
+        return distance <= 30
     }
 
     onGoalReached() {
         //this.dealingDamage = true
-        this.goal = this.spawnPosition
     }
 
     setNewPosition(object, newPosition) {
@@ -264,5 +329,29 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.removeAllEvents()
         this.destroy(true)
         this.dead = true
+    }
+
+    showRange() {
+        this.spot = this.scene.add.image(-this.range, 0, 'circle');
+        this.spot.setTint(0Xfffff)
+        this.spot.setScale(0.5)
+        this.add(this.spot)
+
+        this.spot1 = this.scene.add.image(this.range, 0, 'circle');
+        this.spot1.setTint(0Xfffff)
+        this.spot1.setScale(0.5)
+        this.add(this.spot1)
+
+        this.spot2 = this.scene.add.image(0, -this.range, 'circle');
+        this.spot2.setTint(0Xfffff)
+        this.spot2.setScale(0.5)
+        this.add(this.spot2)
+
+        this.spot3 = this.scene.add.image(0, this.range, 'circle');
+        this.spot3.setTint(0Xfffff)
+        this.spot3.setScale(0.5)
+        this.add(this.spot3)
+
+        // console.log(this.getDistance(this, this.spot))
     }
 }

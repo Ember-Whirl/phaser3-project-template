@@ -3,7 +3,7 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 
 export default class Enemy extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal) {
+    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -16,14 +16,18 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.movementSpeed = movementSpeed
         this.damagePerHit = damagePerHit
         this.attackSpeed = attackSpeed
-        this.goal = goal
+        this.ultimateGoal = goal
+        this.goal = this.ultimateGoal
         this.distanceToGoal = 0
+        this.enemyID = enemyID
 
         this.attackSpeedCounter = 0
 
         this.dead = false
 
         this.spawned = false
+
+        this.spotted = false
 
         this.createEnemyVisual()
 
@@ -107,13 +111,20 @@ export default class Enemy extends Phaser.GameObjects.Container {
             this.moveTowardsGoal()
         }
 
-        if (this.dealingDamage) this.attackSpeedCounter++
+        if (this.reachedUltimateGoal) this.attackSpeedCounter++
 
-        if (this.dealingDamage && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
+        if (this.reachedUltimateGoal && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
             EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
             this.attackSpeedCounter = 0
         }
         this.setDepth(this.y)
+    }
+
+    setSpotted(spotted, warrior) {
+        if (this.reachedUltimateGoal) return
+        this.spotted = spotted
+        if (this.spotted) this.goal = warrior
+        if (!this.spotted) this.goal = this.ultimateGoal
     }
 
     moveTowardsGoal() {
@@ -146,11 +157,17 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     goalReached(distance) {
-        return distance <= 50
+        let isWithinDistance = false
+
+        if (!this.spotted) isWithinDistance = distance <= 50
+        if (this.spotted) isWithinDistance = distance <= 30
+
+        return isWithinDistance
     }
 
     onGoalReached() {
-        this.dealingDamage = true
+        if (!this.spotted) this.reachedUltimateGoal = true
+        //if (this.spotted) 
     }
 
     setNewPosition(object, newPosition) {
@@ -232,9 +249,18 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     killEnemy() {
-        EventManager.instance.dispatch('Enemey:enemyDied')
+        EventManager.instance.dispatch('Enemey:enemyDied', this.enemyID)
         this.removeAllEvents()
         this.destroy(true)
         this.dead = true
+    }
+
+    getWorldPosition (target, positionToAddTo = {x: 0, y: 0}) {
+        if (target.parentContainer) {
+            positionToAddTo.x += target.parentContainer.x
+            positionToAddTo.y += target.parentContainer.y
+            return this.getWorldPosition(target.parentContainer, positionToAddTo)
+        }
+        else return positionToAddTo
     }
 }

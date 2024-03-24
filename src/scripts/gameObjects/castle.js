@@ -60,6 +60,7 @@ export default class Castle extends Phaser.GameObjects.Container {
             this.spawnWarrior()
 
             this.warriorSpawnTimeCounter = 0
+            this.spawningOn = false
         }
 
 
@@ -67,7 +68,7 @@ export default class Castle extends Phaser.GameObjects.Container {
 
     spawnWarrior() {
         console.log('spawn warrior')
-        let warrior = new Warrior(this.scene, 0, 0, 'warrior0', 100, 2, 1, 2, { x: this.x, y: this.y })
+        let warrior = new Warrior(this.scene, 0, 0, 'warrior0', 100, 2, 1, 2, 150, { x: this.x, y: this.y })
         this.scene.add.existing(warrior)
     }
 
