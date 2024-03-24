@@ -212,17 +212,16 @@ export default class Enemy extends Phaser.GameObjects.Container {
         };
     }
 
-    dealDamage(damage, index) {
+    dealDamage(damage, damageDealer) {
         if (this.dead) return
 
         this.health -= damage
-        this.checkHealth(index)
+        this.checkHealth(damageDealer)
     }
 
-    checkHealth(index) {
+    checkHealth(damageDealer) {
         if (this.health <= 0) {
-            //this.levelEnemies.splice(index, 1)
-            EventManager.instance.dispatch('Enemy:isKilled')
+            damageDealer.setEnemyKilled()
             this.killEnemy()
         }
     }
@@ -249,7 +248,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     killEnemy() {
-        EventManager.instance.dispatch('Enemey:enemyDied', this.enemyID)
+        EventManager.instance.dispatch('Enemy:enemyDied', this.enemyID)
         this.removeAllEvents()
         this.destroy(true)
         this.dead = true

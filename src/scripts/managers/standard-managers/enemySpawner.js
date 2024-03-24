@@ -88,13 +88,18 @@ export default class EnemySpawner extends Singleton {
     }
 
     removeEnemyWithID(enemyID) {
+console.log('before ', this.spawnedEnemies.length)
+
         for (let i = 0; i < this.spawnedEnemies.length; i++) {
             const enemy = this.spawnedEnemies[i].enemy
-            
+
             if (enemy.enemyID === enemyID) {
                 this.spawnedEnemies.splice(i, 1)
                 break
             }
         }
+
+        console.log('after ', this.spawnedEnemies.length)
+
     }
 }

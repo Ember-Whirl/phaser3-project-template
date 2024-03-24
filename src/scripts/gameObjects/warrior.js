@@ -166,7 +166,9 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
 
 
-
+        if (this.dealingDamage && this.enemySpotted && this.spottedEnemy) {
+            this.spottedEnemy.dealDamage(this.damagePerHit, this)
+        }
 
 
         // if (this.dealingDamage) this.attackSpeedCounter++
@@ -190,10 +192,14 @@ export default class Warrior extends Phaser.GameObjects.Container {
     removeSpottedEnemy() {
         if (!this.spottedEnemy) return
         this.enemySpotted = false
+        this.dealingDamage = false
         this.goal = null
         this.spottedEnemy.setSpotted(false, this)
         this.spottedEnemy = null
+    }
 
+    setEnemyKilled() {
+        this.removeSpottedEnemy()
     }
 
     isInRange(enemy) {
@@ -246,7 +252,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     onGoalReached() {
-        //this.dealingDamage = true
+        this.dealingDamage = true
     }
 
     setNewPosition(object, newPosition) {
