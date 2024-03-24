@@ -39,7 +39,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.warrior.on(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
 
-        this.showRange()
+        //this.showRange()
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('restart', this.killWarrior, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
@@ -47,15 +47,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     createWarriorVisual() {
-        this.warrior = this.scene.add.image(0, 0, this.imageKey);
-        this.warrior.setScale(1)
-        this.warrior.setVisible(false)
+        this.warrior = this.scene.add.spine(0, 0, 'warrior')
         this.add(this.warrior)
     }
 
     startDrag(pointer) {
-        console.log('start drag')
-
         this.dragging = true
         this.pointer = pointer
 
@@ -145,23 +141,24 @@ export default class Warrior extends Phaser.GameObjects.Container {
             for (let i = 0; i < EnemySpawner.instance.spawnedEnemies.length; i++) {
                 const enemy = EnemySpawner.instance.spawnedEnemies[i]
 
-                console.log('checking enemy',enemy, this.isInRange(enemy))
+                console.log('checking enemy', enemy, this.isInRange(enemy))
 
-    
+
                 if (this.isInRange(enemy) && !enemy.isOutOfScreen()) {
 
                     if (!enemyToAttack || enemyToAttack && this.getDistance(this, enemyToAttack) > this.getDistance(this, enemy)) {
                         enemyToAttack = enemy
-                    } 
+                    }
                 }
             }
-    
-            console.log('enemytoAttack',enemyToAttack)
+
+            console.log('enemytoAttack', enemyToAttack)
 
             if (enemyToAttack) this.spotEnemy(enemyToAttack)
         }
 
         if (this.spawned && this.enemySpotted && !this.dealingDamage && !this.dragging) {
+            this.animationSwitcher('Run')
             this.moveTowardsGoal()
         }
 
@@ -180,6 +177,21 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
 
         this.setDepth(this.y)
+    }
+
+    animationSwitcher(newAnimationToStart) {
+
+        if (newAnimationToStart === this.currentAnimation) return
+
+        switch (newAnimationToStart) {
+            case 'Run':
+                this.warrior.play('Run', true)
+                this.currentAnimation = newAnimationToStart
+                break;
+            default:
+                break;
+        }
+
     }
 
     spotEnemy(enemyToAttack) {

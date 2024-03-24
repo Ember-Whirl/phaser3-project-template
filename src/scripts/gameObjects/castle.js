@@ -60,8 +60,7 @@ export default class Castle extends Phaser.GameObjects.Container {
             this.spawnWarrior()
 
             this.warriorSpawnTimeCounter = 0
-            this.spawningOn = false
-        }
+                }
 
 
     }

@@ -32,6 +32,9 @@ preload () {
   this.load.setPath('src/assets/spines')
   this.load.spine('skeleton', 'skeleton.json', ['skeleton.atlas'], true)
 
+  this.load.setPath('src/assets/spines/warrior')
+  this.load.spine('warrior', 'warrior.json', ['warrior.atlas'], true)
+
   
   this.load.on('complete', (loader, totalComplete, totalFailed) => {
     this.onLoadComplete(loader, totalComplete, totalFailed);

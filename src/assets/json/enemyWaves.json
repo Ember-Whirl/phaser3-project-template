@@ -9,51 +9,51 @@
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 0, 0, 0, 0, 0, 0, 0, 0],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
-            "enemies": [0],
+            "enemies": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "waveSpawnTimer": 400
         },
         {
