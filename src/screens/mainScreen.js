@@ -1,13 +1,11 @@
 import Phaser from 'phaser';
 import DimensionManager from '../scripts/managers/standard-managers/dimensionManager';
-
 import EventManager from '../scripts/managers/standard-managers/eventManager';
 import { ETextStyle } from '../scripts/ETextStyles';
 import Text from '../scripts/text';
 import Enemy from '../scripts/gameObjects/enemy';
 import Castle from '../scripts/gameObjects/castle';
 import EnemySpawner from '../scripts/managers/standard-managers/enemySpawner';
-
 
 export default class MainScreen extends Phaser.GameObjects.Container {
     constructor(scene) {
@@ -16,13 +14,9 @@ export default class MainScreen extends Phaser.GameObjects.Container {
         this.center = DimensionManager.instance.center
         this.bottom = DimensionManager.instance.bottom
 
-        this.createBackground()
-        this.createPlayerLivesText()
-        this.createGoldBalanceText()
-        this.createWaveText()
-        this.updatePlayerLivesText()
-        this.updateGoldBalanceText()
-        this.createCastle()
+        this.createWorld()
+        this.createUI()
+
 
         // this.octopus = this.scene.add.spine(300, 300, 'skeleton')
         // this.octopus.play('animation', true)
@@ -36,9 +30,22 @@ export default class MainScreen extends Phaser.GameObjects.Container {
         EventManager.instance.add('update', this.update, this)
     }
 
+    createWorld() {
+        this.createBackground()
+        this.createCastle()
+    }
+
+    createUI() {
+        this.createPlayerLivesText()
+        this.createGoldBalanceText()
+        this.createWaveText()
+        this.updatePlayerLivesText()
+        this.updateGoldBalanceText()
+    }
+
     createBackground() {
         this.background = this.scene.add.image(this.center.x, this.center.y, 'background');
-        this.background.setTint(0xDBBA8F)
+        this.background.setTint(0x589543)
     }
 
     createCastle() {

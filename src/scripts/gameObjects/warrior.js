@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 
-export default class Enemy extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal) {
+export default class Warrior extends Phaser.GameObjects.Container {
+    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, spawnPosition) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -16,53 +16,80 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.movementSpeed = movementSpeed
         this.damagePerHit = damagePerHit
         this.attackSpeed = attackSpeed
-        this.goal = goal
-        this.distanceToGoal = 0
+        this.spawnPosition = spawnPosition
 
         this.attackSpeedCounter = 0
 
         this.dead = false
 
         this.spawned = false
+        this.dragging = false
 
-        this.createEnemyVisual()
+
+        this.createWarriorVisual()
 
         this.spawn()
 
+        console.log('here', this)
+
+        this.warrior.setInteractive()
+
+
+        this.warrior.on(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
+
+
         EventManager.instance.add('update', this.update, this)
-        EventManager.instance.add('restart', this.killEnemy, this)
+        EventManager.instance.add('restart', this.killWarrior, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
 
-    createEnemyVisual() {
-        this.enemy = this.scene.add.image(0, 0, this.imageKey);
-        this.enemy.setScale(1)
-        this.enemy.setVisible(false)
-        this.add(this.enemy)
+    createWarriorVisual() {
+        this.warrior = this.scene.add.image(0, 0, this.imageKey);
+        this.warrior.setScale(1)
+        this.warrior.setVisible(false)
+        this.add(this.warrior)
+    }
+
+    startDrag(pointer) {
+        console.log('start drag')
+
+        this.dragging = true
+        this.pointer = pointer
+
+        this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
+        this.warrior.on(Phaser.Input.Events.POINTER_UP, this.stopDrag, this)
+    }
+
+    stopDrag() {
+        this.dragging = false
+        this.pointer = null
+
+        this.warrior.on(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
+        this.warrior.off(Phaser.Input.Events.POINTER_UP, this.stopDrag, this)
     }
 
     spawn() {
         this.spawned = true
-        this.enemy.setVisible(true)
-        this.goTowardsGoal()
+        this.warrior.setVisible(true)
+        this.setToStartPosition()
+        this.goTowardsGatherPoint()
     }
 
-    goTowardsGoal() {
-        this.goal = { x: this.goal.x, y: this.goal.y }
-        this.setToStartPosition()
+    goTowardsGatherPoint() {
+        this.gatherPoint = { x: 100, y: 100 }
+        this.goal = this.gatherPoint
     }
 
     setToStartPosition() {
-        let spawnPosition = this.generateRandomPosition()
-        this.x = spawnPosition.x
-        this.y = spawnPosition.y
+        this.x = this.spawnPosition.x - 15
+        this.y = this.spawnPosition.y + 40
     }
 
     generateRandomPosition() {
         const rectangleWidth = 1280; // adjust as needed
         const rectangleHeight = 720; // adjust as needed
-        const offset = this.enemy.width > this.enemy.height ? this.enemy.width + 25 : this.enemy.height + 25
+        const offset = this.warrior.width > this.warrior.height ? this.warrior.width + 25 : this.warrior.height + 25
 
         // Calculate the perimeter of the rectangle
         const perimeter = 2 * (rectangleWidth + rectangleHeight);
@@ -103,24 +130,29 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     update() {
-        if (this.spawned && !this.dealingDamage) {
+        if (this.spawned && !this.dealingDamage && !this.dragging) {
             this.moveTowardsGoal()
         }
 
-        if (this.dealingDamage) this.attackSpeedCounter++
-
-        if (this.dealingDamage && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
-            EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
-            this.attackSpeedCounter = 0
+        if (this.dragging && this.pointer){
+            this.x = this.pointer.x
+            this.y = this.pointer.y
         }
+
+
+        // if (this.dealingDamage) this.attackSpeedCounter++
+
+        // if (this.dealingDamage && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
+        //     this.attackSpeedCounter = 0
+        // }
         this.setDepth(this.y)
     }
 
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
-        if (direction.x < 0) this.enemy.setScale(1, 1)
-        if (direction.x > 0) this.enemy.setScale(-1, 1)
+        if (direction.x < 0) this.warrior.setScale(-1, 1)
+        if (direction.x > 0) this.warrior.setScale(1, 1)
 
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()
@@ -130,8 +162,6 @@ export default class Enemy extends Phaser.GameObjects.Container {
             this.setNewPosition(this, newPosition)
             this.distanceToGoal = this.getDistanceToGoal()
         }
-
-        
     }
 
     calculateDirection(object, target) {
@@ -146,11 +176,12 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     goalReached(distance) {
-        return distance <= 50
+        return distance <= 1
     }
 
     onGoalReached() {
-        this.dealingDamage = true
+        //this.dealingDamage = true
+        this.goal = this.spawnPosition
     }
 
     setNewPosition(object, newPosition) {
@@ -204,9 +235,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
     checkHealth(index) {
         if (this.health <= 0) {
-            //this.levelEnemies.splice(index, 1)
-            EventManager.instance.dispatch('Enemy:isKilled')
-            this.killEnemy()
+            this.killWarrior()
         }
     }
 
@@ -228,11 +257,10 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     onLevelEnd() {
-        this.killEnemy()
+        this.killWarrior()
     }
 
-    killEnemy() {
-        EventManager.instance.dispatch('Enemey:enemyDied')
+    killWarrior() {
         this.removeAllEvents()
         this.destroy(true)
         this.dead = true

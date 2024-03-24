@@ -41,9 +41,6 @@ export default class EnemySpawner extends Singleton {
     startWavesFromBeginning() {
         this.gameInProgress = true
 
-        console.log(this.enemyTypesData.enemyTypes[0])
-        //this.startNewWave()
-
         this.waveToSpawn = 0
         this.enemyCount = 0
         this.waveSpawnTimer = this.enemyWavesData.waves[this.waveToSpawn].waveSpawnTimer
@@ -60,7 +57,6 @@ export default class EnemySpawner extends Singleton {
 
         for (let i = 0; i < this.enemyWavesData.waves[this.waveToSpawn].enemies.length; i++) {
             const enemyType = this.enemyWavesData.waves[this.waveToSpawn].enemies[i];
-            console.log('type to spawn ', enemyType)
             this.spawnEnemy(this.enemyTypesData.enemyTypes[enemyType])
         }
 
@@ -73,7 +69,6 @@ export default class EnemySpawner extends Singleton {
     spawnEnemy(enemyType) {
         if (!this.gameInProgress) return
 
-        console.log('enemy spawned ', enemyType)
         this.enemy = new Enemy(this.scene, 0, 0, enemyType.imageKey, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle)
         this.scene.add.existing(this.enemy)
 

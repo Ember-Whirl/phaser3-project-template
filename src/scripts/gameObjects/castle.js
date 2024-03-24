@@ -3,6 +3,7 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 import { ETextStyle } from '../ETextStyles';
 import Text from '../text';
+import Warrior from './warrior';
 
 export default class Castle extends Phaser.GameObjects.Container {
     constructor(scene, x, y, maximumHealth) {
@@ -13,9 +14,13 @@ export default class Castle extends Phaser.GameObjects.Container {
 
         this.maximumHealth = maximumHealth
         this.health = this.maximumHealth
+        this.warriorSpawnTime = 2
+        this.warriorSpawnTimeCounter = 0
 
         this.createCastleVisual()
         this.createLivesText()
+
+        this.spawningOn = true
 
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('restart', this.reset, this)
@@ -23,7 +28,6 @@ export default class Castle extends Phaser.GameObjects.Container {
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
         EventManager.instance.add('Enemy:hittingCastle', this.takeDamage, this)
-
     }
 
     createCastleVisual() {
@@ -49,10 +53,22 @@ export default class Castle extends Phaser.GameObjects.Container {
         this.checkLoseCondition()
     }
 
-
-
     update() {
+        if (this.spawningOn) this.warriorSpawnTimeCounter++
 
+        if (this.spawningOn && this.warriorSpawnTimeCounter >= (this.warriorSpawnTime * 60)) {
+            this.spawnWarrior()
+
+            this.warriorSpawnTimeCounter = 0
+        }
+
+
+    }
+
+    spawnWarrior() {
+        console.log('spawn warrior')
+        let warrior = new Warrior(this.scene, 0, 0, 'warrior0', 100, 2, 1, 2, { x: this.x, y: this.y })
+        this.scene.add.existing(warrior)
     }
 
     checkLoseCondition() {
@@ -62,6 +78,7 @@ export default class Castle extends Phaser.GameObjects.Container {
     reset() {
         this.health = this.maximumHealth
         this.updateLivesText()
+        this.spawningOn = false
     }
 
     removeAllEvents() {
