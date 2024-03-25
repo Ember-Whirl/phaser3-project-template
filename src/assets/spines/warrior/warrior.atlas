@@ -1,82 +1,89 @@
 
 warrior.png
-size: 182,46
+size: 229,46
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 arm-back
   rotate: false
-  xy: 94, 2
+  xy: 141, 2
   size: 20, 13
   orig: 20, 13
   offset: 0, 0
   index: -1
 arm-up
   rotate: false
-  xy: 121, 13
+  xy: 163, 4
   size: 20, 11
   orig: 20, 11
   offset: 0, 0
   index: -1
 body
   rotate: false
-  xy: 94, 17
+  xy: 141, 17
   size: 25, 27
   orig: 25, 27
   offset: 0, 0
   index: -1
 head
   rotate: false
-  xy: 156, 21
+  xy: 203, 21
   size: 24, 23
   orig: 24, 23
   offset: 0, 0
   index: -1
 l-leg
   rotate: true
-  xy: 143, 8
+  xy: 202, 3
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
   index: -1
 r-leg
   rotate: true
-  xy: 155, 5
+  xy: 185, 10
   size: 14, 15
   orig: 14, 15
   offset: 0, 0
   index: -1
 shadow
   rotate: false
-  xy: 121, 26
+  xy: 168, 26
   size: 33, 18
   orig: 33, 18
   offset: 0, 0
   index: -1
+slash
+  rotate: true
+  xy: 2, 6
+  size: 38, 45
+  orig: 38, 45
+  offset: 0, 0
+  index: -1
 weapon-000
   rotate: false
-  xy: 73, 8
+  xy: 120, 8
   size: 19, 36
   orig: 19, 36
   offset: 0, 0
   index: -1
 weapon-001
   rotate: false
-  xy: 26, 4
+  xy: 73, 4
   size: 22, 40
   orig: 22, 40
   offset: 0, 0
   index: -1
 weapon-002
   rotate: false
-  xy: 50, 4
+  xy: 97, 4
   size: 21, 40
   orig: 21, 40
   offset: 0, 0
   index: -1
 weapon-003
   rotate: false
-  xy: 2, 3
+  xy: 49, 3
   size: 22, 41
   orig: 22, 41
   offset: 0, 0

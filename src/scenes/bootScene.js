@@ -25,6 +25,8 @@ preload () {
 
   this.load.json('enemyWaves', 'src/assets/json/enemyWaves.json');
   this.load.json('enemyTypes', 'src/assets/json/enemyTypes.json');
+  this.load.json('warriorTypes', 'src/assets/json/warriorTypes.json');
+
 
 
 

@@ -4,13 +4,13 @@ import DimensionManager from '../managers/standard-managers/dimensionManager';
 import EnemySpawner from '../managers/standard-managers/enemySpawner';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, spawnPosition) {
+    constructor(scene, x, y, spineKey, weapon, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, spawnPosition) {
         super(scene);
         this.scene = scene
         this.x = x
         this.y = y
 
-        this.imageKey = imageKey
+        this.spineKey = spineKey
 
         this.maximumHealth = maximumHealth
         this.health = this.maximumHealth
@@ -47,8 +47,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     createWarriorVisual() {
-        this.warrior = this.scene.add.spine(0, 0, 'warrior')
+        this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.add(this.warrior)
+
+        this.warrior.setAttachment('weapon-select', 'weapon-003')
+
+
+        console.log('thijs animations ', this.warrior.getAnimationList())
+
+//this.animationSwitcher('Run')
     }
 
     startDrag(pointer) {
@@ -133,10 +140,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (this.dragging && this.pointer) {
             this.x = this.pointer.x
             this.y = this.pointer.y
+            this.animationSwitcher('Run')
         }
 
         if (!this.enemySpotted && !this.dragging) {
             let enemyToAttack = null
+
+            if (this.spawned && !this.enemySpotted && !this.dealingDamage){
+                this.animationSwitcher('Run')
+
+            }
 
             for (let i = 0; i < EnemySpawner.instance.spawnedEnemies.length; i++) {
                 const enemy = EnemySpawner.instance.spawnedEnemies[i]
@@ -162,11 +175,10 @@ export default class Warrior extends Phaser.GameObjects.Container {
             this.moveTowardsGoal()
         }
 
-
         if (this.dealingDamage && this.enemySpotted && this.spottedEnemy) {
+            this.animationSwitcher('Attack')
             this.spottedEnemy.dealDamage(this.damagePerHit, this)
         }
-
 
         // if (this.dealingDamage) this.attackSpeedCounter++
 
@@ -174,24 +186,33 @@ export default class Warrior extends Phaser.GameObjects.Container {
         //     this.attackSpeedCounter = 0
         // }
 
-
-
         this.setDepth(this.y)
     }
 
     animationSwitcher(newAnimationToStart) {
 
+        console.log('animations ', newAnimationToStart, this.currentAnimation)
+
         if (newAnimationToStart === this.currentAnimation) return
 
+        console.log('animations YES ', newAnimationToStart, this.currentAnimation)
+
         switch (newAnimationToStart) {
+            case 'Attack':
+                this.warrior.play('Attack', true)
+                this.warrior.setAttachment('weapon-select', 'weapon-000')
+
+                this.currentAnimation = newAnimationToStart
+                break;
             case 'Run':
                 this.warrior.play('Run', true)
+                this.warrior.setAttachment('weapon-select', 'weapon-001')
+
                 this.currentAnimation = newAnimationToStart
                 break;
             default:
                 break;
         }
-
     }
 
     spotEnemy(enemyToAttack) {
