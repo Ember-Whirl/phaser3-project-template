@@ -65,13 +65,9 @@ export default class Castle extends Phaser.GameObjects.Container {
             this.warriorSpawnTimeCounter = 0
             this.spawningOn = false
         }
-
-
     }
 
     spawnWarrior() {
-
-        console.log('spawn warrior', this.warriorTypesData.warriorTypes)
         let warriorType = this.warriorTypesData.warriorTypes[0]
         let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, { x: this.x, y: this.y })
 

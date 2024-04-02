@@ -3,13 +3,13 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 
 export default class Enemy extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, imageKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
         super(scene);
         this.scene = scene
         this.x = x
         this.y = y
 
-        this.imageKey = imageKey
+        this.spineKey = spineKey
 
         this.maximumHealth = maximumHealth
         this.health = this.maximumHealth
@@ -40,10 +40,17 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     createEnemyVisual() {
-        this.enemy = this.scene.add.image(0, 0, this.imageKey);
-        this.enemy.setScale(1)
-        this.enemy.setVisible(false)
+        // this.enemy = this.scene.add.image(0, 0, this.imageKey);
+        // this.enemy.setScale(1)
+        // this.enemy.setVisible(false)
+        // this.add(this.enemy)
+
+        this.enemy = this.scene.add.spine(0, 0, 'slime')
         this.add(this.enemy)
+
+        this.animationSwitcher('Run')
+
+        // this.warrior.setAttachment('weapon-select', 'weapon-003')
     }
 
     spawn() {
@@ -120,6 +127,25 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.setDepth(this.y)
     }
 
+    animationSwitcher(newAnimationToStart) {
+
+        console.log('animations ', newAnimationToStart, this.currentAnimation)
+
+        if (newAnimationToStart === this.currentAnimation) return
+
+        console.log('animations YES ', newAnimationToStart, this.currentAnimation)
+
+        switch (newAnimationToStart) {
+            case 'Run':
+                this.enemy.play('Run', true)
+                this.currentAnimation = newAnimationToStart
+                break;
+            default:
+                console.warn('animation does not exist ', newAnimationToStart)
+                break;
+        }
+    }
+
     setSpotted(spotted, warrior) {
         if (this.reachedUltimateGoal) return
         this.spotted = spotted
@@ -130,8 +156,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
-        if (direction.x < 0) this.enemy.setScale(1, 1)
-        if (direction.x > 0) this.enemy.setScale(-1, 1)
+        //if (direction.x < 0) this.enemy.setScale(1, 1)
+       // if (direction.x > 0) this.enemy.setScale(-1, 1)
 
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()

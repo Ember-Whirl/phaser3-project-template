@@ -1,0 +1,62 @@
+
+Slime.png
+size: 158,43
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body-000
+  rotate: false
+  xy: 64, 13
+  size: 52, 28
+  orig: 52, 28
+  offset: 0, 0
+  index: -1
+head-000
+  rotate: true
+  xy: 118, 4
+  size: 37, 38
+  orig: 37, 38
+  offset: 0, 0
+  index: -1
+l-eye
+  rotate: false
+  xy: 104, 5
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+l-eye-red
+  rotate: false
+  xy: 86, 4
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: -1
+mouth
+  rotate: true
+  xy: 64, 2
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: -1
+r-eye
+  rotate: true
+  xy: 95, 5
+  size: 6, 7
+  orig: 6, 7
+  offset: 0, 0
+  index: -1
+r-eye-red
+  rotate: false
+  xy: 77, 4
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: -1
+shadow
+  rotate: false
+  xy: 2, 8
+  size: 60, 33
+  orig: 60, 33
+  offset: 0, 0
+  index: -1

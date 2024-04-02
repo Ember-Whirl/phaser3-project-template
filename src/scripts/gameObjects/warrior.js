@@ -211,6 +211,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 this.currentAnimation = newAnimationToStart
                 break;
             default:
+                console.warn('animation does not exist ', newAnimationToStart)
+
                 break;
         }
     }
