@@ -1,6 +1,6 @@
 {
     "warriorTypes": [
-        {"spineKey": "warrior", "weapon": "weapon-000", "maximumHealth": 100, "movementSpeed": 2, "damagePerHit": 1, "attackSpeed": 2, "range": 150},
+        {"spineKey": "warrior", "weapon": "weapon-000", "maximumHealth": 3, "movementSpeed": 2, "damagePerHit": 1, "attackSpeed": 2, "range": 150},
         {"spineKey": "warrior", "weapon": "weapon-001", "maximumHealth": 100, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150}
     ]
 }

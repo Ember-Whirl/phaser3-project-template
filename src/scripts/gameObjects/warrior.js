@@ -165,7 +165,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
             this.attackSpeedCounter++
             this.animationSwitcher('Attack')
 
-            if (this.attackSpeedCounter > this.attackSpeed * 60) {
+            if (this.attackSpeedCounter > (this.attackSpeed * 60)) {
                 this.attackSpeedCounter = 0
                 console.log('warrior deals damage!')
                 this.spottedEnemy.dealDamage(this.damagePerHit, this)
@@ -317,17 +317,19 @@ export default class Warrior extends Phaser.GameObjects.Container {
         };
     }
 
-    dealDamage(damage, index) {
+    dealDamage(damage, damageDealer) {
         if (this.dead) return
 
-        //console.log('warrior hit!!!, ', damage, this.health - damage)
+        console.log('warrior hit!!!, ', damage, this.health - damage)
 
-        //this.health -= damage
-        this.checkHealth(index)
+        this.health -= damage
+        this.checkHealth(damageDealer)
     }
 
-    checkHealth(index) {
+    checkHealth(damageDealer) {
         if (this.health <= 0) {
+            console.log('kill warrior ', damageDealer.setWarriorKilled)
+            damageDealer.setWarriorKilled()
             this.killWarrior()
         }
     }

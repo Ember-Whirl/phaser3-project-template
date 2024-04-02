@@ -114,8 +114,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     update() {
-        if (this.spawned && !this.dealingDamage) {
+        if (this.spawned && !this.dealingDamage && !this.reachedUltimateGoal) {
             this.moveTowardsGoal()
+            this.attackSpeedCounter = 0
         }
 
         if (this.reachedUltimateGoal) this.attackSpeedCounter++
@@ -126,8 +127,13 @@ export default class Enemy extends Phaser.GameObjects.Container {
         }
 
         if (this.dealingDamage && this.warriorToAttack ) {
-            this.animationSwitcher('Attack')
-            this.warriorToAttack.dealDamage(this.damagePerHit, this)
+            this.attackSpeedCounter++
+
+            if (this.attackSpeedCounter >= (this.attackSpeed * 60)) {
+                this.attackSpeedCounter = 0
+                this.animationSwitcher('Attack')
+                this.warriorToAttack.dealDamage(this.damagePerHit, this)
+            }
         }
 
         this.setDepth(this.y)
@@ -159,6 +165,12 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.dealingDamage = true
     }
 
+    setWarriorKilled() {
+        this.warriorToAttack = null
+        this.dealingDamage = false
+        this.setSpotted(false)
+    }
+
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
@@ -173,8 +185,6 @@ export default class Enemy extends Phaser.GameObjects.Container {
             this.setNewPosition(this, newPosition)
             this.distanceToGoal = this.getDistanceToGoal()
         }
-
-        
     }
 
     calculateDirection(object, target) {
