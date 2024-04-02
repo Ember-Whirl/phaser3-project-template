@@ -124,16 +124,17 @@ export default class Enemy extends Phaser.GameObjects.Container {
             EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
             this.attackSpeedCounter = 0
         }
+
+        if (this.dealingDamage && this.warriorToAttack ) {
+            this.animationSwitcher('Attack')
+            this.warriorToAttack.dealDamage(this.damagePerHit, this)
+        }
+
         this.setDepth(this.y)
     }
 
     animationSwitcher(newAnimationToStart) {
-
-        console.log('animations ', newAnimationToStart, this.currentAnimation)
-
         if (newAnimationToStart === this.currentAnimation) return
-
-        console.log('animations YES ', newAnimationToStart, this.currentAnimation)
 
         switch (newAnimationToStart) {
             case 'Run':
@@ -151,6 +152,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.spotted = spotted
         if (this.spotted) this.goal = warrior
         if (!this.spotted) this.goal = this.ultimateGoal
+    }
+
+    setAttacking(warrior) {
+        this.warriorToAttack = warrior
+        this.dealingDamage = true
     }
 
     moveTowardsGoal() {
