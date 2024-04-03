@@ -255,6 +255,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     dealDamage(damage, damageDealer) {
         if (this.dead) return
 
+        console.log('enemy hit! , ', damage, this.health - damage)
+
         let feedback = new DamageDealtFeedback(this.scene, 0, -30, damage, 'Blue')
         this.add(feedback)
 
@@ -293,8 +295,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     killEnemy() {
         EventManager.instance.dispatch('Enemy:enemyDied', this.enemyID)
         this.removeAllEvents()
-        this.destroy(true)
         this.dead = true
+        this.destroy(true)
     }
 
     getWorldPosition(target, positionToAddTo = { x: 0, y: 0 }) {

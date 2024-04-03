@@ -48,7 +48,6 @@ export default class Castle extends Phaser.GameObjects.Container {
 
     updateLivesText() {
         this.livesText.text = this.health
-
     }
 
     takeDamage(damage) {
@@ -69,8 +68,8 @@ export default class Castle extends Phaser.GameObjects.Container {
     }
 
     spawnWarrior() {
-        let warriorType = this.warriorTypesData.warriorTypes[0]
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, { x: this.x, y: this.y }, this.counterwarriors)
+        let warriorType = this.warriorTypesData.warriorTypes[1]
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: this.x, y: this.y }, this.counterwarriors)
 this.counterwarriors++
         this.scene.add.existing(warrior)
     }
