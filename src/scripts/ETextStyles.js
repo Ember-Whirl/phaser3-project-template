@@ -29,6 +29,12 @@ const EColors = Object.freeze({
       DARK: { hash: '#000000', hex: '0x0873B9' },
       LIGHT: { hash: '#222222', hex: '0x0873B9' },
     },
+    BLUE: {
+      hash: '#00a0c4',
+      hex: '0x00a0c4',
+      DARK: { hash: '#000000', hex: '0x0873B9' },
+      LIGHT: { hash: '#222222', hex: '0x0873B9' },
+    },
   });
   
   const ETextStyle = Object.freeze({
@@ -135,6 +141,20 @@ const EColors = Object.freeze({
       fontFamily: 'QuicksandBold',
       fontSize: 20,
       color: EColors.BLACK.hash,
+      align: 'left',
+      wordWrap: { width: 450, useAdvancedWrap: true },
+    },
+    FEEDBACKRED: {
+      fontFamily: 'QuicksandBold',
+      fontSize: 20,
+      color: EColors.RED.hash,
+      align: 'left',
+      wordWrap: { width: 450, useAdvancedWrap: true },
+    },
+    FEEDBACKBLUE: {
+      fontFamily: 'QuicksandBold',
+      fontSize: 20,
+      color: EColors.BLUE.hash,
       align: 'left',
       wordWrap: { width: 450, useAdvancedWrap: true },
     },

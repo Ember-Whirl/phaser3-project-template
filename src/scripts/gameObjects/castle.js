@@ -16,6 +16,7 @@ export default class Castle extends Phaser.GameObjects.Container {
         this.health = this.maximumHealth
         this.warriorSpawnTime = 2
         this.warriorSpawnTimeCounter = 0
+        this.counterwarriors = 0
 
         this.warriorTypesData = this.scene.cache.json.get('warriorTypes')
 
@@ -63,14 +64,14 @@ export default class Castle extends Phaser.GameObjects.Container {
             this.spawnWarrior()
 
             this.warriorSpawnTimeCounter = 0
-            this.spawningOn = false
+            // this.spawningOn = false
         }
     }
 
     spawnWarrior() {
         let warriorType = this.warriorTypesData.warriorTypes[0]
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, { x: this.x, y: this.y })
-
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, { x: this.x, y: this.y }, this.counterwarriors)
+this.counterwarriors++
         this.scene.add.existing(warrior)
     }
 

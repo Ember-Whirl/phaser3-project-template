@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
+import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 
 export default class Enemy extends Phaser.GameObjects.Container {
     constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
@@ -40,17 +41,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     createEnemyVisual() {
-        // this.enemy = this.scene.add.image(0, 0, this.imageKey);
-        // this.enemy.setScale(1)
-        // this.enemy.setVisible(false)
-        // this.add(this.enemy)
-
         this.enemy = this.scene.add.spine(0, 0, 'slime')
         this.add(this.enemy)
-
-        this.animationSwitcher('Run')
-
-        // this.warrior.setAttachment('weapon-select', 'weapon-003')
     }
 
     spawn() {
@@ -114,7 +106,13 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     update() {
+        if (this.dead) {
+            console.log('enemy updating while dead')
+            return
+        }
+
         if (this.spawned && !this.dealingDamage && !this.reachedUltimateGoal) {
+            this.animationSwitcher('Run')
             this.moveTowardsGoal()
             this.attackSpeedCounter = 0
         }
@@ -126,7 +124,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
             this.attackSpeedCounter = 0
         }
 
-        if (this.dealingDamage && this.warriorToAttack ) {
+        if (!this.reachedUltimateGoal && this.dealingDamage && this.warriorToAttack) {
             this.attackSpeedCounter++
 
             if (this.attackSpeedCounter >= (this.attackSpeed * 60)) {
@@ -165,7 +163,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.dealingDamage = true
     }
 
-    setWarriorKilled() {
+    stopAttacking() {
         this.warriorToAttack = null
         this.dealingDamage = false
         this.setSpotted(false)
@@ -174,8 +172,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
-        //if (direction.x < 0) this.enemy.setScale(1, 1)
-       // if (direction.x > 0) this.enemy.setScale(-1, 1)
+        if (direction.x < 0) this.enemy.setScale(1, 1)
+        if (direction.x > 0) this.enemy.setScale(-1, 1)
 
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()
@@ -209,7 +207,6 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
     onGoalReached() {
         if (!this.spotted) this.reachedUltimateGoal = true
-        //if (this.spotted) 
     }
 
     setNewPosition(object, newPosition) {
@@ -257,6 +254,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
     dealDamage(damage, damageDealer) {
         if (this.dead) return
 
+        let feedback = new DamageDealtFeedback(this.scene, 0, -30, damage, 'Blue')
+        this.add(feedback)
+
         this.health -= damage
         this.checkHealth(damageDealer)
     }
@@ -296,7 +296,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.dead = true
     }
 
-    getWorldPosition (target, positionToAddTo = {x: 0, y: 0}) {
+    getWorldPosition(target, positionToAddTo = { x: 0, y: 0 }) {
         if (target.parentContainer) {
             positionToAddTo.x += target.parentContainer.x
             positionToAddTo.y += target.parentContainer.y

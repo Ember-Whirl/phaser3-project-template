@@ -2,9 +2,10 @@ import Phaser from 'phaser';
 import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 import EnemySpawner from '../managers/standard-managers/enemySpawner';
+import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, weapon, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, spawnPosition) {
+    constructor(scene, x, y, spineKey, weapon, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, spawnPosition, id) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -19,6 +20,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.attackSpeed = attackSpeed
         this.range = range
         this.spawnPosition = spawnPosition
+        this.id = id
 
         this.attackSpeedCounter = 0
 
@@ -129,6 +131,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     update() {
+        if (this.dead) {
+            console.log('warrior updating while dead')
+            return
+        }
+
         if (this.dragging && this.pointer) {
             this.x = this.pointer.x
             this.y = this.pointer.y
@@ -178,7 +185,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     animationSwitcher(newAnimationToStart) {
 
         if (newAnimationToStart === this.currentAnimation) {
-            this.warrior.setAttachment('weapon-select', 'weapon-000')
+            //console.log('test ', this.warrior)
+            console.log('warrior, setting', this.id)
             this.warrior.setAttachment('weapon-select', 'weapon-000')
             return
         } 
@@ -210,6 +218,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     removeSpottedEnemy() {
         if (!this.spottedEnemy) return
+        this.spottedEnemy.stopAttacking()
         this.enemySpotted = false
         this.dealingDamage = false
         this.goal = null
@@ -320,7 +329,10 @@ export default class Warrior extends Phaser.GameObjects.Container {
     dealDamage(damage, damageDealer) {
         if (this.dead) return
 
-        console.log('warrior hit!!!, ', damage, this.health - damage)
+        let feedback = new DamageDealtFeedback(this.scene, 0, -30, damage, 'Red')
+        this.add(feedback)
+
+        console.log('warrior hit!!!, ', damage, this.health - damage, this.id)
 
         this.health -= damage
         this.checkHealth(damageDealer)
@@ -328,8 +340,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     checkHealth(damageDealer) {
         if (this.health <= 0) {
-            console.log('kill warrior ', damageDealer.setWarriorKilled)
-            damageDealer.setWarriorKilled()
+            console.log('kill warrior ', this.id)
+            damageDealer.stopAttacking()
             this.killWarrior()
         }
     }
@@ -356,7 +368,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     killWarrior() {
-        console.log('warrior dead')
+        console.log('warrior dead', this.id)
         this.removeAllEvents()
         this.destroy(true)
         this.dead = true
