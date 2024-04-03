@@ -35,14 +35,14 @@ export default class Castle extends Phaser.GameObjects.Container {
     }
 
     createCastleVisual() {
-        this.castle = this.scene.add.image(0, -25, 'castle');
+        this.castle = this.scene.add.image(0, -50, 'castle');
         this.castle.setScale(1)
         this.add(this.castle)
     }
 
     createLivesText() {
         console.log(this.health)
-        this.livesText = new Text(this.scene, 0, 0, this.health, ETextStyle.GAMEPLAYVALUES)
+        this.livesText = new Text(this.scene, 0, -25, this.health, ETextStyle.GAMEPLAYVALUES)
         this.add(this.livesText)
     }
 
@@ -69,8 +69,10 @@ export default class Castle extends Phaser.GameObjects.Container {
 
     spawnWarrior() {
         let warriorType = this.warriorTypesData.warriorTypes[1]
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: this.x, y: this.y }, this.counterwarriors)
-this.counterwarriors++
+        let spawnX = this.x + Math.random() * (20 - -20) + -20
+        let spawnY = this.y + Math.random() * (20 - -20) + -20
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, this.counterwarriors)
+        this.counterwarriors++
         this.scene.add.existing(warrior)
     }
 
