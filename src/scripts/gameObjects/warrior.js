@@ -171,6 +171,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (this.dealingDamage && this.enemySpotted && this.spottedEnemy) {
             this.attackSpeedCounter++
             this.animationSwitcher('Attack')
+            this.spottedEnemy.setAttacking(this)
+
 
             if (this.attackSpeedCounter > (this.attackSpeed * 60)) {
                 this.attackSpeedCounter = 0
@@ -186,7 +188,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (newAnimationToStart === this.currentAnimation) {
             //console.log('test ', this.warrior)
-            console.log('warrior, setting', this.id)
             this.warrior.setAttachment('weapon-select', 'weapon-000')
             return
         } 

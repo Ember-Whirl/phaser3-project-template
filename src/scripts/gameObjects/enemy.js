@@ -159,6 +159,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     setAttacking(warrior) {
+        if (this.dealingDamage) return
         this.warriorToAttack = warrior
         this.dealingDamage = true
     }
