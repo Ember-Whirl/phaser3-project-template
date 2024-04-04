@@ -32,7 +32,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.enemySpotted = false
 
         this.createWarriorVisual()
-        this.setAttachments()
+        this.setAttachments(false)
 
         this.spawn()
 
@@ -50,12 +50,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
     createWarriorVisual() {
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.add(this.warrior)
-
-        
     }
 
-    setAttachments() {
+    setAttachments(isAttack) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
+        if (isAttack) this.warrior.setAttachment('slash', 'slash')
+        if (!isAttack) this.warrior.setAttachment('slash', null)
     }
 
     startDrag(pointer) {
@@ -199,17 +199,20 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (newAnimationToStart === this.currentAnimation) {
             //console.log('test ', this.warrior)
-            this.setAttachments()
+            let isAttack = this.currentAnimation === 'Attack'
+            this.setAttachments(isAttack)
+
             return
         } 
 
         switch (newAnimationToStart) {
             case 'Attack':
+                this.setAttachments(true)
                 this.warrior.play('Attack', true)
-
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Run':
+                this.setAttachments(false)
                 this.warrior.play('Run', true)
                 this.currentAnimation = newAnimationToStart
                 break;
