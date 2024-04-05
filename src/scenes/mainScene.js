@@ -3,6 +3,7 @@ import DimensionManager from '../scripts/managers/standard-managers/dimensionMan
 import EventManager from '../scripts/managers/standard-managers/eventManager';
 import MainScreen from '../screens/mainScreen';
 import EnemySpawner from '../scripts/managers/standard-managers/enemySpawner';
+import WarriorSpawner from '../scripts/managers/standard-managers/warriorSpawner';
 
 export default class MainScene extends Phaser.Scene {
     constructor () {
@@ -18,6 +19,8 @@ export default class MainScene extends Phaser.Scene {
         this.mainScreen = new MainScreen(this)
         this.add.existing(this.mainScreen)
         EnemySpawner.instance.init(this)
+        WarriorSpawner.instance.init(this)
+
     }
 
     update() {

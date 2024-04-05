@@ -3,9 +3,10 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 import EnemySpawner from '../managers/standard-managers/enemySpawner';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
+import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, id) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, warriorID) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -21,7 +22,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.range = range
         this.spawnPosition = spawnPosition
         this.attachments = attachments
-        this.id = id
+        this.warriorID = warriorID
 
         this.attackSpeedCounter = 0
 
@@ -376,7 +377,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         let feedback = new DamageDealtFeedback(this.scene, 0, -30, damage, 'Red')
         this.add(feedback)
 
-        console.log('warrior hit!!!, ', damage, this.health - damage, this.id)
+        console.log('warrior hit!!!, ', damage, this.health - damage, this.warriorID)
 
         this.health -= damage
         this.checkHealth(damageDealer)
@@ -384,7 +385,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     checkHealth(damageDealer) {
         if (this.health <= 0) {
-            console.log('kill warrior ', this.id)
+            console.log('kill warrior ', this.warriorID)
             damageDealer.stopAttacking()
             this.killWarrior()
         }
@@ -412,7 +413,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     killWarrior() {
-        console.log('warrior dead', this.id)
+        console.log('warrior dead', this.warriorID)
+        WarriorSpawner.instance.warriorDied(this.warriorID)
         this.removeAllEvents()
         this.dead = true
         this.destroy(true)

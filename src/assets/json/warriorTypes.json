@@ -1,9 +1,9 @@
 {
     "warriorTypes": [
         {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 0, "g": 146, "b": 69, "a": 1 }, "lowerBodyColor": { "r": 0, "g": 104, "b": 55, "a": 1 }, "weapon": "weapon-000", "shield": null}, "maximumHealth": 3, "movementSpeed": 2, "damagePerHit": 1, "attackSpeed": 2, "range": 150},
-        {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 255, "g": 255, "b": 255, "a": 0 }, "lowerBodyColor": { "r": 0, "g": 0, "b": 0, "a": 1 }, "weapon": "weapon-001", "shield": "shield-000"}, "maximumHealth": 100, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150},
-        {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 255, "g": 255, "b": 255, "a": 0 }, "lowerBodyColor": { "r": 0, "g": 0, "b": 0, "a": 1 }, "weapon": "weapon-002", "shield": "shield-000"}, "maximumHealth": 100, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150},
-        {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 255, "g": 255, "b": 255, "a": 0 }, "lowerBodyColor": { "r": 0, "g": 0, "b": 0, "a": 1 }, "weapon": "weapon-003", "shield": null}, "maximumHealth": 100, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150}
+        {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 255, "g": 255, "b": 255, "a": 0 }, "lowerBodyColor": { "r": 0, "g": 0, "b": 0, "a": 1 }, "weapon": "weapon-001", "shield": "shield-000"}, "maximumHealth": 2, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150},
+        {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 255, "g": 255, "b": 255, "a": 0 }, "lowerBodyColor": { "r": 0, "g": 0, "b": 0, "a": 1 }, "weapon": "weapon-002", "shield": "shield-000"}, "maximumHealth": 1, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150},
+        {"spineKey": "warrior", "attachments": {"upperBodyColor": { "r": 255, "g": 255, "b": 255, "a": 0 }, "lowerBodyColor": { "r": 0, "g": 0, "b": 0, "a": 1 }, "weapon": "weapon-003", "shield": null}, "maximumHealth": 2, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150}
 
     ]
 }
