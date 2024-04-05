@@ -25,6 +25,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.attackSpeedCounter = 0
 
+        this.positionToReturnTo = this.spawnPosition
+
         this.dead = false
 
         this.spawned = false
@@ -77,6 +79,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     stopDrag() {
         this.dragging = false
         this.pointer = null
+
+        this.positionToReturnTo = { x: this.x, y: this.y }
 
         this.warrior.on(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
         this.warrior.off(Phaser.Input.Events.POINTER_UP, this.stopDrag, this)
@@ -177,6 +181,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (this.spawned && this.enemySpotted && !this.dealingDamage && !this.dragging) {
             this.animationSwitcher('Run')
+            this.moveTowardsGoal()
+        }
+
+        if (this.spawned && !this.enemySpotted && !this.dealingDamage && !this.dragging) {
+            this.animationSwitcher('Run')
+            if (this.goal !== this.positionToReturnTo) this.goal = this.positionToReturnTo
             this.moveTowardsGoal()
         }
 
@@ -307,8 +317,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     onGoalReached() {
-        this.dealingDamage = true
-        this.spottedEnemy.setAttacking(this)
+
+        if (this.goal === this.positionToReturnTo) {
+            //go idle
+        }
+
+        if (this.goal !== this.positionToReturnTo) {
+            this.dealingDamage = true
+            this.spottedEnemy.setAttacking(this)
+        }
     }
 
     setNewPosition(object, newPosition) {
