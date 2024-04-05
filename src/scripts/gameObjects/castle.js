@@ -68,10 +68,18 @@ export default class Castle extends Phaser.GameObjects.Container {
     }
 
     spawnWarrior() {
-        let warriorType = this.warriorTypesData.warriorTypes[0]
+        console.log(Math.random())
+        let type = 0
+        let random = Math.random()
+        if (random > 0.25 && random < 0.5) type = 1
+        if (random > 0.5 && random < 0.75) type = 2
+        if (random > 0.75 && random < 1) type = 3
+
+
+        let warriorType = this.warriorTypesData.warriorTypes[type]
         let spawnX = this.x + Math.random() * (20 - -20) + -20
         let spawnY = this.y + Math.random() * (20 - -20) + -20
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.weapon, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, this.counterwarriors)
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, this.counterwarriors)
         this.counterwarriors++
         this.scene.add.existing(warrior)
     }

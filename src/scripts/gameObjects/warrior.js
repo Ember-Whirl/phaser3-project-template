@@ -5,7 +5,7 @@ import EnemySpawner from '../managers/standard-managers/enemySpawner';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, weapon, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, id) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, id) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -54,8 +54,14 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     setAttachments(isAttack) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
+        this.warrior.setAttachment('shield-000', this.attachments.shield)
+        if (this.attachments.shield === null) this.attackAnimation = 'Attack'
+        if (this.attachments.shield !== null) this.attackAnimation = 'AttackShield'
+
         if (isAttack) this.warrior.setAttachment('slash', 'slash')
         if (!isAttack) this.warrior.setAttachment('slash', null)
+
+       // this.warrior.setColor(this.attachments.upperBodyColor, 'body')
     }
 
     startDrag(pointer) {
@@ -151,7 +157,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (!this.enemySpotted && !this.dragging) {
             let enemyToAttack = null
 
-            if (this.spawned && !this.enemySpotted && !this.dealingDamage){
+            if (this.spawned && !this.enemySpotted && !this.dealingDamage) {
                 this.animationSwitcher('Run')
             }
 
@@ -177,13 +183,13 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (this.dealingDamage && this.enemySpotted) {
             if (!this.spottedEnemy || this.spottedEnemy.dead) {
                 this.setEnemyKilled()
-            } 
+            }
 
             if (this.spottedEnemy) {
                 this.attackSpeedCounter++
-                this.animationSwitcher('Attack')
+                this.animationSwitcher(this.attackAnimation)
                 this.spottedEnemy.setAttacking(this)
-    
+
                 if (this.attackSpeedCounter > (this.attackSpeed * 60)) {
                     this.attackSpeedCounter = 0
                     console.log('warrior deals damage!')
@@ -199,16 +205,21 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (newAnimationToStart === this.currentAnimation) {
             //console.log('test ', this.warrior)
-            let isAttack = this.currentAnimation === 'Attack'
+            let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
             this.setAttachments(isAttack)
 
             return
-        } 
+        }
 
         switch (newAnimationToStart) {
             case 'Attack':
                 this.setAttachments(true)
                 this.warrior.play('Attack', true)
+                this.currentAnimation = newAnimationToStart
+                break;
+            case 'AttackShield':
+                this.setAttachments(true)
+                this.warrior.play('AttackShield', true)
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Run':
