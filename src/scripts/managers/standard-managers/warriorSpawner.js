@@ -20,6 +20,10 @@ export default class WarriorSpawner extends Singleton {
 
         this.warriorTypesData = this.scene.cache.json.get('warriorTypes')
 
+        this.maxLevel = this.warriorTypesData.warriorTypes.length
+        this.spawningLevel = 1
+        this.maxAmountOfWarriors = 10
+
         this.gameInProgress = true
 
         EventManager.instance.add('update', this.update, this)
@@ -28,17 +32,18 @@ export default class WarriorSpawner extends Singleton {
     }
 
     update() {
-        if (this.gameInProgress) this.warriorSpawnTimeCounter++
+        if (this.gameInProgress && this.spawnedWarriors.length < this.maxAmountOfWarriors) this.warriorSpawnTimeCounter++
 
-        if (this.gameInProgress && this.warriorSpawnTimeCounter >= (this.warriorSpawnTime * 60)) {
-            this.spawnWarrior()
+        if (this.gameInProgress && this.warriorSpawnTimeCounter >= (this.warriorSpawnTime * 60) && this.spawnedWarriors.length < this.maxAmountOfWarriors) {
+            //this.spawnRandomWarrior()
+            this.spawnWarrior(this.spawningLevel - 1)
 
             this.warriorSpawnTimeCounter = 0
             // this.gameInProgress = false
         }
     }
 
-    spawnWarrior() {
+    spawnRandomWarrior() {
         console.log(Math.random())
         let type = 0
         let random = Math.random()
@@ -46,13 +51,28 @@ export default class WarriorSpawner extends Singleton {
         if (random > 0.5 && random < 0.75) type = 2
         if (random > 0.75 && random < 1) type = 3
 
+        this.spawnWarrior(type)
+    }
 
+    spawnWarrior(type, spawnPosition = null) {
         let warriorType = this.warriorTypesData.warriorTypes[type]
-        console.log('spawn warrior ', this.scene.mainScreen.castle.x)
-        let spawnX = this.scene.mainScreen.castle.x + Math.random() * (20 - -20) + -20
-        let spawnY = this.scene.mainScreen.castle.y + Math.random() * (20 - -20) + -20
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, this.nextWarriorID)
+
+        let spawnX = 0
+        let spawnY = 0
+
+        if (spawnPosition === null) {
+            spawnX = this.scene.mainScreen.castle.x + Math.random() * (20 - -20) + -20
+            spawnY = this.scene.mainScreen.castle.y + Math.random() * (20 - -20) + -20
+        }
+
+        if (spawnPosition !== null && spawnPosition.x && spawnPosition.y) {
+             spawnX = spawnPosition.x
+             spawnY = spawnPosition.y
+        }
+
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, this.nextWarriorID, type)
         this.nextWarriorID++
+        this.spawnedWarriors.push(warrior)
         this.scene.add.existing(warrior)
     }
 
@@ -73,5 +93,16 @@ export default class WarriorSpawner extends Singleton {
                 break
             }
         }
+    }
+
+    mergeWarriors(warriorOne, warriorTwo) {
+        let levelToSpawn = warriorOne.warriorLevel + 1
+
+        if (levelToSpawn >= this.maxLevel) return
+
+        this.spawnWarrior(levelToSpawn, { x: warriorOne.x, y: warriorOne.y })
+
+        warriorOne.killWarrior()
+        warriorTwo.killWarrior()
     }
 }

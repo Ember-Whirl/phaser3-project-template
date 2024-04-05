@@ -6,7 +6,7 @@ import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, warriorID) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, warriorID, warriorLevel) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -23,8 +23,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.spawnPosition = spawnPosition
         this.attachments = attachments
         this.warriorID = warriorID
+        this.warriorLevel = warriorLevel
 
         this.attackSpeedCounter = 0
+        this.mergeRange = 15
+        this.warriorToMergeWith = null
 
         this.positionToReturnTo = this.spawnPosition
 
@@ -68,6 +71,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     startDrag(pointer) {
+        console.log('drag start')
+
         this.dragging = true
         this.pointer = pointer
 
@@ -78,10 +83,14 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     stopDrag() {
-        this.dragging = false
-        this.pointer = null
+        console.log('drag stop')
 
         this.positionToReturnTo = { x: this.x, y: this.y }
+
+        this.checkMerge()
+
+        this.dragging = false
+        this.pointer = null
 
         this.warrior.on(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
         this.warrior.off(Phaser.Input.Events.POINTER_UP, this.stopDrag, this)
@@ -154,9 +163,28 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
 
         if (this.dragging && this.pointer) {
+            this.setDepth(5000)
+
             this.x = this.pointer.x
             this.y = this.pointer.y
             this.animationSwitcher('Run')
+
+            this.warriorToMergeWith = null
+
+            for (let i = 0; i < WarriorSpawner.instance.spawnedWarriors.length; i++) {
+                const warrior = WarriorSpawner.instance.spawnedWarriors[i]
+
+                if (this.warriorID === warrior.warriorID) continue
+
+                if (this.isInMergeRange(warrior)) {
+                    if (!this.warriorToMergeWith && this.warriorLevel === warrior.warriorLevel || (this.warriorToMergeWith && this.getDistance(this, this.warriorToMergeWith) > this.getDistance(this, warrior)) && this.warriorLevel === warrior.warriorLevel) {
+                        console.log('this warrior level and other warrior level ', this.warriorLevel, warrior.warriorLevel)
+                        this.warriorToMergeWith = warrior
+                    }
+                }
+            }
+
+            console.log('warrior to merge with ', this.warriorToMergeWith)
         }
 
         if (!this.enemySpotted && !this.dragging) {
@@ -171,7 +199,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
                 if (this.isInRange(enemy) && !enemy.isOutOfScreen()) {
 
-                    if (!enemyToAttack || enemyToAttack && this.getDistance(this, enemyToAttack) > this.getDistance(this, enemy)) {
+                    if (!enemyToAttack || (enemyToAttack && this.getDistance(this, enemyToAttack) > this.getDistance(this, enemy))) {
                         enemyToAttack = enemy
                     }
                 }
@@ -209,7 +237,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
             }
         }
 
-        this.setDepth(this.y)
+        if (!this.dragging) this.setDepth(this.y)
+    }
+
+    checkMerge() {
+        if (this.warriorToMergeWith) WarriorSpawner.instance.mergeWarriors(this, this.warriorToMergeWith)
     }
 
     animationSwitcher(newAnimationToStart) {
@@ -222,6 +254,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
             return
         }
 
+        // on drag remove shadow
         switch (newAnimationToStart) {
             case 'Attack':
                 this.setAttachments(true)
@@ -270,6 +303,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     isInRange(enemy) {
         return this.getDistance(this.getWorldPosition(this, { x: this.x, y: this.y }), this.getWorldPosition(enemy, { x: enemy.x, y: enemy.y })) < this.range
+    }
+
+    isInMergeRange(warrior) {
+        return this.getDistance(this.getWorldPosition(this, { x: this.x, y: this.y }), this.getWorldPosition(warrior, { x: warrior.x, y: warrior.y })) < this.mergeRange
+
     }
 
     getWorldPosition(target, positionToAddTo = { x: 0, y: 0 }) {
@@ -395,6 +433,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         EventManager.instance.remove('update', this.update, this)
         EventManager.instance.remove('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.remove('LevelManager:winLevel', this.onLevelEnd, this)
+        this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
+        this.warrior.off(Phaser.Input.Events.POINTER_UP, this.stopDrag, this)
     }
 
     getDistanceToGoal() {
