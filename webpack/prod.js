@@ -1,4 +1,6 @@
 const merge = require("webpack-merge");
+const webpack = require("webpack")
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require("path");
 const base = require("./base");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -31,5 +33,10 @@ module.exports = merge(base, {
       CANVAS_RENDERER: JSON.stringify(true),
       WEBGL_RENDERER: JSON.stringify(true)
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets', to: 'src/assets'}
+      ]
+    })
   ]
 });
