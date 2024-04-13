@@ -72,7 +72,7 @@ export default class EnemySpawner extends Singleton {
     spawnEnemy(enemyType) {
         if (!this.gameInProgress) return
 
-        let enemy = new Enemy(this.scene, 0, 0, enemyType.imageKey, enemyType.attachments, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
+        let enemy = new Enemy(this.scene, 0, 0, enemyType.spineKey, enemyType.attachments, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
         this.scene.add.existing(enemy)
 
         this.enemyCount++
@@ -88,18 +88,13 @@ export default class EnemySpawner extends Singleton {
     }
 
     removeEnemyWithID(enemyID) {
-console.log('enemyremoval before ', this.spawnedEnemies.length)
 
         for (let i = 0; i < this.spawnedEnemies.length; i++) {
             const enemy = this.spawnedEnemies[i]
-console.log('enemyremoval, check', enemy.enemyID, enemyID)
             if (enemy.enemyID === enemyID) {
                 this.spawnedEnemies.splice(i, 1)
                 break
             }
         }
-
-        console.log('enemyremoval after ', this.spawnedEnemies.length)
-
     }
 }

@@ -43,7 +43,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     createEnemyVisual() {
-        this.enemy = this.scene.add.spine(0, 0, 'slime')
+        this.enemy = this.scene.add.spine(0, 0, this.spineKey)
         this.add(this.enemy)
     }
 
