@@ -2,7 +2,7 @@
     "waves": [
         {
             "enemies": [0, 1, 0],
-            "waveSpawnTimer": 1000
+            "waveSpawnTimer": 200
         },
         {
             "enemies": [0, 1, 0, 0,0,0,0,0,0,0],

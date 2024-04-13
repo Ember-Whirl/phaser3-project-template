@@ -22,7 +22,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.maxLevel = this.warriorTypesData.warriorTypes.length
         this.spawningLevel = 1
-        this.maxAmountOfWarriors = 10
+        this.maxAmountOfWarriors = 5
 
         this.gameInProgress = true
 

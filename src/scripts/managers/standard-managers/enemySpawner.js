@@ -72,7 +72,7 @@ export default class EnemySpawner extends Singleton {
     spawnEnemy(enemyType) {
         if (!this.gameInProgress) return
 
-        let enemy = new Enemy(this.scene, 0, 0, enemyType.imageKey, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
+        let enemy = new Enemy(this.scene, 0, 0, enemyType.imageKey, enemyType.attachments, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
         this.scene.add.existing(enemy)
 
         this.enemyCount++

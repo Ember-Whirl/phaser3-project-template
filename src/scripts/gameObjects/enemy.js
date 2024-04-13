@@ -4,13 +4,14 @@ import DimensionManager from '../managers/standard-managers/dimensionManager';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 
 export default class Enemy extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
+    constructor(scene, x, y, spineKey, attachments, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
         super(scene);
         this.scene = scene
         this.x = x
         this.y = y
 
         this.spineKey = spineKey
+        this.attachments = attachments
 
         this.maximumHealth = maximumHealth
         this.health = this.maximumHealth
@@ -31,6 +32,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.spotted = false
 
         this.createEnemyVisual()
+        this.setAttachments()
 
         this.spawn()
 
@@ -43,6 +45,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
     createEnemyVisual() {
         this.enemy = this.scene.add.spine(0, 0, 'slime')
         this.add(this.enemy)
+    }
+
+    setAttachments() {
+        this.enemy.setAttachment('r-eye', this.attachments.rightEye)
+        this.enemy.setAttachment('l-eye', this.attachments.leftEye)
     }
 
     spawn() {
@@ -111,25 +118,33 @@ export default class Enemy extends Phaser.GameObjects.Container {
             return
         }
 
+        // this.setAttachments()
+
+
         if (this.spawned && !this.dealingDamage && !this.reachedUltimateGoal) {
             this.animationSwitcher('Run')
             this.moveTowardsGoal()
             this.attackSpeedCounter = 0
         }
 
-        if (this.reachedUltimateGoal) this.attackSpeedCounter++
+        if (this.reachedUltimateGoal) {
+            this.attackSpeedCounter++
+            this.animationSwitcher('Attack')
 
-        if (this.reachedUltimateGoal && this.attackSpeedCounter >= (this.attackSpeed * 60)) {
-            EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
-            this.attackSpeedCounter = 0
+            if (this.attackSpeedCounter >= (this.attackSpeed * 60)) {
+                EventManager.instance.dispatch('Enemy:hittingCastle', this.damagePerHit)
+                this.attackSpeedCounter = 0
+            }
         }
+
+
 
         if (!this.reachedUltimateGoal && this.dealingDamage && this.warriorToAttack) {
             this.attackSpeedCounter++
+            this.animationSwitcher('Attack')
 
             if (this.attackSpeedCounter >= (this.attackSpeed * 60)) {
                 this.attackSpeedCounter = 0
-                this.animationSwitcher('Attack')
                 this.warriorToAttack.dealDamage(this.damagePerHit, this)
             }
         }
@@ -138,14 +153,20 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     animationSwitcher(newAnimationToStart) {
-        if (newAnimationToStart === this.currentAnimation) return
+
+        if (newAnimationToStart === this.currentAnimation) {
+            this.setAttachments()
+            return
+        }
 
         switch (newAnimationToStart) {
             case 'Run':
+                this.setAttachments()
                 this.enemy.play('Run', true)
                 this.currentAnimation = newAnimationToStart
                 break;
             default:
+                this.setAttachments()
                 console.warn('animation does not exist ', newAnimationToStart)
                 break;
         }
