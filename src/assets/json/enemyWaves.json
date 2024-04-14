@@ -1,20 +1,20 @@
 {
     "waves": [
         {
-            "enemies": [0, 0, 0],
-            "waveSpawnTimer": 200000
+            "enemies": [0, 1, 2, 3],
+            "waveSpawnTimer": 200
         },
         {
-            "enemies": [0, 1, 0, 0,0,0,0,0,0,0],
-            "waveSpawnTimer": 1000
+            "enemies": [0, 1, 2, 3],
+            "waveSpawnTimer": 2000
         },
         {
-            "enemies": [0, 1, 0,0,0,0,0,0,0,0,0,0,0],
-            "waveSpawnTimer": 1000
+            "enemies": [0, 1, 2,3,1,0],
+            "waveSpawnTimer": 2000
         },
         {
-            "enemies": [0, 1, 0,0,0,0,0,0,0,0,0,0,0],
-            "waveSpawnTimer": 1000
+            "enemies": [0, 1, 0,2,1,3],
+            "waveSpawnTimer": 2000
         }
     ]
 }

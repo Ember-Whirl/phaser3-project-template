@@ -50,6 +50,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     setAttachments() {
         this.enemy.setAttachment('r-eye', this.attachments.rightEye)
         this.enemy.setAttachment('l-eye', this.attachments.leftEye)
+        this.enemy.setAttachment('head', this.attachments.head)
+        this.enemy.setAttachment('body', this.attachments.body)
     }
 
     spawn() {
@@ -163,6 +165,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
             case 'Run':
                 this.setAttachments()
                 this.enemy.play('Run', true)
+                this.currentAnimation = newAnimationToStart
+                break;
+            case 'Attack':
+                this.setAttachments()
+                this.enemy.play('Attack', true)
                 this.currentAnimation = newAnimationToStart
                 break;
             default:
