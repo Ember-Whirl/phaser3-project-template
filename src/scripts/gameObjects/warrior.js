@@ -28,6 +28,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.attackSpeedCounter = 0
         this.mergeRange = 15
         this.warriorToMergeWith = null
+        this.dragOffset = 30
 
         this.positionToReturnTo = this.spawnPosition
 
@@ -60,14 +61,21 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     setAttachments(isAttack) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
-        this.warrior.setAttachment('shield-000', this.attachments.shield)
+        this.warrior.setAttachment('shield-select', this.attachments.shield)
+        this.warrior.setAttachment('body', this.attachments.body)
+        this.warrior.setAttachment('arm-front', this.attachments.armFront)
+        this.warrior.setAttachment('r-leg', this.attachments.rightLeg)
+        this.warrior.setAttachment('l-leg', this.attachments.leftLeg)
+        this.warrior.setAttachment('head', this.attachments.head)
+
+
         if (this.attachments.shield === null) this.attackAnimation = 'Attack'
         if (this.attachments.shield !== null) this.attackAnimation = 'AttackShield'
 
         if (isAttack) this.warrior.setAttachment('slash', 'slash')
         if (!isAttack) this.warrior.setAttachment('slash', null)
 
-       // this.warrior.setColor(this.attachments.upperBodyColor, 'body')
+        // this.warrior.setColor(this.attachments.upperBodyColor, 'body')
     }
 
     startDrag(pointer) {
@@ -86,6 +94,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         console.log('drag stop')
 
         this.positionToReturnTo = { x: this.x, y: this.y }
+        this.y += this.dragOffset
 
         this.checkMerge()
 
@@ -167,7 +176,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
             this.x = this.pointer.x
             this.y = this.pointer.y
-            this.animationSwitcher('Run')
+            this.animationSwitcher('Drag')
 
             this.warriorToMergeWith = null
 
@@ -257,18 +266,27 @@ export default class Warrior extends Phaser.GameObjects.Container {
         // on drag remove shadow
         switch (newAnimationToStart) {
             case 'Attack':
+                this.warrior.y = 0
                 this.setAttachments(true)
-                this.warrior.play('Attack', true)
+                this.warrior.play('Attack', true, true)
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'AttackShield':
+                this.warrior.y = 0
                 this.setAttachments(true)
-                this.warrior.play('AttackShield', true)
+                this.warrior.play('AttackShield', true, true)
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Run':
+                this.warrior.y = 0
                 this.setAttachments(false)
-                this.warrior.play('Run', true)
+                this.warrior.play('Run', true, true)
+                this.currentAnimation = newAnimationToStart
+                break;
+            case 'Drag':
+                this.warrior.y = this.dragOffset
+                this.setAttachments(false)
+                this.warrior.play('Drag', true, true)
                 this.currentAnimation = newAnimationToStart
                 break;
             default:

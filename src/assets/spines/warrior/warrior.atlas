@@ -1,96 +1,159 @@
 
 warrior.png
-size: 242,46
+size: 256,256
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-arm-back
+arm-back-000
   rotate: false
-  xy: 161, 2
+  xy: 82, 238
   size: 18, 12
   orig: 18, 12
   offset: 0, 0
   index: -1
-arm-up
+arm-front-000
   rotate: false
-  xy: 181, 3
+  xy: 38, 239
   size: 20, 11
   orig: 20, 11
   offset: 0, 0
   index: -1
-body
+arm-front-001
   rotate: false
-  xy: 190, 17
+  xy: 60, 239
+  size: 20, 11
+  orig: 20, 11
+  offset: 0, 0
+  index: -1
+body-000
+  rotate: true
+  xy: 194, 202
   size: 25, 27
   orig: 25, 27
   offset: 0, 0
   index: -1
-head
+body-001
   rotate: true
-  xy: 217, 20
+  xy: 223, 202
+  size: 25, 27
+  orig: 25, 27
+  offset: 0, 0
+  index: -1
+head-000
+  rotate: false
+  xy: 56, 214
   size: 24, 23
   orig: 24, 23
   offset: 0, 0
   index: -1
-l-leg
+head-001
   rotate: false
-  xy: 203, 5
+  xy: 2, 188
+  size: 25, 26
+  orig: 25, 26
+  offset: 0, 0
+  index: -1
+head-002
+  rotate: false
+  xy: 29, 186
+  size: 29, 26
+  orig: 29, 26
+  offset: 0, 0
+  index: -1
+l-leg-000
+  rotate: false
+  xy: 2, 240
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
   index: -1
-r-leg
+l-leg-001
   rotate: false
-  xy: 221, 3
+  xy: 20, 240
+  size: 16, 10
+  orig: 16, 10
+  offset: 0, 0
+  index: -1
+r-leg-000
+  rotate: true
+  xy: 102, 236
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
+r-leg-001
+  rotate: true
+  xy: 119, 236
   size: 14, 15
   orig: 14, 15
   offset: 0, 0
   index: -1
 shadow
-  rotate: true
-  xy: 141, 11
+  rotate: false
+  xy: 136, 232
   size: 33, 18
   orig: 33, 18
   offset: 0, 0
   index: -1
 shield-000
-  rotate: false
-  xy: 161, 16
+  rotate: true
+  xy: 60, 183
   size: 27, 28
   orig: 27, 28
   offset: 0, 0
   index: -1
-slash
+shield-001
   rotate: true
-  xy: 73, 6
+  xy: 2, 216
+  size: 22, 25
+  orig: 22, 25
+  offset: 0, 0
+  index: -1
+shield-002
+  rotate: true
+  xy: 29, 215
+  size: 22, 25
+  orig: 22, 25
+  offset: 0, 0
+  index: -1
+shield-003
+  rotate: true
+  xy: 167, 206
+  size: 23, 25
+  orig: 23, 25
+  offset: 0, 0
+  index: -1
+slash-000
+  rotate: true
+  xy: 90, 168
   size: 38, 45
   orig: 38, 45
   offset: 0, 0
   index: -1
 weapon-000
-  rotate: false
-  xy: 120, 8
+  rotate: true
+  xy: 171, 231
   size: 19, 36
   orig: 19, 36
   offset: 0, 0
   index: -1
 weapon-001
-  rotate: false
-  xy: 26, 4
+  rotate: true
+  xy: 82, 212
   size: 22, 40
   orig: 22, 40
   offset: 0, 0
   index: -1
 weapon-002
-  rotate: false
-  xy: 50, 4
+  rotate: true
+  xy: 209, 229
   size: 21, 40
   orig: 21, 40
   offset: 0, 0
   index: -1
 weapon-003
-  rotate: false
-  xy: 2, 3
+  rotate: true
+  xy: 124, 208
   size: 22, 41
   orig: 22, 41
   offset: 0, 0
