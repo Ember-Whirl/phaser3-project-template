@@ -102,7 +102,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.spawnWarrior(levelToSpawn, { x: warriorOne.x, y: warriorOne.y })
 
-        warriorOne.killWarrior()
-        warriorTwo.killWarrior()
+        warriorOne.killWarrior(false)
+        warriorTwo.killWarrior(false)
     }
 }
