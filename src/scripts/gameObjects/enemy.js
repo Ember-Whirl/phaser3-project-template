@@ -184,6 +184,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
                 this.enemy.play('Attack', true)
                 this.currentAnimation = newAnimationToStart
                 break;
+            case 'Death':
+                this.setAttachments()
+                this.enemy.play('Death', false)
+                this.currentAnimation = newAnimationToStart
+                break;
             default:
                 this.setAttachments()
                 console.warn('animation does not exist ', newAnimationToStart)
@@ -329,13 +334,22 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     onLevelEnd() {
-        this.killEnemy()
+        this.killEnemy(false)
     }
 
-    killEnemy() {
+    async killEnemy(playAnimation = true) {
         EventManager.instance.dispatch('Enemy:enemyDied', this.enemyID)
-        this.removeAllEvents()
         this.dead = true
+        if (playAnimation) {
+            this.animationSwitcher('Death')
+            await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Death').duration * 1000)
+        }
+        this.destroyEnemy()
+
+    }
+
+    destroyEnemy() {
+        this.removeAllEvents()
         this.destroy(true)
     }
 
