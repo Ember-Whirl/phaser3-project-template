@@ -406,4 +406,12 @@ export default class ApiAdapter extends Singleton {
       }, 1000)
     })
   }
+
+  async awaitForTime (time) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  }
 }

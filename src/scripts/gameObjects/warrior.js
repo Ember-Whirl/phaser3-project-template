@@ -4,6 +4,7 @@ import DimensionManager from '../managers/standard-managers/dimensionManager';
 import EnemySpawner from '../managers/standard-managers/enemySpawner';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
+import ApiAdapter from '../adapter/apiAdapter';
 
 export default class Warrior extends Phaser.GameObjects.Container {
     constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, warriorID, warriorLevel) {
@@ -297,6 +298,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 this.warrior.play('Drag', true, true)
                 this.currentAnimation = newAnimationToStart
                 break;
+            case 'Death':
+                this.warrior.y = 0
+                this.setAttachments(false)
+                this.warrior.play('Death', false, true)
+                this.currentAnimation = newAnimationToStart
+                break;
             default:
                 console.warn('animation does not exist ', newAnimationToStart)
                 break;
@@ -474,10 +481,17 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.killWarrior()
     }
 
-    killWarrior() {
+    async killWarrior() {
         WarriorSpawner.instance.warriorDied(this.warriorID)
-        this.removeAllEvents()
+        this.animationSwitcher('Death')
         this.dead = true
+        await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Death').duration * 1000)
+        this.destroyWarrior()
+
+    }
+
+    destroyWarrior() {
+        this.removeAllEvents()
         this.destroy(true)
     }
 
