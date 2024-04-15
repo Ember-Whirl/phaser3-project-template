@@ -33,6 +33,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
         this.createEnemyVisual()
         this.setAttachments()
+        this.setAnimationMixes()
 
         this.spawn()
 
@@ -52,6 +53,17 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.enemy.setAttachment('l-eye', this.attachments.leftEye)
         this.enemy.setAttachment('head', this.attachments.head)
         this.enemy.setAttachment('body', this.attachments.body)
+    }
+
+    setAnimationMixes() {
+        const animations = this.enemy.skeletonData.animations
+
+        for (let i = 0; i < animations.length; i++) {
+            for (let j = 0; j < animations.length; j++) {
+                this.enemy.setMix(animations[i].name, animations[j].name, 0.05)
+
+            }
+        }
     }
 
     spawn() {
