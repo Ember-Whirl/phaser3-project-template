@@ -40,6 +40,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.createWarriorVisual()
         this.setAttachments(false)
+        this.setAnimationMixes()
 
         this.spawn()
 
@@ -78,9 +79,18 @@ export default class Warrior extends Phaser.GameObjects.Container {
         // this.warrior.setColor(this.attachments.upperBodyColor, 'body')
     }
 
-    startDrag(pointer) {
-        console.log('drag start')
+    setAnimationMixes() {
+        const animations = this.warrior.skeletonData.animations
 
+        for (let i = 0; i < animations.length; i++) {
+            for (let j = 0; j < animations.length; j++) {
+                this.warrior.setMix(animations[i].name, animations[j].name, 0.05)
+
+            }
+        }
+    }
+
+    startDrag(pointer) {
         this.dragging = true
         this.pointer = pointer
 
@@ -91,8 +101,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     stopDrag() {
-        console.log('drag stop')
-
         this.positionToReturnTo = { x: this.x, y: this.y }
         this.y += this.dragOffset
 
@@ -187,21 +195,18 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
                 if (this.isInMergeRange(warrior)) {
                     if (!this.warriorToMergeWith && this.warriorLevel === warrior.warriorLevel || (this.warriorToMergeWith && this.getDistance(this, this.warriorToMergeWith) > this.getDistance(this, warrior)) && this.warriorLevel === warrior.warriorLevel) {
-                        console.log('this warrior level and other warrior level ', this.warriorLevel, warrior.warriorLevel)
                         this.warriorToMergeWith = warrior
                     }
                 }
             }
+        }
 
-            console.log('warrior to merge with ', this.warriorToMergeWith)
+        if (this.spawned && !this.goal && !this.dragging && !this.enemySpotted && !this.dealingDamage) {
+            this.animationSwitcher('Idle')
         }
 
         if (!this.enemySpotted && !this.dragging) {
             let enemyToAttack = null
-
-            if (this.spawned && !this.enemySpotted && !this.dealingDamage) {
-                this.animationSwitcher('Run')
-            }
 
             for (let i = 0; i < EnemySpawner.instance.spawnedEnemies.length; i++) {
                 const enemy = EnemySpawner.instance.spawnedEnemies[i]
@@ -217,12 +222,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
             if (enemyToAttack) this.spotEnemy(enemyToAttack)
         }
 
-        if (this.spawned && this.enemySpotted && !this.dealingDamage && !this.dragging) {
+        if (this.spawned && this.goal && this.enemySpotted && !this.dealingDamage && !this.dragging) {
             this.animationSwitcher('Run')
             this.moveTowardsGoal()
         }
 
-        if (this.spawned && !this.enemySpotted && !this.dealingDamage && !this.dragging) {
+        if (this.spawned && this.goal && !this.enemySpotted && !this.dealingDamage && !this.dragging) {
             this.animationSwitcher('Run')
             if (this.goal !== this.positionToReturnTo) this.goal = this.positionToReturnTo
             this.moveTowardsGoal()
@@ -240,7 +245,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
                 if (this.attackSpeedCounter > (this.attackSpeed * 60)) {
                     this.attackSpeedCounter = 0
-                    console.log('warrior deals damage!')
                     this.spottedEnemy.dealDamage(this.damagePerHit, this)
                 }
             }
@@ -254,9 +258,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     animationSwitcher(newAnimationToStart) {
-
         if (newAnimationToStart === this.currentAnimation) {
-            //console.log('test ', this.warrior)
             let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
             this.setAttachments(isAttack)
 
@@ -283,6 +285,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 this.warrior.play('Run', true, true)
                 this.currentAnimation = newAnimationToStart
                 break;
+            case 'Idle':
+                this.warrior.y = 0
+                this.setAttachments(false)
+                this.warrior.play('Idle', true, true)
+                this.currentAnimation = newAnimationToStart
+                break;
             case 'Drag':
                 this.warrior.y = this.dragOffset
                 this.setAttachments(false)
@@ -303,8 +311,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     removeSpottedEnemy() {
-        console.log('thijs, checking remove spotted enemy ', this.spottedEnemy)
-
         if (!this.spottedEnemy) return
         this.spottedEnemy.stopAttacking()
         this.enemySpotted = false
@@ -315,7 +321,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     setEnemyKilled() {
-        console.log('thijs, checking set enemy killed')
         this.removeSpottedEnemy()
     }
 
@@ -376,12 +381,14 @@ export default class Warrior extends Phaser.GameObjects.Container {
     onGoalReached() {
 
         if (this.goal === this.positionToReturnTo) {
-            //go idle
+            this.goal = null
+            return
         }
 
         if (this.goal !== this.positionToReturnTo) {
             this.dealingDamage = true
             this.spottedEnemy.setAttacking(this)
+            return
         }
     }
 
@@ -433,15 +440,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
         let feedback = new DamageDealtFeedback(this.scene, 0, -30, damage, 'Red')
         this.add(feedback)
 
-        console.log('warrior hit!!!, ', damage, this.health - damage, this.warriorID)
-
         this.health -= damage
         this.checkHealth(damageDealer)
     }
 
     checkHealth(damageDealer) {
         if (this.health <= 0) {
-            console.log('kill warrior ', this.warriorID)
             damageDealer.stopAttacking()
             this.killWarrior()
         }
@@ -471,7 +475,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     killWarrior() {
-        console.log('warrior dead', this.warriorID)
         WarriorSpawner.instance.warriorDied(this.warriorID)
         this.removeAllEvents()
         this.dead = true
