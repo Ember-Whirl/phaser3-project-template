@@ -478,14 +478,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     onLevelEnd() {
-        this.killWarrior()
+        this.killWarrior(false)
     }
 
-    async killWarrior() {
+    async killWarrior(playAnimation = true) {
         WarriorSpawner.instance.warriorDied(this.warriorID)
-        this.animationSwitcher('Death')
         this.dead = true
-        await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Death').duration * 1000)
+        if (playAnimation) {
+            this.animationSwitcher('Death')
+            await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Death').duration * 1000)
+        }
         this.destroyWarrior()
 
     }
