@@ -7,7 +7,7 @@ import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
 import ApiAdapter from '../adapter/apiAdapter';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, warriorID, warriorLevel) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, positionToReturnTo, warriorID, warriorLevel) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -31,7 +31,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.warriorToMergeWith = null
         this.dragOffset = 30
 
-        this.positionToReturnTo = this.spawnPosition
+        this.positionToReturnTo = positionToReturnTo
 
         this.dead = false
 
@@ -322,7 +322,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.spottedEnemy.stopAttacking()
         this.enemySpotted = false
         this.dealingDamage = false
-        this.goal = null
+        this.goal = this.positionToReturnTo
         this.spottedEnemy.setSpotted(false, this)
         this.spottedEnemy = null
     }
@@ -382,7 +382,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     goalReached(distance) {
-        return distance <= 30
+
+        
+        if (this.goal === this.positionToReturnTo) {
+            return distance <= 5
+        }
+
+        if (this.goal !== this.positionToReturnTo) {
+            return distance <= 60
+        }
+
     }
 
     onGoalReached() {

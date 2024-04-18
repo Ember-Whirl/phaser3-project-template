@@ -14,7 +14,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.spawnedWarriors = []
         this.warriorCount = 0
-        this.warriorSpawnTime = 2
+        this.warriorSpawnTime = 0.0002
         this.warriorSpawnTimeCounter = 0
         this.nextWarriorID = 0
 
@@ -22,7 +22,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.maxLevel = this.warriorTypesData.warriorTypes.length
         this.spawningLevel = 1
-        this.maxAmountOfWarriors = 8
+        this.maxAmountOfWarriors = 100
 
         this.gameInProgress = true
 
@@ -57,23 +57,39 @@ export default class WarriorSpawner extends Singleton {
     spawnWarrior(type, spawnPosition = null) {
         let warriorType = this.warriorTypesData.warriorTypes[type]
 
-        let spawnX = 0
-        let spawnY = 0
+        let spawnX = this.scene.mainScreen.castle.x
+        let spawnY = this.scene.mainScreen.castle.y - 15
+        let positionToReturnToX = 0
+        let positionToReturnToY = 0
 
         if (spawnPosition === null) {
-            spawnX = this.scene.mainScreen.castle.x + Math.random() * (20 - -20) + -20
-            spawnY = this.scene.mainScreen.castle.y + Math.random() * (20 - -20) + -20
+            let randomPosition = this.randomPositionAroundRadius(spawnX, spawnY, 75)
+            positionToReturnToX = randomPosition.x
+            positionToReturnToY = randomPosition.y
         }
 
         if (spawnPosition !== null && spawnPosition.x && spawnPosition.y) {
              spawnX = spawnPosition.x
              spawnY = spawnPosition.y
+             positionToReturnToX = spawnX
+             positionToReturnToY = spawnY
         }
 
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, this.nextWarriorID, type)
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, {x: positionToReturnToX, y: positionToReturnToY}, this.nextWarriorID, type)
         this.nextWarriorID++
         this.spawnedWarriors.push(warrior)
         this.scene.add.existing(warrior)
+    }
+
+    randomPositionAroundRadius(centerX, centerY, radius) {
+        // Generate a random angle between 0 and 2*pi (full circle)
+        const angle = Math.random() * 2 * Math.PI;
+        
+        // Calculate the x and y coordinates using polar to Cartesian conversion
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+    
+        return { x, y };
     }
 
     stopWarriorSpawning() {
