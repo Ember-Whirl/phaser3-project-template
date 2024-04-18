@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
+import ApiAdapter from '../adapter/apiAdapter';
 
 export default class Enemy extends Phaser.GameObjects.Container {
     constructor(scene, x, y, spineKey, attachments, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
@@ -342,10 +343,9 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.dead = true
         if (playAnimation) {
             this.animationSwitcher('Death')
-            await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Death').duration * 1000)
+            await ApiAdapter.instance.awaitForTime(this.enemy.findAnimation('Death').duration * 1000)
         }
         this.destroyEnemy()
-
     }
 
     destroyEnemy() {
