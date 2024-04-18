@@ -21,10 +21,12 @@ export default class EnemySpawner extends Singleton {
 
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('Enemy:enemyDied', this.enemyDied, this)
-        EventManager.instance.add('restart', this.stopWaveSpawning, this)
+        EventManager.instance.add('startGame', this.startGame, this)
+        EventManager.instance.add('gameEnd', this.stopWaveSpawning, this)
+    }
 
-
-
+    startGame() {
+        this.gameInProgress = true
         this.startWavesFromBeginning()
     }
 
@@ -42,8 +44,6 @@ export default class EnemySpawner extends Singleton {
     }
 
     startWavesFromBeginning() {
-        this.gameInProgress = true
-
         this.waveToSpawn = 0
         this.enemyCount = 0
         this.waveSpawnTimer = this.enemyWavesData.waves[this.waveToSpawn].waveSpawnTimer

@@ -22,13 +22,16 @@ export default class WarriorSpawner extends Singleton {
 
         this.maxLevel = this.warriorTypesData.warriorTypes.length
         this.spawningLevel = 1
-        this.maxAmountOfWarriors = 8
-
-        this.gameInProgress = true
+        this.maxAmountOfWarriors = 0
 
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('Warrior:warriorDied', this.warriorDied, this)
-        EventManager.instance.add('restart', this.stopWarriorSpawning, this)
+        EventManager.instance.add('gameEnd', this.stopWarriorSpawning, this)
+        EventManager.instance.add('startGame', this.startGame, this)
+    }
+
+    startGame() {
+        this.gameInProgress = true
     }
 
     update() {

@@ -39,7 +39,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.spawn()
 
         EventManager.instance.add('update', this.update, this)
-        EventManager.instance.add('restart', this.killEnemy, this)
+        EventManager.instance.add('gameEnd', this.killEnemy, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
@@ -313,7 +313,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
     checkHealth(damageDealer) {
         if (this.health <= 0) {
             damageDealer.setEnemyKilled()
-            this.killEnemy()
+            this.killEnemy(true)
         }
     }
 
@@ -335,10 +335,10 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     onLevelEnd() {
-        this.killEnemy(false)
+        this.killEnemy()
     }
 
-    async killEnemy(playAnimation = true) {
+    async killEnemy(playAnimation = false) {
         EventManager.instance.dispatch('Enemy:enemyDied', this.enemyID)
         this.dead = true
         if (playAnimation) {

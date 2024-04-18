@@ -6,6 +6,7 @@ import Text from '../scripts/text';
 import Enemy from '../scripts/gameObjects/enemy';
 import Castle from '../scripts/gameObjects/castle';
 import EnemySpawner from '../scripts/managers/standard-managers/enemySpawner';
+import Button from '../scripts/gameObjects/UI/button';
 
 export default class MainScreen extends Phaser.GameObjects.Container {
     constructor(scene) {
@@ -23,11 +24,24 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
         // this.octopus.setScale(-1, 1)
 
-        EventManager.instance.add('LevelManager:lostLevel', this.onLevelLost, this)
-        EventManager.instance.add('LevelManager:winLevel', this.onLevelWon, this)
-        EventManager.instance.add('LevelManager:levelStarted', this.onlevelStart, this)
+        EventManager.instance.add('startGame', this.onStartGame, this)
+        EventManager.instance.add('gameEnd', this.onEndGame, this)
         EventManager.instance.add('EnemySpawner:newWaveSpawned', this.updateWaveText, this)
         EventManager.instance.add('update', this.update, this)
+    }
+
+    onStartGame () {
+        this.startButton.setVisible(false)
+        this.playerLivesText.setVisible(true)
+        this.goldBalanceText.setVisible(true)
+        this.waveText.setVisible(true)
+    }
+
+    onEndGame () {
+        this.startButton.setVisible(true)
+        this.playerLivesText.setVisible(false)
+        this.goldBalanceText.setVisible(false)
+        this.waveText.setVisible(false)
     }
 
     createWorld() {
@@ -36,11 +50,16 @@ export default class MainScreen extends Phaser.GameObjects.Container {
     }
 
     createUI() {
+        this.uiLayer = new Phaser.GameObjects.Container(this.scene, 0, 0)
+        this.scene.add.existing(this.uiLayer)
+        this.uiLayer.setDepth(50000)
+
         this.createPlayerLivesText()
         this.createGoldBalanceText()
         this.createWaveText()
         this.updatePlayerLivesText()
         this.updateGoldBalanceText()
+        this.createClickToStart()
     }
 
     createBackground() {
@@ -56,8 +75,21 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
     createPlayerLivesText() {
         this.playerLivesText = new Text(this.scene, 100, 100, '', ETextStyle.GAMEPLAYVALUES)
-        this.add(this.playerLivesText)
+        this.playerLivesText.setVisible(false)
+        this.uiLayer.add(this.playerLivesText)
     }
+
+    createClickToStart() {
+        this.startButton = new Button(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2, 'atlas-ui', 'Button.png', 'Button.png', 'Button.png', 'Start game')
+        this.uiLayer.add(this.startButton)
+
+        this.startButton.buttonEmitter.on('onClick', this.startGame, this);
+    }
+
+    startGame () {
+        EventManager.instance.dispatch('startGame')
+    }
+
 
     updatePlayerLivesText() {
         this.playerLivesText.text = 'Lives: ' + 5
@@ -65,8 +97,8 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
     createGoldBalanceText() {
         this.goldBalanceText = new Text(this.scene, 100, 125, '', ETextStyle.GAMEPLAYVALUES)
-        this.add(this.goldBalanceText)
-        //this.goldBalanceText.setVisible(false)
+        this.goldBalanceText.setVisible(false)
+        this.uiLayer.add(this.goldBalanceText)
     }
 
     updateGoldBalanceText() {
@@ -75,32 +107,13 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
     createWaveText() {
         this.waveText = new Text(this.scene, 100, 150, '', ETextStyle.GAMEPLAYVALUES)
-        this.add(this.waveText)
+        this.uiLayer.add(this.waveText)
     }
 
     updateWaveText() {
         this.waveText.text = 'Wave: ' + (EnemySpawner.instance.waveToSpawn + 1)
     }
 
-    onlevelStart() {
-        this.playerLivesText.setVisible(true)
-        this.goldBalanceText.setVisible(true)
-    }
-
-    onLevelWon() {
-        this.onLevelEnd()
-    }
-
-    onLevelLost() {
-        this.onLevelEnd()
-    }
-
-    onLevelEnd() {
-        this.playerLivesText.setVisible(false)
-        this.goldBalanceText.setVisible(false)
-    }
-
     update() {
-
     }
 }

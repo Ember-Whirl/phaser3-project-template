@@ -21,15 +21,11 @@ preload () {
   this.load.image('warrior6', 'src/assets/warrior-6.png')
   this.load.image('warrior7', 'src/assets/warrior-7.png')
 
-
-
   this.load.json('enemyWaves', 'src/assets/json/enemyWaves.json');
   this.load.json('enemyTypes', 'src/assets/json/enemyTypes.json');
   this.load.json('warriorTypes', 'src/assets/json/warriorTypes.json');
 
-
-
-
+  this.load.atlas('atlas-ui', 'src/assets/atlas/atlas-ui.png', 'src/assets/atlas/atlas-ui.json')
 
   this.load.setPath('src/assets/spines')
   this.load.spine('skeleton', 'skeleton.json', ['skeleton.atlas'], true)

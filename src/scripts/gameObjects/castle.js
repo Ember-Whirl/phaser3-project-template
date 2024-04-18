@@ -21,7 +21,7 @@ export default class Castle extends Phaser.GameObjects.Container {
         this.spawningOn = true
 
         EventManager.instance.add('update', this.update, this)
-        EventManager.instance.add('restart', this.reset, this)
+        EventManager.instance.add('startGame', this.startGame, this)
 
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
@@ -51,10 +51,10 @@ export default class Castle extends Phaser.GameObjects.Container {
     }
 
     checkLoseCondition() {
-        if (this.health <= 0) EventManager.instance.dispatch('restart')
+        if (this.health <= 0) EventManager.instance.dispatch('gameEnd')
     }
 
-    reset() {
+    startGame() {
         this.health = this.maximumHealth
         this.updateLivesText()
         this.spawningOn = false

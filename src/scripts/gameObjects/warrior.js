@@ -51,7 +51,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         //this.showRange()
         EventManager.instance.add('update', this.update, this)
-        EventManager.instance.add('restart', this.killWarrior, this)
+        EventManager.instance.add('gameEnd', this.killWarrior, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
