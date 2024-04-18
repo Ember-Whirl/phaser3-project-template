@@ -14,7 +14,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.spawnedWarriors = []
         this.warriorCount = 0
-        this.warriorSpawnTime = 0.0002
+        this.warriorSpawnTime = 2
         this.warriorSpawnTimeCounter = 0
         this.nextWarriorID = 0
 
@@ -22,7 +22,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.maxLevel = this.warriorTypesData.warriorTypes.length
         this.spawningLevel = 1
-        this.maxAmountOfWarriors = 100
+        this.maxAmountOfWarriors = 8
 
         this.gameInProgress = true
 
