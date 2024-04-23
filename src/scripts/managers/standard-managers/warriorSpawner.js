@@ -14,7 +14,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.spawnedWarriors = []
         this.warriorCount = 0
-        this.warriorSpawnTime = 2
+        this.warriorSpawnTime = 0.2
         this.warriorSpawnTimeCounter = 0
         this.nextWarriorID = 0
 
@@ -22,7 +22,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.maxLevel = this.warriorTypesData.warriorTypes.length
         this.spawningLevel = 1
-        this.maxAmountOfWarriors = 8
+        this.maxAmountOfWarriors = 800
 
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('Warrior:warriorDied', this.warriorDied, this)
@@ -66,7 +66,7 @@ export default class WarriorSpawner extends Singleton {
         let positionToReturnToY = 0
 
         if (spawnPosition === null) {
-            let randomPosition = this.randomPositionAroundRadius(spawnX, spawnY, 75)
+            let randomPosition = this.randomPositionAroundRadius(spawnX, spawnY, 125)
             positionToReturnToX = randomPosition.x
             positionToReturnToY = randomPosition.y
         }
