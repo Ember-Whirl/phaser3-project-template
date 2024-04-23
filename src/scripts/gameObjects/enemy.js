@@ -247,7 +247,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         let isWithinDistance = false
 
         if (!this.spotted) isWithinDistance = distance <= 100
-        if (this.spotted) isWithinDistance = distance <= 60
+        if (this.spotted) isWithinDistance = distance <= 70
 
         return isWithinDistance
     }

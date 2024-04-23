@@ -398,7 +398,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
 
         if (this.goal !== this.positionToReturnTo) {
-            return distance <= 60
+            return distance <= 70
         }
 
     }
