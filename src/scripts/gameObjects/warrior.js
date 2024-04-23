@@ -7,7 +7,7 @@ import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
 import ApiAdapter from '../adapter/apiAdapter';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, positionToReturnTo, warriorID, warriorLevel) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, positionToReturnTo, warriorID, warriorLevel, fromMerge) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -25,6 +25,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.attachments = attachments
         this.warriorID = warriorID
         this.warriorLevel = warriorLevel
+        this.merging = fromMerge
 
         this.attackSpeedCounter = 0
         this.mergeRange = 35
@@ -183,6 +184,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
             return
         }
 
+        if (this.merging) {
+            this.animationSwitcher('Merge')
+            return
+        }
+
         if (this.dragging && this.pointer) {
             this.setDepth(5000)
 
@@ -271,12 +277,18 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (newAnimationToStart === this.currentAnimation) {
             let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
             this.setAttachments(isAttack)
-
             return
         }
 
         // on drag remove shadow
         switch (newAnimationToStart) {
+            case 'Merge':
+                this.warrior.y = 0
+                this.setAttachments(false)
+                this.warrior.play('Merge', false, true)
+                this.currentAnimation = newAnimationToStart
+                this.startMergeCountDown()
+                break;
             case 'Attack':
                 this.warrior.y = 0
                 this.setAttachments(true)
@@ -317,6 +329,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 console.warn('animation does not exist ', newAnimationToStart)
                 break;
         }
+    }
+
+    async startMergeCountDown() {
+        await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Merge').duration * 1000)
+        this.merging = false
     }
 
     spotEnemy(enemyToAttack) {
