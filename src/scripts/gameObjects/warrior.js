@@ -131,8 +131,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     setToStartPosition() {
-        this.x = this.spawnPosition.x - 15
-        this.y = this.spawnPosition.y + 40
+        this.x = this.spawnPosition.x
+        this.y = this.spawnPosition.y
     }
 
     generateRandomPosition() {

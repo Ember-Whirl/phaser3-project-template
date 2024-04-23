@@ -61,11 +61,13 @@ export default class WarriorSpawner extends Singleton {
         let warriorType = this.warriorTypesData.warriorTypes[type]
 
         let spawnX = this.scene.mainScreen.castle.x
-        let spawnY = this.scene.mainScreen.castle.y - 15
+        let spawnY = this.scene.mainScreen.castle.y
         let positionToReturnToX = 0
         let positionToReturnToY = 0
 
         if (spawnPosition === null) {
+            spawnX -= 15
+            spawnY += 40
             let randomPosition = this.randomPositionAroundRadius(spawnX, spawnY, 125)
             positionToReturnToX = randomPosition.x
             positionToReturnToY = randomPosition.y
