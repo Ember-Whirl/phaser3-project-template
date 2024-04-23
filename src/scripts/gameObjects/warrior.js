@@ -186,6 +186,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (this.merging) {
             this.animationSwitcher('Merge')
+            this.setDepth(5000)
             return
         }
 
