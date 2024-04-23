@@ -27,7 +27,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.warriorLevel = warriorLevel
 
         this.attackSpeedCounter = 0
-        this.mergeRange = 15
+        this.mergeRange = 35
         this.warriorToMergeWith = null
         this.dragOffset = 30
 
@@ -42,6 +42,9 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.createWarriorVisual()
         this.setAttachments(false)
         this.setAnimationMixes()
+
+        this.createRange(this.mergeRange)
+        this.showRange(false)
 
         this.spawn()
 
@@ -197,9 +200,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 if (this.isInMergeRange(warrior)) {
                     if (!this.warriorToMergeWith && this.warriorLevel === warrior.warriorLevel || (this.warriorToMergeWith && this.getDistance(this, this.warriorToMergeWith) > this.getDistance(this, warrior)) && this.warriorLevel === warrior.warriorLevel) {
                         this.warriorToMergeWith = warrior
+                        //debug
+                        this.showRange(true)
                     }
                 }
             }
+
+            //debug
+            if (this.warriorToMergeWith === null) this.showRange(false)
+
         }
 
         if (this.spawned && !this.goal && !this.dragging && !this.enemySpotted && !this.dealingDamage) {
@@ -506,27 +515,35 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.destroy(true)
     }
 
-    showRange() {
-        this.spot = this.scene.add.image(-this.range, 0, 'circle');
-        this.spot.setTint(0Xfffff)
-        this.spot.setScale(0.5)
-        this.add(this.spot)
+    createRange(range) {
+        this.spot0 = this.scene.add.image(-range, 0, 'circle');
+        this.spot0.setTint(0Xfffff)
+        this.spot0.setScale(0.5)
+        this.add(this.spot0)
 
-        this.spot1 = this.scene.add.image(this.range, 0, 'circle');
+        this.spot1 = this.scene.add.image(range, 0, 'circle');
         this.spot1.setTint(0Xfffff)
         this.spot1.setScale(0.5)
         this.add(this.spot1)
 
-        this.spot2 = this.scene.add.image(0, -this.range, 'circle');
+        this.spot2 = this.scene.add.image(0, -range, 'circle');
         this.spot2.setTint(0Xfffff)
         this.spot2.setScale(0.5)
         this.add(this.spot2)
 
-        this.spot3 = this.scene.add.image(0, this.range, 'circle');
+        this.spot3 = this.scene.add.image(0, range, 'circle');
         this.spot3.setTint(0Xfffff)
         this.spot3.setScale(0.5)
         this.add(this.spot3)
 
         // console.log(this.getDistance(this, this.spot))
     }
+
+    showRange(show) {
+        this.spot0.setVisible(show)
+        this.spot1.setVisible(show)
+        this.spot2.setVisible(show)
+        this.spot3.setVisible(show)
+    }
+    
 }
