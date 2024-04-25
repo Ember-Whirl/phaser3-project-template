@@ -57,7 +57,7 @@ export default class WarriorSpawner extends Singleton {
         this.spawnWarrior(type)
     }
 
-    spawnWarrior(type, spawnPosition = null, fromMerge = false) {
+    spawnWarrior(type, xScale = 1, spawnPosition = null, fromMerge = false) {
         let warriorType = this.warriorTypesData.warriorTypes[type]
 
         let spawnX = this.scene.mainScreen.castle.x
@@ -78,7 +78,7 @@ export default class WarriorSpawner extends Singleton {
              positionToReturnToY = spawnY
         }
 
-        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, {x: positionToReturnToX, y: positionToReturnToY}, this.nextWarriorID, type, fromMerge)
+        let warrior = new Warrior(this.scene, 0, 0, warriorType.spineKey, warriorType.maximumHealth, warriorType.movementSpeed, warriorType.damagePerHit, warriorType.attackSpeed, warriorType.range, warriorType.attachments, { x: spawnX, y: spawnY }, {x: positionToReturnToX, y: positionToReturnToY}, xScale, this.nextWarriorID, type, fromMerge)
         this.nextWarriorID++
         this.spawnedWarriors.push(warrior)
         this.scene.add.existing(warrior)
@@ -119,7 +119,7 @@ export default class WarriorSpawner extends Singleton {
 
         if (levelToSpawn >= this.maxLevel) return
 
-        this.spawnWarrior(levelToSpawn, { x: warriorTwo.x, y: warriorTwo.y }, true)
+        this.spawnWarrior(levelToSpawn, warriorTwo.warrior._scaleX, { x: warriorTwo.x, y: warriorTwo.y }, true)
 
         warriorOne.killWarrior(false)
         warriorTwo.killWarrior(false)
