@@ -61,11 +61,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     createWarriorVisual() {
+        this.mergeFX = this.scene.add.spine(0, 25, 'merge')
+        this.add(this.mergeFX)
+        this.mergeFX.setVisible(false)
+
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.add(this.warrior)
     }
 
-    setAttachments(isAttack) {
+    setAttachments(isAttack, isMerge = false) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
         this.warrior.setAttachment('shield-select', this.attachments.shield)
         this.warrior.setAttachment('body', this.attachments.body)
@@ -80,6 +84,13 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (isAttack) this.warrior.setAttachment('slash', 'slash')
         if (!isAttack) this.warrior.setAttachment('slash', null)
+
+        if (isMerge) {
+            this.mergeFX.setVisible(true)
+        }
+        if (!isMerge) {
+            this.mergeFX.setVisible(false)
+        }
 
         // this.warrior.setColor(this.attachments.upperBodyColor, 'body')
     }
@@ -186,7 +197,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (this.merging) {
             this.animationSwitcher('Merge')
-            this.setDepth(5000)
+            this.setDepth(this.y)
             return
         }
 
@@ -277,7 +288,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     animationSwitcher(newAnimationToStart) {
         if (newAnimationToStart === this.currentAnimation) {
             let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
-            this.setAttachments(isAttack)
+            let isMerge = this.currentAnimation === 'Merge'
+            this.setAttachments(isAttack, isMerge)
             return
         }
 
@@ -285,8 +297,9 @@ export default class Warrior extends Phaser.GameObjects.Container {
         switch (newAnimationToStart) {
             case 'Merge':
                 this.warrior.y = 0
-                this.setAttachments(false)
+                this.setAttachments(false, true)
                 this.warrior.play('Merge', false, true)
+                this.mergeFX.play('animation', false, true)
                 this.currentAnimation = newAnimationToStart
                 this.startMergeCountDown()
                 break;

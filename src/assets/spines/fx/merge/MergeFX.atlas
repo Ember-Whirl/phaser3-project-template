@@ -1,0 +1,111 @@
+
+MergeFX.png
+size: 128,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arrow-1
+  rotate: true
+  xy: 2, 9
+  size: 40, 29
+  orig: 40, 29
+  offset: 0, 0
+  index: -1
+arrow-2
+  rotate: true
+  xy: 79, 15
+  size: 40, 29
+  orig: 40, 29
+  offset: 0, 0
+  index: -1
+arrow-3
+  rotate: true
+  xy: 47, 35
+  size: 40, 30
+  orig: 40, 30
+  offset: 0, 0
+  index: -1
+circle-orange
+  rotate: true
+  xy: 85, 67
+  size: 57, 32
+  orig: 57, 32
+  offset: 0, 0
+  index: -1
+circle-white
+  rotate: false
+  xy: 2, 77
+  size: 81, 47
+  orig: 81, 47
+  offset: 0, 0
+  index: -1
+circle-yellow
+  rotate: false
+  xy: 2, 51
+  size: 43, 24
+  orig: 43, 24
+  offset: 0, 0
+  index: -1
+dot-1
+  rotate: false
+  xy: 41, 31
+  size: 4, 5
+  orig: 4, 5
+  offset: 0, 0
+  index: -1
+dot-2
+  rotate: false
+  xy: 79, 71
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+dot-3
+  rotate: false
+  xy: 33, 30
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+line-1
+  rotate: false
+  xy: 110, 13
+  size: 5, 42
+  orig: 5, 42
+  offset: 0, 0
+  index: -1
+line-2
+  rotate: true
+  xy: 79, 60
+  size: 5, 38
+  orig: 5, 38
+  offset: 0, 0
+  index: -1
+line-3
+  rotate: false
+  xy: 119, 57
+  size: 5, 67
+  orig: 5, 67
+  offset: 0, 0
+  index: -1
+star-1
+  rotate: false
+  xy: 33, 38
+  size: 10, 11
+  orig: 10, 11
+  offset: 0, 0
+  index: -1
+star-2
+  rotate: false
+  xy: 63, 19
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+star-3
+  rotate: false
+  xy: 47, 18
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
