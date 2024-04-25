@@ -7,7 +7,7 @@ import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
 import ApiAdapter from '../adapter/apiAdapter';
 
 export default class Warrior extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, positionToReturnTo, warriorID, warriorLevel, fromMerge) {
+    constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, positionToReturnTo, xScale, warriorID, warriorLevel, fromMerge) {
         super(scene);
         this.scene = scene
         this.x = x
@@ -22,6 +22,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.attackSpeed = attackSpeed
         this.range = range
         this.spawnPosition = spawnPosition
+        this.xScale = xScale
         this.attachments = attachments
         this.warriorID = warriorID
         this.warriorLevel = warriorLevel
@@ -40,7 +41,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.dragging = false
         this.enemySpotted = false
 
-        this.createWarriorVisual()
+        this.createWarriorVisual(xScale)
         this.setAttachments(false)
         this.setAnimationMixes()
 
@@ -66,6 +67,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.mergeFX.setVisible(false)
 
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
+        this.warrior.setScale(xScale, 1)
         this.add(this.warrior)
     }
 
@@ -191,7 +193,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     update() {
         if (this.dead) {
-            console.log('warrior updating while dead')
+            this.setAttachments(false)
             return
         }
 
