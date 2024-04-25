@@ -121,7 +121,7 @@ export default class WarriorSpawner extends Singleton {
 
         if (levelToSpawn >= this.maxLevel) return
 
-        this.spawnWarrior(levelToSpawn, { x: warriorOne.x, y: warriorOne.y }, true)
+        this.spawnWarrior(levelToSpawn, { x: warriorTwo.x, y: warriorTwo.y }, true)
 
         warriorOne.killWarrior(false)
         warriorTwo.killWarrior(false)
