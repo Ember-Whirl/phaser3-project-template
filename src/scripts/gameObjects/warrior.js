@@ -182,7 +182,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     update() {
         if (this.dead) {
-            console.log('warrior updating while dead')
+            this.setAttachments(false)
             return
         }
 
