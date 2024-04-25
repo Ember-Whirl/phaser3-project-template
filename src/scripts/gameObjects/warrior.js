@@ -61,7 +61,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
 
-    createWarriorVisual() {
+    createWarriorVisual(xScale) {
         this.mergeFX = this.scene.add.spine(0, 25, 'merge')
         this.add(this.mergeFX)
         this.mergeFX.setVisible(false)
@@ -93,8 +93,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (!isMerge) {
             this.mergeFX.setVisible(false)
         }
-
-        // this.warrior.setColor(this.attachments.upperBodyColor, 'body')
     }
 
     setAnimationMixes() {
