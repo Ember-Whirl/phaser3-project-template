@@ -1,111 +1,111 @@
 
 MergeFX.png
-size: 128,128
+size: 256,256
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 arrow-1
-  rotate: true
-  xy: 2, 9
-  size: 40, 29
-  orig: 40, 29
+  rotate: false
+  xy: 103, 201
+  size: 51, 38
+  orig: 51, 38
   offset: 0, 0
   index: -1
 arrow-2
-  rotate: true
-  xy: 79, 15
-  size: 40, 29
-  orig: 40, 29
+  rotate: false
+  xy: 156, 201
+  size: 51, 38
+  orig: 51, 38
   offset: 0, 0
   index: -1
 arrow-3
   rotate: true
-  xy: 47, 35
-  size: 40, 30
-  orig: 40, 30
+  xy: 209, 181
+  size: 51, 38
+  orig: 51, 38
   offset: 0, 0
   index: -1
 circle-orange
-  rotate: true
-  xy: 85, 67
-  size: 57, 32
-  orig: 57, 32
+  rotate: false
+  xy: 2, 163
+  size: 75, 42
+  orig: 75, 42
   offset: 0, 0
   index: -1
 circle-white
   rotate: false
-  xy: 2, 77
-  size: 81, 47
-  orig: 81, 47
+  xy: 79, 138
+  size: 106, 61
+  orig: 106, 61
   offset: 0, 0
   index: -1
 circle-yellow
   rotate: false
-  xy: 2, 51
-  size: 43, 24
-  orig: 43, 24
+  xy: 44, 207
+  size: 57, 32
+  orig: 57, 32
   offset: 0, 0
   index: -1
 dot-1
   rotate: false
-  xy: 41, 31
-  size: 4, 5
-  orig: 4, 5
+  xy: 2, 242
+  size: 6, 5
+  orig: 6, 5
   offset: 0, 0
   index: -1
 dot-2
   rotate: false
-  xy: 79, 71
-  size: 4, 4
-  orig: 4, 4
+  xy: 10, 242
+  size: 5, 5
+  orig: 5, 5
   offset: 0, 0
   index: -1
 dot-3
   rotate: false
-  xy: 33, 30
-  size: 6, 6
-  orig: 6, 6
+  xy: 215, 240
+  size: 7, 7
+  orig: 7, 7
   offset: 0, 0
   index: -1
 line-1
-  rotate: false
-  xy: 110, 13
-  size: 5, 42
-  orig: 5, 42
+  rotate: true
+  xy: 17, 241
+  size: 6, 55
+  orig: 6, 55
   offset: 0, 0
   index: -1
 line-2
   rotate: true
-  xy: 79, 60
-  size: 5, 38
-  orig: 5, 38
+  xy: 74, 241
+  size: 6, 50
+  orig: 6, 50
   offset: 0, 0
   index: -1
 line-3
-  rotate: false
-  xy: 119, 57
-  size: 5, 67
-  orig: 5, 67
+  rotate: true
+  xy: 126, 241
+  size: 6, 87
+  orig: 6, 87
   offset: 0, 0
   index: -1
 star-1
   rotate: false
-  xy: 33, 38
-  size: 10, 11
-  orig: 10, 11
+  xy: 224, 234
+  size: 13, 13
+  orig: 13, 13
   offset: 0, 0
   index: -1
 star-2
-  rotate: false
-  xy: 63, 19
-  size: 14, 14
-  orig: 14, 14
+  rotate: true
+  xy: 23, 221
+  size: 18, 19
+  orig: 18, 19
   offset: 0, 0
   index: -1
 star-3
   rotate: false
-  xy: 47, 18
-  size: 14, 15
-  orig: 14, 15
+  xy: 2, 221
+  size: 19, 18
+  orig: 19, 18
   offset: 0, 0
   index: -1

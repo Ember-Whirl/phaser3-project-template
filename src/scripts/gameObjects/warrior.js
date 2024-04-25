@@ -100,13 +100,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         for (let i = 0; i < animations.length; i++) {
             for (let j = 0; j < animations.length; j++) {
-                this.warrior.setMix(animations[i].name, animations[j].name, 0.05)
+                this.warrior.setMix(animations[i].name, animations[j].name, 0.125)
 
             }
         }
     }
 
     startDrag(pointer) {
+        if (this.merging) return
+
         this.dragging = true
         this.pointer = pointer
 
@@ -348,6 +350,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
     async startMergeCountDown() {
         await ApiAdapter.instance.awaitForTime(this.warrior.findAnimation('Merge').duration * 1000)
         this.merging = false
+        this.goal = null
     }
 
     spotEnemy(enemyToAttack) {

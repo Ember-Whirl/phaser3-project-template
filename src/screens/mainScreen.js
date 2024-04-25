@@ -64,7 +64,7 @@ export default class MainScreen extends Phaser.GameObjects.Container {
 
     createBackground() {
         this.background = this.scene.add.image(this.center.x, this.center.y, 'background');
-        this.background.setTint(0x589543)
+        //this.background.setTint(0x589543)
     }
 
     createCastle() {

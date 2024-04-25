@@ -14,7 +14,7 @@ export default class WarriorSpawner extends Singleton {
 
         this.spawnedWarriors = []
         this.warriorCount = 0
-        this.warriorSpawnTime = 2
+        this.warriorSpawnTime = 2.5
         this.warriorSpawnTimeCounter = 0
         this.nextWarriorID = 0
 
