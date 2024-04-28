@@ -66,12 +66,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.add(this.mergeFX)
         this.mergeFX.setVisible(false)
 
+        this.ripFX = this.scene.add.spine(0, 25, 'rip')
+        this.add(this.ripFX)
+        this.ripFX.setVisible(true)
+
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.warrior.setScale(xScale, 1)
         this.add(this.warrior)
     }
 
-    setAttachments(isAttack, isMerge = false) {
+    setAttachments(isAttack, isMerge = false, isDeath = false) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
         this.warrior.setAttachment('shield-select', this.attachments.shield)
         this.warrior.setAttachment('body', this.attachments.body)
@@ -92,6 +96,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
         if (!isMerge) {
             this.mergeFX.setVisible(false)
+        }
+
+        console.log('attachments ', isDeath)
+
+        if (isDeath) {
+            this.ripFX.setVisible(true)
+        }
+        if (!isDeath) {
+            this.ripFX.setVisible(false)
         }
     }
 
@@ -193,7 +206,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     update() {
         if (this.dead) {
-            this.setAttachments(false)
+            this.setAttachments(false, false, true)
             return
         }
 
@@ -291,7 +304,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (newAnimationToStart === this.currentAnimation) {
             let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
             let isMerge = this.currentAnimation === 'Merge'
-            this.setAttachments(isAttack, isMerge)
+            let isDeath = this.currentAnimation === 'Death'
+            this.setAttachments(isAttack, isMerge, isDeath)
             return
         }
 
@@ -337,8 +351,11 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 break;
             case 'Death':
                 this.warrior.y = 0
-                this.setAttachments(false)
+                this.setAttachments(false, false, true)
                 this.warrior.play('Death', false, true)
+                console.log('play death ', this.ripFX)
+                this.ripFX.play('animation', false, true)
+
                 this.currentAnimation = newAnimationToStart
                 break;
             default:
