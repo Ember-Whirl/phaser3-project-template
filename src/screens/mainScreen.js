@@ -80,7 +80,7 @@ export default class MainScreen extends Phaser.GameObjects.Container {
     }
 
     createClickToStart() {
-        this.startButton = new Button(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2, 'atlas-ui', 'Button.png', 'Button.png', 'Button.png', 'Start game')
+        this.startButton = new Button(this.scene, DimensionManager.instance.width / 2, DimensionManager.instance.height / 2, 'atlas-ui', 'button.png', 'button-locked.png', 'button-pressed.png', 'Start game')
         this.uiLayer.add(this.startButton)
 
         this.startButton.buttonEmitter.on('onClick', this.startGame, this);

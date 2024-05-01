@@ -5,6 +5,7 @@ import EnemySpawner from '../managers/standard-managers/enemySpawner';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 import WarriorSpawner from '../managers/standard-managers/warriorSpawner';
 import ApiAdapter from '../adapter/apiAdapter';
+import HealthBar from './UI/healthBar';
 
 export default class Warrior extends Phaser.GameObjects.Container {
     constructor(scene, x, y, spineKey, maximumHealth, movementSpeed, damagePerHit, attackSpeed, range, attachments, spawnPosition, positionToReturnTo, xScale, warriorID, warriorLevel, fromMerge) {
@@ -44,6 +45,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.createWarriorVisual(xScale)
         this.setAttachments(false)
         this.setAnimationMixes()
+        this.createHealthBar()
 
         this.createRange(this.mergeRange)
         this.showRange(false)
@@ -106,8 +108,15 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
     }
 
+    createHealthBar() {
+        this.healthBar = new HealthBar(this.scene, -5, -50, 'green')
+        this.add(this.healthBar)
+    }
+
     startDrag(pointer) {
         if (this.merging) return
+
+        this.healthBar.setVisible(false)
 
         this.dragging = true
         this.pointer = pointer
@@ -119,6 +128,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     stopDrag() {
+        this.healthBar.setVisible(true)
+
         this.positionToReturnTo = { x: this.x, y: this.y }
         this.y += this.dragOffset
 
@@ -400,8 +411,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
-        if (direction.x < 0) this.warrior.setScale(-1, 1)
-        if (direction.x > 0) this.warrior.setScale(1, 1)
+        if (direction.x < 0) {
+            this.warrior.setScale(-1, 1)
+            this.healthBar.x = -5
+            this.healthBar.y = -50
+        } 
+        if (direction.x > 0) {
+            this.warrior.setScale(1, 1)
+            this.healthBar.x = 2.5
+            this.healthBar.y = -50
+        } 
 
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()
