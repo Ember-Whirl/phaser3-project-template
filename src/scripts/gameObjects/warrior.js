@@ -66,13 +66,13 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.add(this.mergeFX)
         this.mergeFX.setVisible(false)
 
-        this.ripFX = this.scene.add.spine(0, 25, 'rip')
-        this.add(this.ripFX)
-        this.ripFX.setVisible(true)
-
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.warrior.setScale(xScale, 1)
         this.add(this.warrior)
+
+        this.ripFX = this.scene.add.spine(0, 0, 'rip')
+        this.add(this.ripFX)
+        this.ripFX.setVisible(true)
     }
 
     setAttachments(isAttack, isMerge = false, isDeath = false) {
