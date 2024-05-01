@@ -21,7 +21,7 @@ export default class WarriorSpawner extends Singleton {
         this.warriorTypesData = this.scene.cache.json.get('warriorTypes')
 
         this.maxLevel = this.warriorTypesData.warriorTypes.length
-        this.spawningLevel = 1
+        this.spawningLevel = 8
         this.maxAmountOfWarriors = 8
 
         EventManager.instance.add('update', this.update, this)

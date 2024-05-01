@@ -1,6 +1,7 @@
 import { GameObjects } from 'phaser';
 import Text from '../../text';
 import { ETextStyle } from '../../ETextStyles';
+import ProgressBar from './progressBar';
 
 export default class HealthBar extends GameObjects.Container {
     constructor(scene, x, y, color) {
@@ -14,7 +15,7 @@ export default class HealthBar extends GameObjects.Container {
     }
 
     createHealthBarImages() {
-        this.background = new GameObjects.Sprite(this.scene, 0, 0, 'atlas-ui', 'ui-healthbar-back.png')
+        this.background = new ProgressBar(this.scene, 0, 0, 'atlas-ui', 'ui-healthbar-back.png', 'ui-healthbar-warrior.png')
         this.add(this.background)
     }
 
