@@ -109,7 +109,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     createHealthBar() {
-        this.healthBar = new HealthBar(this.scene, -5, -50, 'green')
+        this.healthBar = new HealthBar(this.scene, 0, -50, 'green')
         this.add(this.healthBar)
     }
 
@@ -413,12 +413,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (direction.x < 0) {
             this.warrior.setScale(-1, 1)
-            this.healthBar.x = -5
+            this.healthBar.x = -20
             this.healthBar.y = -50
         } 
         if (direction.x > 0) {
             this.warrior.setScale(1, 1)
-            this.healthBar.x = 2.5
+            this.healthBar.x = -15
             this.healthBar.y = -50
         } 
 

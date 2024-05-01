@@ -11,11 +11,14 @@ export default class HealthBar extends GameObjects.Container {
         this.y = y
         this.color = color
 
-        this.createHealthBarImages()
+        this.createProgressBar()
     }
 
-    createHealthBarImages() {
-        this.background = new ProgressBar(this.scene, 0, 0, 'atlas-ui', 'ui-healthbar-back.png', 'ui-healthbar-warrior.png')
+    createProgressBar() {
+        if (this.color === 'green') this.fillKey = 'ui-healthbar-warrior.png'
+        if (this.color === 'red') this.fillKey = 'ui-healthbar-enemy.png'
+
+        this.background = new ProgressBar(this.scene, 0, 0, 'atlas-ui', 'ui-healthbar-back.png', this.fillKey, 'ui-healthbar-front.png')
         this.add(this.background)
     }
 
