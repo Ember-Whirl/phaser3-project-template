@@ -109,7 +109,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     createHealthBar() {
-        this.healthBar = new HealthBar(this.scene, 0, -50, 'green')
+        this.healthBar = new HealthBar(this.scene, 0, -50, 'green', this.maximumHealth)
         this.add(this.healthBar)
     }
 
@@ -411,15 +411,17 @@ export default class Warrior extends Phaser.GameObjects.Container {
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
+        // looking left
         if (direction.x < 0) {
             this.warrior.setScale(-1, 1)
-            this.healthBar.x = -20
-            this.healthBar.y = -50
+            this.healthBar.x = -25
+            this.healthBar.y = -45
         } 
+        // looking right
         if (direction.x > 0) {
             this.warrior.setScale(1, 1)
             this.healthBar.x = -15
-            this.healthBar.y = -50
+            this.healthBar.y = -45
         } 
 
         let distance = this.calculateDistance(direction)
@@ -520,6 +522,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.health -= damage
         this.checkHealth(damageDealer)
+
+        this.healthBar.updateHealth(this.health)
     }
 
     checkHealth(damageDealer) {
