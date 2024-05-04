@@ -3,6 +3,7 @@ import EventManager from '../managers/standard-managers/eventManager';
 import DimensionManager from '../managers/standard-managers/dimensionManager';
 import DamageDealtFeedback from '../userInterfaceObjects/damageDealtFeedback';
 import ApiAdapter from '../adapter/apiAdapter';
+import HealthBar from './UI/healthBar';
 
 export default class Enemy extends Phaser.GameObjects.Container {
     constructor(scene, x, y, spineKey, attachments, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
@@ -33,6 +34,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.spotted = false
 
         this.createEnemyVisual()
+        this.createHealthBar()
         this.setAttachments()
         this.setAnimationMixes()
 
@@ -49,11 +51,18 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.add(this.enemy)
     }
 
-    setAttachments() {
+    setAttachments(isDeath = false) {
         this.enemy.setAttachment('r-eye', this.attachments.rightEye)
         this.enemy.setAttachment('l-eye', this.attachments.leftEye)
         this.enemy.setAttachment('head', this.attachments.head)
         this.enemy.setAttachment('body', this.attachments.body)
+
+        if (isDeath) {
+            this.healthBar.setVisible(false)
+        }
+        if (!isDeath) {
+            this.healthBar.setVisible(true)
+        }
     }
 
     setAnimationMixes() {
@@ -65,6 +74,11 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
             }
         }
+    }
+
+    createHealthBar() {
+        this.healthBar = new HealthBar(this.scene, 0, -55, 'red', this.maximumHealth)
+        this.add(this.healthBar)
     }
 
     spawn() {
@@ -186,7 +200,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Death':
-                this.setAttachments()
+                this.setAttachments(true)
                 this.enemy.play('Death', false)
                 this.currentAnimation = newAnimationToStart
                 break;
@@ -219,8 +233,16 @@ export default class Enemy extends Phaser.GameObjects.Container {
     moveTowardsGoal() {
         let direction = this.calculateDirection(this, this.goal)
 
-        if (direction.x < 0) this.enemy.setScale(1, 1)
-        if (direction.x > 0) this.enemy.setScale(-1, 1)
+        if (direction.x < 0) {
+            this.enemy.setScale(1, 1)
+            this.healthBar.x = -25
+            this.healthBar.y = -55
+        } 
+        if (direction.x > 0) {
+            this.enemy.setScale(-1, 1)
+            this.healthBar.x = -15
+            this.healthBar.y = -55
+        } 
 
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()
@@ -308,6 +330,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
         this.health -= damage
         this.checkHealth(damageDealer)
+
+        this.healthBar.updateHealth(this.health)
     }
 
     checkHealth(damageDealer) {

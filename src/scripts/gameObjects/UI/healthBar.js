@@ -27,5 +27,4 @@ export default class HealthBar extends GameObjects.Container {
         if (newHealth < 0) newHealth = 0
         this.progressBar.setFill(newHealth)
     }
-
 }

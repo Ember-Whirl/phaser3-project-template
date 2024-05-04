@@ -77,7 +77,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.ripFX.setVisible(true)
     }
 
-    setAttachments(isAttack, isMerge = false, isDeath = false) {
+    setAttachments(isAttack, isMerge = false, isDeath = false, isDrag = false) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
         this.warrior.setAttachment('shield-select', this.attachments.shield)
         this.warrior.setAttachment('body', this.attachments.body)
@@ -109,6 +109,13 @@ export default class Warrior extends Phaser.GameObjects.Container {
             this.healthBar.setVisible(true)
             this.ripFX.setVisible(false)
         }
+ 
+        if (isDrag) {
+            this.healthBar.setVisible(false)
+        }
+        if (!isDrag) {
+            this.healthBar.setVisible(true)
+        }
     }
 
     setAnimationMixes() {
@@ -130,8 +137,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
     startDrag(pointer) {
         if (this.merging) return
 
-        this.healthBar.setVisible(false)
-
         this.dragging = true
         this.pointer = pointer
 
@@ -142,8 +147,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     stopDrag() {
-        this.healthBar.setVisible(true)
-
         this.positionToReturnTo = { x: this.x, y: this.y }
         this.y += this.dragOffset
 
@@ -317,7 +320,9 @@ export default class Warrior extends Phaser.GameObjects.Container {
             let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
             let isMerge = this.currentAnimation === 'Merge'
             let isDeath = this.currentAnimation === 'Death'
-            this.setAttachments(isAttack, isMerge, isDeath)
+            let isDrag = this.currentAnimation === 'Drag'
+
+            this.setAttachments(isAttack, isMerge, isDeath, isDrag)
             return
         }
 
@@ -357,7 +362,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 break;
             case 'Drag':
                 this.warrior.y = this.dragOffset
-                this.setAttachments(false)
+                this.setAttachments(false, false, false, true)
                 this.warrior.play('Drag', true, true)
                 this.currentAnimation = newAnimationToStart
                 break;
