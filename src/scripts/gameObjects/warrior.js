@@ -43,9 +43,9 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.enemySpotted = false
 
         this.createWarriorVisual(xScale)
+        this.createHealthBar()
         this.setAttachments(false)
         this.setAnimationMixes()
-        this.createHealthBar()
 
         this.createRange(this.mergeRange)
         this.showRange(false)
@@ -73,7 +73,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.add(this.warrior)
     }
 
-    setAttachments(isAttack, isMerge = false) {
+    setAttachments(isAttack, isMerge = false, isDeath = false) {
         this.warrior.setAttachment('weapon-select', this.attachments.weapon)
         this.warrior.setAttachment('shield-select', this.attachments.shield)
         this.warrior.setAttachment('body', this.attachments.body)
@@ -94,6 +94,13 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
         if (!isMerge) {
             this.mergeFX.setVisible(false)
+        }
+
+        if (isDeath) {
+            this.healthBar.setVisible(false)
+        }
+        if (!isDeath) {
+            this.healthBar.setVisible(true)
         }
     }
 
@@ -204,7 +211,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     update() {
         if (this.dead) {
-            this.setAttachments(false)
+            this.setAttachments(false, false, true)
             return
         }
 
@@ -348,7 +355,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 break;
             case 'Death':
                 this.warrior.y = 0
-                this.setAttachments(false)
+                this.setAttachments(false, false, true)
                 this.warrior.play('Death', false, true)
                 this.currentAnimation = newAnimationToStart
                 break;

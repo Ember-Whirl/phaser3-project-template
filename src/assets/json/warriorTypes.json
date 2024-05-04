@@ -1,6 +1,6 @@
 {
     "warriorTypes": [
-        {"spineKey": "warrior", "attachments": {"weapon": "weapon-000", "shield": null, "body": "body-000", "armFront": "arm-front-000", "rightLeg": "r-leg-000", "leftLeg": "l-leg-000", "head": "head-000"}, "maximumHealth": 10, "movementSpeed": 2, "damagePerHit": 1, "attackSpeed": 2, "range": 150},
+        {"spineKey": "warrior", "attachments": {"weapon": "weapon-000", "shield": null, "body": "body-000", "armFront": "arm-front-000", "rightLeg": "r-leg-000", "leftLeg": "l-leg-000", "head": "head-000"}, "maximumHealth": 2, "movementSpeed": 2, "damagePerHit": 1, "attackSpeed": 2, "range": 150},
         {"spineKey": "warrior", "attachments": {"weapon": "weapon-001", "shield": null, "body": "body-000", "armFront": "arm-front-000", "rightLeg": "r-leg-000", "leftLeg": "l-leg-000", "head": "head-000"}, "maximumHealth": 20, "movementSpeed": 5, "damagePerHit": 2, "attackSpeed": 1, "range": 150},
         {"spineKey": "warrior", "attachments": {"weapon": "weapon-002", "shield": null, "body": "body-001", "armFront": "arm-front-001", "rightLeg": "r-leg-001", "leftLeg": "l-leg-001", "head": "head-000"}, "maximumHealth": 1, "movementSpeed": 5, "damagePerHit": 5, "attackSpeed": 1, "range": 150},
         {"spineKey": "warrior", "attachments": {"weapon": "weapon-003", "shield": "shield-000", "body": "body-001", "armFront": "arm-front-001", "rightLeg": "r-leg-001", "leftLeg": "l-leg-001", "head": "head-000"}, "maximumHealth": 2, "movementSpeed": 5, "damagePerHit": 5, "attackSpeed": 1, "range": 150},
