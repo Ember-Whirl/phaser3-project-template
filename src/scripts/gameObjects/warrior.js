@@ -71,6 +71,10 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.warrior.setScale(xScale, 1)
         this.add(this.warrior)
+
+        this.ripFX = this.scene.add.spine(0, 0, 'rip')
+        this.add(this.ripFX)
+        this.ripFX.setVisible(true)
     }
 
     setAttachments(isAttack, isMerge = false, isDeath = false) {
@@ -98,9 +102,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         if (isDeath) {
             this.healthBar.setVisible(false)
+            this.ripFX.setVisible(true)
+
         }
         if (!isDeath) {
             this.healthBar.setVisible(true)
+            this.ripFX.setVisible(false)
         }
     }
 
@@ -309,7 +316,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (newAnimationToStart === this.currentAnimation) {
             let isAttack = this.currentAnimation === 'Attack' || this.currentAnimation === 'AttackShield'
             let isMerge = this.currentAnimation === 'Merge'
-            this.setAttachments(isAttack, isMerge)
+            let isDeath = this.currentAnimation === 'Death'
+            this.setAttachments(isAttack, isMerge, isDeath)
             return
         }
 
@@ -357,6 +365,9 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 this.warrior.y = 0
                 this.setAttachments(false, false, true)
                 this.warrior.play('Death', false, true)
+                console.log('play death ', this.ripFX)
+                this.ripFX.play('animation', false, true)
+
                 this.currentAnimation = newAnimationToStart
                 break;
             default:

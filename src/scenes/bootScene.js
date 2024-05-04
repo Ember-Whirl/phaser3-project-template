@@ -39,6 +39,9 @@ preload () {
   this.load.setPath('src/assets/spines/fx/merge')
   this.load.spine('merge', 'MergeFX.json', ['MergeFX.atlas'], true)
 
+  this.load.setPath('src/assets/spines/fx/rip')
+  this.load.spine('rip', 'Rip.json', ['Rip.atlas'], true)
+
   
   this.load.on('complete', (loader, totalComplete, totalFailed) => {
     this.onLoadComplete(loader, totalComplete, totalFailed);

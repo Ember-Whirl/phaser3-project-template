@@ -1,0 +1,20 @@
+
+Rip.png
+size: 256,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+grond
+  rotate: false
+  xy: 59, 88
+  size: 71, 42
+  orig: 71, 42
+  offset: 0, 0
+  index: -1
+rip
+  rotate: true
+  xy: 2, 96
+  size: 34, 55
+  orig: 34, 55
+  offset: 0, 0
+  index: -1
