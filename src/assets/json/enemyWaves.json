@@ -1,11 +1,35 @@
 {
     "waves": [
         {
-            "enemies": [4, 5, 6, 7],
+            "enemies": [4],
             "waveSpawnTimer": 200
         },
         {
-            "enemies": [0, 1, 2, 3],
+            "enemies": [0],
+            "waveSpawnTimer": 200
+        },
+        {
+            "enemies": [5],
+            "waveSpawnTimer": 200
+        },
+        {
+            "enemies": [1],
+            "waveSpawnTimer": 200
+        },
+        {
+            "enemies": [6],
+            "waveSpawnTimer": 200
+        },
+        {
+            "enemies": [2],
+            "waveSpawnTimer": 200
+        },
+        {
+            "enemies": [7],
+            "waveSpawnTimer": 200
+        },
+        {
+            "enemies": [3],
             "waveSpawnTimer": 200
         }
     ]
