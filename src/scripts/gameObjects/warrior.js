@@ -133,7 +133,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
     }
 
     createHealthBar() {
-        this.healthBar = new HealthBar(this.scene, 0, -50, 'green', this.maximumHealth)
+        let x = 0
+
+        if (this.warrior.scaleX < 0) {
+            x = -25
+        }
+        if (this.warrior.scaleX > 0) {
+            x = -15
+        }
+
+        this.healthBar = new HealthBar(this.scene, x, -50, 'green', this.maximumHealth)
         this.add(this.healthBar)
     }
 
@@ -178,7 +187,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
             this.mergeAvailable.setVisible(true)
             this.warrior.setAttachment('shadow', null)
             this.mergeAvailable.play('animation', true, true)
-        } 
+        }
     }
 
     stopShowMergeAvailable() {
