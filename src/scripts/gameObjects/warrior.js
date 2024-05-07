@@ -59,6 +59,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         //this.showRange()
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('gameEnd', this.killWarrior, this)
+        EventManager.instance.add('warrior:showAvailableMerges', this.showMergeAvailable, this)
+        EventManager.instance.add('warrior:stopShowAvailableMerges', this.stopShowMergeAvailable, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
@@ -67,6 +69,10 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.mergeFX = this.scene.add.spine(0, 25, 'merge')
         this.add(this.mergeFX)
         this.mergeFX.setVisible(false)
+
+        this.mergeAvailable = this.scene.add.spine(0, 0, 'mergeAvailable')
+        this.add(this.mergeAvailable)
+        this.mergeAvailable.setVisible(false)
 
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.warrior.setScale(xScale, 1)
@@ -86,7 +92,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.warrior.setAttachment('l-leg', this.attachments.leftLeg)
         this.warrior.setAttachment('head', this.attachments.head)
 
-
         if (this.attachments.shield === null) this.attackAnimation = 'Attack'
         if (this.attachments.shield !== null) this.attackAnimation = 'AttackShield'
 
@@ -103,13 +108,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
         if (isDeath) {
             this.healthBar.setVisible(false)
             this.ripFX.setVisible(true)
-
         }
         if (!isDeath) {
             this.healthBar.setVisible(true)
             this.ripFX.setVisible(false)
         }
- 
+
         if (isDrag) {
             this.healthBar.setVisible(false)
         }
@@ -124,7 +128,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
         for (let i = 0; i < animations.length; i++) {
             for (let j = 0; j < animations.length; j++) {
                 this.warrior.setMix(animations[i].name, animations[j].name, 0.125)
-
             }
         }
     }
@@ -140,6 +143,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.dragging = true
         this.pointer = pointer
 
+        EventManager.instance.dispatch('warrior:showAvailableMerges', this.warriorLevel)
+
         this.removeSpottedEnemy()
 
         this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
@@ -151,6 +156,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.y += this.dragOffset
 
         this.checkMerge()
+
+        EventManager.instance.dispatch('warrior:stopShowAvailableMerges')
 
         this.dragging = false
         this.pointer = null
@@ -164,6 +171,19 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.warrior.setVisible(true)
         this.setToStartPosition()
         this.goTowardsGatherPoint()
+    }
+
+    showMergeAvailable(level) {
+        if (this.warriorLevel === level && !this.dragging) {
+            this.mergeAvailable.setVisible(true)
+            this.warrior.setAttachment('shadow', null)
+            this.mergeAvailable.play('animation', true, true)
+        } 
+    }
+
+    stopShowMergeAvailable() {
+        this.mergeAvailable.setVisible(false)
+        this.warrior.setAttachment('shadow', 'shadow')
     }
 
     goTowardsGatherPoint() {
@@ -439,13 +459,13 @@ export default class Warrior extends Phaser.GameObjects.Container {
             this.warrior.setScale(-1, 1)
             this.healthBar.x = -25
             this.healthBar.y = -45
-        } 
+        }
         // looking right
         if (direction.x > 0) {
             this.warrior.setScale(1, 1)
             this.healthBar.x = -15
             this.healthBar.y = -45
-        } 
+        }
 
         let distance = this.calculateDistance(direction)
         if (this.goalReached(distance)) this.onGoalReached()
@@ -470,7 +490,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     goalReached(distance) {
 
-        
+
         if (this.goal === this.positionToReturnTo) {
             return distance <= 5
         }
@@ -558,6 +578,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     removeAllEvents() {
         EventManager.instance.remove('update', this.update, this)
+        EventManager.instance.remove('warrior:showAvailableMerges', this.showMergeAvailable, this)
+        EventManager.instance.remove('warrior:stopShowAvailableMerges', this.stopShowMergeAvailable, this)
         EventManager.instance.remove('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.remove('LevelManager:winLevel', this.onLevelEnd, this)
         this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
@@ -625,5 +647,5 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.spot2.setVisible(show)
         this.spot3.setVisible(show)
     }
-    
+
 }
