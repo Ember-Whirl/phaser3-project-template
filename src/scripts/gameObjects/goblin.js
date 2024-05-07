@@ -1,6 +1,6 @@
 import Enemy from './enemy';
 
-export default class Slime extends Enemy {
+export default class Goblin extends Enemy {
     constructor(scene, x, y, spineKey, attachments, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID) {
         super(scene, x, y, spineKey, attachments, maximumHealth, movementSpeed, damagePerHit, attackSpeed, goal, enemyID)
 
@@ -14,10 +14,8 @@ export default class Slime extends Enemy {
     }
 
     setAttachments(isDeath = false) {
-        this.spine.setAttachment('r-eye', this.attachments.rightEye)
-        this.spine.setAttachment('l-eye', this.attachments.leftEye)
         this.spine.setAttachment('head', this.attachments.head)
-        this.spine.setAttachment('body', this.attachments.body)
+        this.spine.setAttachment('weapon-select', this.attachments.weapon)
 
         if (isDeath) {
             this.healthBar.setVisible(false)

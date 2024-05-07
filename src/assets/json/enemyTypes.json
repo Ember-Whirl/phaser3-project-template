@@ -4,7 +4,9 @@
         {"spineKey": "slime", "attachments": {"rightEye": "r-eye", "leftEye": "l-eye", "head": "head-001", "body": "body-001"}, "maximumHealth": 2, "movementSpeed": 2, "damage": 1, "attackSpeed": 2},
         {"spineKey": "slime", "attachments": {"rightEye": "r-eye", "leftEye": "l-eye", "head": "head-002", "body": "body-002"}, "maximumHealth": 2, "movementSpeed": 3, "damage": 4, "attackSpeed": 1},
         {"spineKey": "slime", "attachments": {"rightEye": "r-eye", "leftEye": "l-eye", "head": "head-003", "body": "body-003"}, "maximumHealth": 3, "movementSpeed": 4, "damage": 5, "attackSpeed": 1},
-        {"spineKey": "goblin", "attachments": {}, "maximumHealth": 3, "movementSpeed": 4, "damage": 5, "attackSpeed": 1}
-
+        {"spineKey": "goblin", "attachments": {"head": "head-000", "weapon": "weapon-000"}, "maximumHealth": 3, "movementSpeed": 2, "damage": 1, "attackSpeed": 1},
+        {"spineKey": "goblin", "attachments": {"head": "head-001", "weapon": "weapon-000"}, "maximumHealth": 5, "movementSpeed": 2, "damage": 1, "attackSpeed": 1},
+        {"spineKey": "goblin", "attachments": {"head": "head-000", "weapon": "weapon-001"}, "maximumHealth": 3, "movementSpeed": 2, "damage": 2, "attackSpeed": 1},
+        {"spineKey": "goblin", "attachments": {"head": "head-001", "weapon": "weapon-001"}, "maximumHealth": 5, "movementSpeed": 2, "damage": 2, "attackSpeed": 1}
     ]
 }
