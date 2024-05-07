@@ -23,8 +23,6 @@ export default class DamageDealtFeedback extends Phaser.GameObjects.Container {
 
         this.damageText = new Text(this.scene, 0, 0, this.damageAmount.toString(), textStyle)
         this.add(this.damageText)
-
-        console.log(this.damageText, this.damageAmount.toString())
     }
 
     createTweens() {
@@ -33,8 +31,6 @@ export default class DamageDealtFeedback extends Phaser.GameObjects.Container {
         let minPosition = -100
         let maxPosition = 100
         let targetX = Math.random() * (maxPosition - minPosition) + minPosition
-
-        console.log(this.damageText)
 
         this.positionXTween = this.scene.tweens.add({
             targets: [this.damageText],

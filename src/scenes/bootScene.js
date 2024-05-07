@@ -42,6 +42,9 @@ preload () {
   this.load.setPath('src/assets/spines/fx/rip')
   this.load.spine('rip', 'Rip.json', ['Rip.atlas'], true)
 
+  this.load.setPath('src/assets/spines/goblin')
+  this.load.spine('goblin', 'Goblin.json', ['Goblin.atlas'], true)
+
   
   this.load.on('complete', (loader, totalComplete, totalFailed) => {
     this.onLoadComplete(loader, totalComplete, totalFailed);

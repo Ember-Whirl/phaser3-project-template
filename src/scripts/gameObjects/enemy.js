@@ -35,8 +35,6 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
         this.createEnemyVisual()
         this.createHealthBar()
-        this.setAttachments()
-        this.setAnimationMixes()
 
         this.spawn()
 
@@ -47,33 +45,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
     }
 
     createEnemyVisual() {
-        this.enemy = this.scene.add.spine(0, 0, this.spineKey)
-        this.add(this.enemy)
-    }
-
-    setAttachments(isDeath = false) {
-        this.enemy.setAttachment('r-eye', this.attachments.rightEye)
-        this.enemy.setAttachment('l-eye', this.attachments.leftEye)
-        this.enemy.setAttachment('head', this.attachments.head)
-        this.enemy.setAttachment('body', this.attachments.body)
-
-        if (isDeath) {
-            this.healthBar.setVisible(false)
-        }
-        if (!isDeath) {
-            this.healthBar.setVisible(true)
-        }
-    }
-
-    setAnimationMixes() {
-        const animations = this.enemy.skeletonData.animations
-
-        for (let i = 0; i < animations.length; i++) {
-            for (let j = 0; j < animations.length; j++) {
-                this.enemy.setMix(animations[i].name, animations[j].name, 0.05)
-
-            }
-        }
+        this.spine = this.scene.add.spine(0, 0, this.spineKey)
+        this.add(this.spine)
     }
 
     createHealthBar() {
@@ -83,7 +56,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
     spawn() {
         this.spawned = true
-        this.enemy.setVisible(true)
+        this.spine.setVisible(true)
         this.goTowardsGoal()
     }
 
@@ -101,7 +74,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
     generateRandomPosition() {
         const rectangleWidth = 1280; // adjust as needed
         const rectangleHeight = 720; // adjust as needed
-        const offset = this.enemy.width > this.enemy.height ? this.enemy.width + 25 : this.enemy.height + 25
+        const offset = this.spine.width > this.spine.height ? this.spine.width + 25 : this.spine.height + 25
 
         // Calculate the perimeter of the rectangle
         const perimeter = 2 * (rectangleWidth + rectangleHeight);
@@ -147,9 +120,6 @@ export default class Enemy extends Phaser.GameObjects.Container {
             return
         }
 
-        // this.setAttachments()
-
-
         if (this.spawned && !this.dealingDamage && !this.reachedUltimateGoal) {
             this.animationSwitcher('Run')
             this.moveTowardsGoal()
@@ -165,8 +135,6 @@ export default class Enemy extends Phaser.GameObjects.Container {
                 this.attackSpeedCounter = 0
             }
         }
-
-
 
         if (!this.reachedUltimateGoal && this.dealingDamage && this.warriorToAttack) {
             this.attackSpeedCounter++
@@ -191,17 +159,17 @@ export default class Enemy extends Phaser.GameObjects.Container {
         switch (newAnimationToStart) {
             case 'Run':
                 this.setAttachments()
-                this.enemy.play('Run', true)
+                this.spine.play('Run', true)
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Attack':
                 this.setAttachments()
-                this.enemy.play('Attack', true)
+                this.spine.play('Attack', true)
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Death':
                 this.setAttachments(true)
-                this.enemy.play('Death', false)
+                this.spine.play('Death', false)
                 this.currentAnimation = newAnimationToStart
                 break;
             default:
@@ -234,12 +202,12 @@ export default class Enemy extends Phaser.GameObjects.Container {
         let direction = this.calculateDirection(this, this.goal)
 
         if (direction.x < 0) {
-            this.enemy.setScale(1, 1)
+            this.spine.setScale(1, 1)
             this.healthBar.x = -25
             this.healthBar.y = -55
         } 
         if (direction.x > 0) {
-            this.enemy.setScale(-1, 1)
+            this.spine.setScale(-1, 1)
             this.healthBar.x = -15
             this.healthBar.y = -55
         } 
@@ -367,7 +335,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         this.dead = true
         if (playAnimation) {
             this.animationSwitcher('Death')
-            await ApiAdapter.instance.awaitForTime(this.enemy.findAnimation('Death').duration * 1000)
+            await ApiAdapter.instance.awaitForTime(this.spine.findAnimation('Death').duration * 1000)
         }
         this.destroyEnemy()
     }

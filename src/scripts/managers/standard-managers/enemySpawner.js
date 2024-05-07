@@ -1,4 +1,4 @@
-import Enemy from "../../gameObjects/enemy";
+import Slime from "../../gameObjects/slime";
 import Singleton from "../../singleton";
 import EventManager from "./eventManager";
 
@@ -72,7 +72,7 @@ export default class EnemySpawner extends Singleton {
     spawnEnemy(enemyType) {
         if (!this.gameInProgress) return
 
-        let enemy = new Enemy(this.scene, 0, 0, enemyType.spineKey, enemyType.attachments, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
+        let enemy = new Slime(this.scene, 0, 0, enemyType.spineKey, enemyType.attachments, enemyType.maximumHealth, enemyType.movementSpeed, enemyType.damage, enemyType.attackSpeed, this.scene.mainScreen.castle, this.nextEnemyID)
         this.scene.add.existing(enemy)
 
         this.enemyCount++
