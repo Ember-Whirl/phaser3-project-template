@@ -17,6 +17,9 @@ export default class Goblin extends Enemy {
         this.spine.setAttachment('head', this.attachments.head)
         this.spine.setAttachment('weapon-select', this.attachments.weapon)
 
+        if (this.attachments.weapon === 'weapon-001') this.runAnimation = 'Run'
+        if (this.attachments.weapon === 'weapon-000') this.runAnimation = 'Run2'
+
         if (isDeath) {
             this.healthBar.setVisible(false)
         }

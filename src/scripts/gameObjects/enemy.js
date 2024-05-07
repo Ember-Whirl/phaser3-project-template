@@ -33,6 +33,8 @@ export default class Enemy extends Phaser.GameObjects.Container {
 
         this.spotted = false
 
+        this.runAnimation = 'Run'
+
         this.createEnemyVisual()
         this.createHealthBar()
 
@@ -159,7 +161,7 @@ export default class Enemy extends Phaser.GameObjects.Container {
         switch (newAnimationToStart) {
             case 'Run':
                 this.setAttachments()
-                this.spine.play('Run', true)
+                this.spine.play(this.runAnimation, true)
                 this.currentAnimation = newAnimationToStart
                 break;
             case 'Attack':
