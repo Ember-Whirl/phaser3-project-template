@@ -42,6 +42,9 @@ preload () {
   this.load.setPath('src/assets/spines/fx/mergeAvailable')
   this.load.spine('mergeAvailable', 'Merge-Available.json', ['Merge-Available.atlas'], true)
 
+  this.load.setPath('src/assets/spines/fx/mergeHover')
+  this.load.spine('mergeHover', 'Merge-Hover.json', ['Merge-Hover.atlas'], true)
+
   this.load.setPath('src/assets/spines/fx/rip')
   this.load.spine('rip', 'Rip.json', ['Rip.atlas'], true)
 

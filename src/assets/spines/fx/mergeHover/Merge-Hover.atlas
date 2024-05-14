@@ -1,0 +1,83 @@
+
+Merge-Hover.png
+size: 256,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arrow-up
+  rotate: false
+  xy: 119, 138
+  size: 47, 33
+  orig: 47, 33
+  offset: 0, 0
+  index: -1
+arrow-down
+  rotate: false
+  xy: 119, 138
+  size: 47, 33
+  orig: 47, 33
+  offset: 0, 0
+  index: -1
+circle-1
+  rotate: false
+  xy: 147, 133
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+circle-2
+  rotate: false
+  xy: 119, 131
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
+circle-3
+  rotate: false
+  xy: 126, 131
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
+circle-4
+  rotate: false
+  xy: 152, 133
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+circle-5
+  rotate: false
+  xy: 133, 131
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
+circle-6
+  rotate: false
+  xy: 140, 131
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
+circle-back
+  rotate: false
+  xy: 2, 56
+  size: 115, 115
+  orig: 115, 115
+  offset: 0, 0
+  index: -1
+green-circle
+  rotate: false
+  xy: 2, 2
+  size: 90, 52
+  orig: 90, 52
+  offset: 0, 0
+  index: -1
+white-circle
+  rotate: false
+  xy: 94, 19
+  size: 64, 35
+  orig: 64, 35
+  offset: 0, 0
+  index: -1
