@@ -59,8 +59,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
         //this.showRange()
         EventManager.instance.add('update', this.update, this)
         EventManager.instance.add('gameEnd', this.killWarrior, this)
-        EventManager.instance.add('warrior:showAvailableMerges', this.showMergeAvailable, this)
-        EventManager.instance.add('warrior:stopShowAvailableMerges', this.stopShowMergeAvailable, this)
         EventManager.instance.add('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.add('LevelManager:winLevel', this.onLevelEnd, this)
     }
@@ -73,6 +71,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.mergeAvailable = this.scene.add.spine(0, 0, 'mergeAvailable')
         this.add(this.mergeAvailable)
         this.mergeAvailable.setVisible(false)
+        this.mergeAvailable.play('animation', true, true)
+
+        this.mergeHover = this.scene.add.spine(0, 0, 'mergeHover')
+        this.add(this.mergeHover)
+        this.mergeHover.setVisible(false)
+        this.mergeHover.play('animation', true, true)
 
         this.warrior = this.scene.add.spine(0, 0, this.spineKey)
         this.warrior.setScale(xScale, 1)
@@ -152,8 +156,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.dragging = true
         this.pointer = pointer
 
-        EventManager.instance.dispatch('warrior:showAvailableMerges', this.warriorLevel)
-
         this.removeSpottedEnemy()
 
         this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
@@ -166,7 +168,12 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
         this.checkMerge()
 
-        EventManager.instance.dispatch('warrior:stopShowAvailableMerges')
+        for (let i = 0; i < WarriorSpawner.instance.spawnedWarriors.length; i++) {
+            const warrior = WarriorSpawner.instance.spawnedWarriors[i]
+            if (this.warriorID === warrior.warriorID) continue
+
+            warrior.fxAnimationSwitcher(null)
+        }
 
         this.dragging = false
         this.pointer = null
@@ -180,19 +187,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
         this.warrior.setVisible(true)
         this.setToStartPosition()
         this.goTowardsGatherPoint()
-    }
-
-    showMergeAvailable(level) {
-        if (this.warriorLevel === level && !this.dragging) {
-            this.mergeAvailable.setVisible(true)
-            this.warrior.setAttachment('shadow', null)
-            this.mergeAvailable.play('animation', true, true)
-        }
-    }
-
-    stopShowMergeAvailable() {
-        this.mergeAvailable.setVisible(false)
-        this.warrior.setAttachment('shadow', 'shadow')
     }
 
     goTowardsGatherPoint() {
@@ -273,6 +267,8 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 const warrior = WarriorSpawner.instance.spawnedWarriors[i]
 
                 if (this.warriorID === warrior.warriorID) continue
+
+                if (this.warriorLevel === warrior.warriorLevel) warrior.fxAnimationSwitcher('mergeAvailable')
 
                 if (this.isInMergeRange(warrior)) {
                     if (!this.warriorToMergeWith && this.warriorLevel === warrior.warriorLevel || (this.warriorToMergeWith && this.getDistance(this, this.warriorToMergeWith) > this.getDistance(this, warrior)) && this.warriorLevel === warrior.warriorLevel) {
@@ -406,6 +402,28 @@ export default class Warrior extends Phaser.GameObjects.Container {
                 break;
             default:
                 console.warn('animation does not exist ', newAnimationToStart)
+                break;
+        }
+    }
+
+    fxAnimationSwitcher(newAnimationToStart) {
+
+        if (newAnimationToStart === this.currentFXanimation) {
+            return
+        }
+
+        switch (newAnimationToStart) {
+            case 'mergeAvailable':
+                this.mergeAvailable.setVisible(true)
+                this.warrior.setAttachment('shadow', null)
+                this.mergeAvailable.play('animation', true, true)
+                break
+            case null:
+                this.mergeAvailable.setVisible(false)
+
+                this.warrior.setAttachment('shadow', 'shadow')
+            default:
+                console.warn('FX animation does not exist ', newAnimationToStart)
                 break;
         }
     }
@@ -587,8 +605,6 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
     removeAllEvents() {
         EventManager.instance.remove('update', this.update, this)
-        EventManager.instance.remove('warrior:showAvailableMerges', this.showMergeAvailable, this)
-        EventManager.instance.remove('warrior:stopShowAvailableMerges', this.stopShowMergeAvailable, this)
         EventManager.instance.remove('LevelManager:lostLevel', this.onLevelEnd, this)
         EventManager.instance.remove('LevelManager:winLevel', this.onLevelEnd, this)
         this.warrior.off(Phaser.Input.Events.POINTER_DOWN, this.startDrag, this)
