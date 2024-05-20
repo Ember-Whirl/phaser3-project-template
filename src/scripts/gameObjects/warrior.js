@@ -172,7 +172,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
             const warrior = WarriorSpawner.instance.spawnedWarriors[i]
             if (this.warriorID === warrior.warriorID) continue
 
-            warrior.fxAnimationSwitcher(null)
+            warrior.secondaryAnimationSwitcher(null)
         }
 
         this.dragging = false
@@ -268,19 +268,16 @@ export default class Warrior extends Phaser.GameObjects.Container {
 
                 if (this.warriorID === warrior.warriorID) continue
 
-                if (this.warriorLevel === warrior.warriorLevel) warrior.fxAnimationSwitcher('mergeAvailable')
+                if (this.warriorLevel === warrior.warriorLevel) warrior.secondaryAnimationSwitcher('mergeAvailable')
 
                 if (this.isInMergeRange(warrior)) {
                     if (!this.warriorToMergeWith && this.warriorLevel === warrior.warriorLevel || (this.warriorToMergeWith && this.getDistance(this, this.warriorToMergeWith) > this.getDistance(this, warrior)) && this.warriorLevel === warrior.warriorLevel) {
                         this.warriorToMergeWith = warrior
-                        //debug
-                        this.showRange(true)
                     }
                 }
             }
 
-            //debug
-            if (this.warriorToMergeWith === null) this.showRange(false)
+            if (this.warriorToMergeWith !== null) this.warriorToMergeWith.secondaryAnimationSwitcher('mergeHover')
 
         }
 
@@ -406,7 +403,7 @@ export default class Warrior extends Phaser.GameObjects.Container {
         }
     }
 
-    fxAnimationSwitcher(newAnimationToStart) {
+    secondaryAnimationSwitcher(newAnimationToStart) {
 
         if (newAnimationToStart === this.currentFXanimation) {
             return
@@ -415,12 +412,18 @@ export default class Warrior extends Phaser.GameObjects.Container {
         switch (newAnimationToStart) {
             case 'mergeAvailable':
                 this.mergeAvailable.setVisible(true)
+                this.mergeHover.setVisible(false)
                 this.warrior.setAttachment('shadow', null)
                 this.mergeAvailable.play('animation', true, true)
                 break
+            case 'mergeHover':
+                this.mergeHover.setVisible(true)
+                this.mergeAvailable.setVisible(false)
+                this.warrior.setAttachment('shadow', null)
+                this.mergeHover.play('animation', true, true)
+                break
             case null:
                 this.mergeAvailable.setVisible(false)
-
                 this.warrior.setAttachment('shadow', 'shadow')
             default:
                 console.warn('FX animation does not exist ', newAnimationToStart)
