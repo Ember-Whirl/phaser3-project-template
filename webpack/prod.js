@@ -1,11 +1,14 @@
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const path = require("path");
+const webpack = require("webpack");
 const base = require("./base");
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = merge(base, {
   mode: "production",
   output: {
+    path: path.resolve(__dirname, "../dist"),
     filename: "bundle.min.js"
   },
   devtool: false,
@@ -17,10 +20,11 @@ module.exports = merge(base, {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          output: {
+          format: {
             comments: false
           }
-        }
+        },
+        extractComments: false
       })
     ]
   },
@@ -31,5 +35,13 @@ module.exports = merge(base, {
       CANVAS_RENDERER: JSON.stringify(true),
       WEBGL_RENDERER: JSON.stringify(true)
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "../src/assets"),
+          to: path.resolve(__dirname, "../dist/src/assets")
+        }
+      ]
+    })
   ]
 });
