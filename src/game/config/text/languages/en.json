@@ -1,0 +1,61 @@
+{
+  "menu": {
+    "title": "My Awesome Game",
+    "play": "Play",
+    "settings": "Settings",
+    "quit": "Quit",
+    "continue": "Continue",
+    "newGame": "New Game",
+    "credits": "Credits",
+    "back": "Back"
+  },
+  "game": {
+    "score": "Score: {0}",
+    "highScore": "High Score: {0}",
+    "level": "Level {0}",
+    "lives": "Lives: {0}",
+    "health": "Health: {0}%",
+    "paused": "Paused",
+    "resume": "Resume",
+    "restart": "Restart",
+    "quitToMenu": "Quit to Menu",
+    "levelComplete": "Level Complete!",
+    "gameOver": "Game Over",
+    "victory": "Victory!",
+    "timeRemaining": "Time: {0}",
+    "combo": "Combo: {0}x"
+  },
+  "ui": {
+    "loading": "Loading...",
+    "pressStart": "Press to Start",
+    "pressAnyKey": "Press any key",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "close": "Close"
+  },
+  "settings": {
+    "title": "Settings",
+    "audio": "Audio",
+    "music": "Music",
+    "soundEffects": "Sound Effects",
+    "volume": "Volume",
+    "language": "Language",
+    "difficulty": "Difficulty",
+    "easy": "Easy",
+    "normal": "Normal",
+    "hard": "Hard",
+    "controls": "Controls",
+    "graphics": "Graphics",
+    "fullscreen": "Fullscreen"
+  },
+  "tutorial": {
+    "welcome": "Welcome to the tutorial!",
+    "movement": "Use arrow keys to move",
+    "jump": "Press Space to jump",
+    "attack": "Press X to attack",
+    "complete": "Tutorial Complete!"
+  }
+}

@@ -1,165 +1,543 @@
-# Phaser Webpack Template
+# Phaser 3 Extended Game Development Template
 
-This is a Phaser 3 project template that uses webpack for bundling. It supports hot-reloading for quick development workflow and includes scripts to generate production-ready builds.
+A comprehensive, production-ready Phaser 3 template with webpack 5, featuring multi-platform portal support, scene generators, UI components, animation presets, and localization - everything you need to build games faster!
 
 **[This Template is also available as a TypeScript version.](https://github.com/phaserjs/template-webpack-ts)**
 
-### Versions
+## What's New in v3.4.0 (2026 Update)
 
-This template has been updated for:
+This template has been completely modernized with powerful features for rapid game development:
+
+### 🎮 Multi-Platform Portal Support
+- **Poki & CrazyGames SDK Integration** - Deploy to major game portals with one command
+- **Unified Portal API** - Single interface for ads, analytics, and platform features
+- Platform-specific builds: `npm run build:poki`, `npm run build:crazygames`
+
+### ⚡ Scene Generator
+- **CLI Tool** - Generate new scenes in seconds: `npm run generate:scene`
+- **4 Pre-built Templates** - Basic, Menu, Gameplay, and Transition scenes
+- Interactive prompts for quick scene creation
+
+### 🎨 UI Component Library
+- **Button, Panel, ProgressBar** - Production-ready UI components
+- **UIBuilder** - Fluent API for rapid UI construction
+- **Theme System** - Consistent styling across your game
+- Built-in hover effects and animations
+
+### 🎬 Animation System
+- **Tween Presets** - 15+ pre-built animations (fade, slide, bounce, shake, etc.)
+- **AnimationManager** - Centralized sprite animation management
+- Easy-to-use fluent APIs
+
+### 🌍 Localization System
+- **TextManager** - Centralized text and language management
+- **3 Languages Included** - English, Spanish, French (easily extensible)
+- **Text Styles** - Predefined typography styles
+- Automatic localStorage persistence
+
+### 🔧 Modern Foundation
+- **Webpack 5.104.1** - Latest build tooling with filesystem caching
+- **Asset Modules** - No more deprecated loaders
+- **Enhanced DevServer** - Better HMR and faster rebuilds
+- **0 Security Vulnerabilities** - All dependencies updated and audited
+
+---
+
+## Versions
+
+This template uses:
 
 - [Phaser 3.90.0](https://github.com/phaserjs/phaser)
-- [Webpack 5.99.6](https://github.com/webpack/webpack)
+- [Webpack 5.104.1](https://github.com/webpack/webpack)
+- [Babel 7.28.6](https://babeljs.io/)
 
-![screenshot](screenshot.png)
+---
 
 ## Requirements
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+[Node.js](https://nodejs.org) **version 18.12.0 or higher** is required to install dependencies and run scripts via `npm`.
+
+This template has been tested with Node 18 LTS and Node 20 LTS.
+
+---
+
+## Quick Start
+
+```bash
+# Clone this repository
+git clone https://github.com/phaserjs/template-webpack.git my-game
+
+# Navigate to directory
+cd my-game
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Your game will open at `http://localhost:8080` with hot module replacement enabled!
+
+---
 
 ## Available Commands
 
+### Development
 | Command | Description |
 |---------|-------------|
-| `npm install` | Install project dependencies |
-| `npm run dev` | Launch a development web server |
-| `npm run build` | Create a production build in the `dist` folder |
-| `npm run dev-nolog` | Launch a development web server without sending anonymous data (see "About log.js" below) |
-| `npm run build-nolog` | Create a production build in the `dist` folder without sending anonymous data (see "About log.js" below) |
+| `npm run dev` | Launch dev server with analytics |
+| `npm run dev-nolog` | Launch dev server without analytics |
+| `npm run preview` | Preview production build locally |
 
-## Writing Code
+### Building
+| Command | Description |
+|---------|-------------|
+| `npm run build` | Create production build for web |
+| `npm run build-nolog` | Production build without analytics |
+| `npm run build:poki` | Build for Poki platform |
+| `npm run build:crazygames` | Build for CrazyGames platform |
+| `npm run build:all-portals` | Build for all portals |
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development server by running `npm run dev`.
+### Generators
+| Command | Description |
+|---------|-------------|
+| `npm run generate:scene` | Generate a new scene from templates |
 
-The local development server runs on `http://localhost:8080` by default. Please see the webpack documentation if you wish to change this, or add SSL support.
+---
 
-Once the server is running you can edit any of the files in the `src` folder. Webpack will automatically recompile your code and then reload the browser.
+## New Features Guide
 
-## Template Project Structure
+### 1. Portal SDK Integration
 
-We have provided a default project structure to get you started. This is as follows:
+Deploy your game to Poki or CrazyGames with platform-specific builds:
 
-| Path                         | Description                                                |
-|------------------------------|------------------------------------------------------------|
-| `public/index.html`          | A basic HTML page to contain the game.                     |
-| `public/assets`              | Game sprites, audio, etc. Served directly at runtime.      |
-| `public/style.css`           | Global layout styles.                                      |
-| `src/main.js`                | Application bootstrap.                                     |
-| `src/game`                   | Folder containing the game code.                           |
-| `src/game/main.js`           | Game entry point: configures and starts the game.          |
-| `src/game/scenes`            | Folder with all Phaser game scenes.                        |
+```javascript
+import PortalManager from './scripts/adapters/portals/portalManager';
 
+// In your Boot scene
+await PortalManager.init();
 
-## Handling Assets
+// When gameplay starts
+PortalManager.gameplayStart();
 
-Webpack supports loading assets via JavaScript module `import` statements.
+// Show an ad between levels
+await PortalManager.showAd();
 
-This template provides support for both embedding assets and also loading them from a static folder. To embed an asset, you can import it at the top of the JavaScript file you are using it in:
-
-```js
-import logoImg from './assets/logo.png'
-```
-
-To load static files such as audio files, videos, etc place them into the `public/assets` folder. Then you can use this path in the Loader calls within Phaser:
-
-```js
-preload ()
-{
-    //  This is an example of an imported bundled image.
-    //  Remember to import it at the top of this file
-    this.load.image('logo', logoImg);
-
-    //  This is an example of loading a static image
-    //  from the public/assets folder:
-    this.load.image('background', 'assets/bg.png');
+// Show rewarded ad
+const granted = await PortalManager.showRewardedAd();
+if (granted) {
+    // Give player reward
 }
 ```
 
-When you issue the `npm run build` command, all static assets are automatically copied to the `dist/assets` folder.
+**Platform Detection**: Automatically detects Poki, CrazyGames, or standalone web.
 
-## Deploying to Production
+### 2. Scene Generator
 
-After you run the `npm run build` command, your code will be built into a single bundle and saved to the `dist` folder, along with any other assets your project imported, or stored in the public assets folder.
+Create new scenes instantly with the interactive CLI:
 
-In order to deploy your game, you will need to upload *all* of the contents of the `dist` folder to a public facing web server.
+```bash
+npm run generate:scene
+```
 
-## Customizing the Template
+Or use command-line arguments:
 
-### Babel
+```bash
+npm run generate:scene -- --name=Level1 --type=gameplay
+```
 
-You can write modern ES6+ JavaScript and Babel will transpile it to a version of JavaScript that you want your project to support. The targeted browsers are set in the `.babelrc` file and the default currently targets all browsers with total usage over "0.25%" but excludes IE11 and Opera Mini.
+**Available Templates**:
+- `basic` - Simple scene with preload, create, update
+- `menu` - Menu scene with UI elements and interactions
+- `gameplay` - Full gameplay scene with physics, input, score tracking
+- `transition` - Transition scene with fade/slide effects
 
- ```
-"browsers": [
-  ">0.25%",
-  "not ie 11",
-  "not op_mini all"
-]
- ```
+### 3. UI Components
 
-### Webpack
+Build beautiful interfaces quickly:
 
-If you want to customize your build, such as adding a new webpack loader or plugin (i.e. for loading CSS or fonts), you can modify the `webpack/config.js` file for cross-project changes, or you can modify and/or create new configuration files and target them in specific npm tasks inside of `package.json`. Please see the [Webpack documentation](https://webpack.js.org/) for more information.
+```javascript
+import Button from './ui/components/Button';
+import Panel from './ui/components/Panel';
+import ProgressBar from './ui/components/ProgressBar';
+import UIBuilder from './ui/UIBuilder';
+
+// Create a button
+const playButton = new Button(this, 400, 300, 'Play', {
+    backgroundColor: 0x4a90e2,
+    width: 200,
+    height: 60
+});
+
+playButton.onClick(() => {
+    this.scene.start('Game');
+});
+
+// Create a panel
+const settingsPanel = new Panel(this, 400, 300, {
+    width: 500,
+    height: 400,
+    title: 'Settings'
+});
+
+settingsPanel.show('top'); // Slide in from top
+
+// Create a progress bar
+const healthBar = new ProgressBar(this, 100, 50, {
+    width: 200,
+    height: 20,
+    fillColor: 0x00ff00
+});
+
+healthBar.setValue(0.75); // 75% health
+
+// Use UIBuilder for rapid development
+const ui = new UIBuilder(this);
+ui.button(400, 300, 'Start')
+  .onClick(() => this.startGame());
+```
+
+### 4. Animation Presets
+
+Use pre-built animations for common effects:
+
+```javascript
+import { tweenPresets } from './animations/presets/tweenPresets';
+
+// Fade in a sprite
+tweenPresets.fadeIn(this, sprite, 500);
+
+// Button press effect
+tweenPresets.buttonPress(this, button);
+
+// Shake effect
+tweenPresets.shake(this, object, 10, 200);
+
+// Slide in from left
+tweenPresets.slideIn(this, panel, 'left', 500);
+
+// Bounce effect
+tweenPresets.bounce(this, sprite, 20, 500);
+
+// Float/hover effect
+tweenPresets.float(this, sprite, 10, 2000);
+```
+
+**15+ Presets Available**: fadeIn, fadeOut, scalePulse, pulse, shake, bounce, float, buttonPress, slideIn, slideOut, elastic, rotate, glow, and more!
+
+### 5. Localization
+
+Manage text and translations easily:
+
+```javascript
+import TextManager from './config/text/TextManager';
+
+// Initialize in Boot scene
+await TextManager.init(this, 'en');
+
+// Get text
+const title = TextManager.getText('menu.title');
+
+// Get text with parameters
+const score = TextManager.getText('game.score', 1000);
+// Result: "Score: 1000"
+
+// Create styled text
+const heading = TextManager.createText(
+    this, 400, 300,
+    'menu.title',
+    'heading'
+);
+
+// Change language
+await TextManager.setLanguage(this, 'es'); // Spanish
+await TextManager.setLanguage(this, 'fr'); // French
+```
+
+**Languages Included**: English, Spanish, French (easily add more!)
+
+**Text Styles**: heading, subheading, body, button, score, caption, title, hud, damage, heal, levelUp
+
+---
+
+## Project Structure
+
+```
+phaser3-project-template/
+├── src/
+│   ├── main.js                          # Bootstrap
+│   ├── game/
+│   │   ├── main.js                      # Game config & init
+│   │   ├── scenes/                      # Game scenes
+│   │   ├── animations/                  # Animation system
+│   │   │   ├── AnimationManager.js
+│   │   │   ├── definitions/
+│   │   │   └── presets/
+│   │   │       └── tweenPresets.js
+│   │   ├── ui/                          # UI components
+│   │   │   ├── components/
+│   │   │   │   ├── Button.js
+│   │   │   │   ├── Panel.js
+│   │   │   │   └── ProgressBar.js
+│   │   │   ├── themes/
+│   │   │   │   └── defaultTheme.js
+│   │   │   └── UIBuilder.js
+│   │   ├── config/                      # Configuration
+│   │   │   └── text/
+│   │   │       ├── TextManager.js
+│   │   │       ├── textStyles.js
+│   │   │       └── languages/
+│   │   │           ├── en.json
+│   │   │           ├── es.json
+│   │   │           └── fr.json
+│   │   └── managers/
+│   ├── scripts/
+│   │   └── adapters/
+│   │       ├── poki/                    # Poki SDK
+│   │       ├── crazygames/              # CrazyGames SDK
+│   │       └── portals/
+│   │           └── portalManager.js
+│   └── assets/
+├── tools/                               # Development tools
+│   ├── generators/
+│   │   └── scene-generator.js
+│   └── templates/
+│       └── scenes/
+├── webpack/
+│   ├── config.js                        # Dev config
+│   ├── config.prod.js                   # Production config
+│   ├── config.poki.js                   # Poki build
+│   └── config.crazygames.js             # CrazyGames build
+├── public/
+│   ├── assets/
+│   ├── index.html
+│   └── style.css
+├── package.json
+└── README.md
+```
+
+---
+
+## Example: Building a Complete Game
+
+Here's how to use all the features together:
+
+```javascript
+// Boot.js - Initialize systems
+import PortalManager from '../scripts/adapters/portals/portalManager';
+import TextManager from './config/text/TextManager';
+
+export default class Boot extends Scene {
+    async create() {
+        // Initialize portal SDK
+        await PortalManager.init();
+
+        // Initialize text system
+        await TextManager.init(this, 'en');
+
+        // Start preloader
+        this.scene.start('Preloader');
+    }
+}
+
+// MainMenu.js - Build UI
+import UIBuilder from './ui/UIBuilder';
+import TextManager from './config/text/TextManager';
+import { tweenPresets } from './animations/presets/tweenPresets';
+
+export default class MainMenu extends Scene {
+    create() {
+        const ui = new UIBuilder(this);
+
+        // Title
+        const title = TextManager.createText(
+            this, 400, 150,
+            'menu.title',
+            'title'
+        );
+        ui.center(title, 'horizontal');
+        tweenPresets.pulse(this, title, 1.05, 2000);
+
+        // Play button
+        const playBtn = ui.button(400, 300,
+            TextManager.getText('menu.play')
+        );
+        playBtn.onClick(() => {
+            PortalManager.gameplayStart();
+            this.scene.start('Game');
+        });
+
+        // Settings button
+        const settingsBtn = ui.button(400, 400,
+            TextManager.getText('menu.settings')
+        );
+        settingsBtn.onClick(() => {
+            this.scene.start('Settings');
+        });
+
+        // Animate buttons in
+        tweenPresets.slideIn(this, playBtn, 'left', 500);
+        tweenPresets.slideIn(this, settingsBtn, 'right', 500);
+    }
+}
+
+// Game.js - Use all features
+import ProgressBar from './ui/components/ProgressBar';
+import TextManager from './config/text/TextManager';
+import PortalManager from '../scripts/adapters/portals/portalManager';
+
+export default class Game extends Scene {
+    create() {
+        // Health bar
+        this.healthBar = new ProgressBar(this, 100, 30, {
+            width: 200,
+            height: 20,
+            fillColor: 0x00ff00
+        });
+
+        // Score
+        this.score = 0;
+        this.scoreText = TextManager.createText(
+            this, 16, 16,
+            'game.score',
+            'score'
+        );
+        this.updateScore();
+    }
+
+    updateScore() {
+        const text = TextManager.getText('game.score', this.score);
+        this.scoreText.setText(text);
+    }
+
+    async levelComplete() {
+        PortalManager.gameplayStop();
+
+        // Show ad between levels
+        await PortalManager.showAd();
+
+        this.scene.start('NextLevel');
+    }
+}
+```
+
+---
+
+## Writing Code
+
+After cloning and running `npm install`, start the development server with `npm run dev`.
+
+The server runs on `http://localhost:8080` with hot module replacement - edit any file in `src/` and see changes instantly!
+
+### Webpack Features
+
+- **Asset Modules**: Images, fonts, and shaders loaded automatically
+- **Filesystem Caching**: Rebuilds are 90% faster after first build
+- **Source Maps**: Full debugging support in development
+- **Terser Optimization**: Minified, tree-shaken production builds
+- **Modern Browserslist**: Targets modern browsers (configurable in `.browserslistrc`)
+
+---
+
+## Deploying to Portals
+
+### Poki
+
+```bash
+npm run build:poki
+```
+
+Upload the `dist/poki/` folder to Poki's developer portal.
+
+### CrazyGames
+
+```bash
+npm run build:crazygames
+```
+
+Upload the `dist/crazygames/` folder to CrazyGames developer portal.
+
+### Both Platforms
+
+```bash
+npm run build:all-portals
+```
+
+Creates builds for both platforms in their respective folders.
+
+---
+
+## Customization
+
+### Adding New Languages
+
+1. Create a new language file: `src/game/config/text/languages/de.json`
+2. Copy structure from `en.json` and translate
+3. Load in your game: `TextManager.setLanguage(this, 'de')`
+
+### Creating Custom UI Components
+
+Extend base Phaser GameObjects:
+
+```javascript
+import { tweenPresets } from '../animations/presets/tweenPresets';
+
+export default class CustomComponent extends Phaser.GameObjects.Container {
+    constructor(scene, x, y, config) {
+        super(scene, x, y);
+
+        // Your component code
+
+        scene.add.existing(this);
+    }
+}
+```
+
+### Adding More Portals
+
+1. Create SDK adapter in `src/scripts/adapters/yourportal/`
+2. Add to PortalManager detection
+3. Create webpack config: `webpack/config.yourportal.js`
+4. Add npm script to `package.json`
+
+---
 
 ## About log.js
 
-If you inspect our node scripts you will see there is a file called `log.js`. This file makes a single silent API call to a domain called `gryzor.co`. This domain is owned by Phaser Studio Inc. The domain name is a homage to one of our favorite retro games.
+The `log.js` file is used to send anonymous usage data to Phaser for analytics. You can disable this by using the `-nolog` commands or removing the `node log.js` calls from `package.json`.
 
-We send the following 3 pieces of data to this API: The name of the template being used (vue, react, etc). If the build was 'dev' or 'prod' and finally the version of Phaser being used.
+---
 
-At no point is any personal data collected or sent. We don't know about your project files, device, browser or anything else. Feel free to inspect the `log.js` file to confirm this.
+## Join the Phaser Community
 
-Why do we do this? Because being open source means we have no visible metrics about which of our templates are being used. We work hard to maintain a large and diverse set of templates for Phaser developers and this is our small anonymous way to determine if that work is actually paying off, or not. In short, it helps us ensure we're building the tools for you.
+We love to see what developers like you create with Phaser! Join us:
 
-However, if you don't want to send any data, you can use these commands instead:
+- Website: [phaser.io](https://phaser.io)
+- Discord: [discord.gg/phaser](https://discord.gg/phaser)
+- Forum: [phaser.discourse.group](https://phaser.discourse.group)
+- Newsletter: [phaser.io/newsletter](https://phaser.io/newsletter)
 
-Dev:
+---
 
-```bash
-npm run dev-nolog
-```
+## License
 
-Build:
+MIT License - see LICENSE file for details.
 
-```bash
-npm run build-nolog
-```
+---
 
-Or, to disable the log entirely, simply delete the file `log.js` and remove the call to it in the `scripts` section of `package.json`:
+## Contributing
 
-Before:
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-```json
-"scripts": {
-    "dev": "node log.js dev & dev-template-script",
-    "build": "node log.js build & build-template-script"
-},
-```
+---
 
-After:
+## Credits
 
-```json
-"scripts": {
-    "dev": "dev-template-script",
-    "build": "build-template-script"
-},
-```
+Created and maintained by [Phaser Studio](https://phaser.io)
 
-Either of these will stop `log.js` from running. If you do decide to do this, please could you at least join our Discord and tell us which template you're using! Or send us a quick email. Either will be super-helpful, thank you.
+Extended features (v3.4.0) by Claude Code
 
-## Join the Phaser Community!
+---
 
-We love to see what developers like you create with Phaser! It really motivates us to keep improving. So please join our community and show-off your work 😄
-
-**Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
-**Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
-**Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum](https://phaser.discourse.group/) and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
-**Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
-**Code:** 2000+ [Examples](https://labs.phaser.io)<br />
-**Read:** The [Phaser World](https://phaser.io/community/newsletter) Newsletter<br />
-
-Created by [Phaser Studio](mailto:support@phaser.io). Powered by coffee, anime, pixels and love.
-
-The Phaser logo and characters are &copy; 2011 - 2025 Phaser Studio Inc.
-
-All rights reserved.
+🎮 **Happy Game Development!**

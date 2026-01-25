@@ -1,0 +1,61 @@
+{
+  "menu": {
+    "title": "Mon Jeu Génial",
+    "play": "Jouer",
+    "settings": "Paramètres",
+    "quit": "Quitter",
+    "continue": "Continuer",
+    "newGame": "Nouvelle Partie",
+    "credits": "Crédits",
+    "back": "Retour"
+  },
+  "game": {
+    "score": "Score: {0}",
+    "highScore": "Meilleur Score: {0}",
+    "level": "Niveau {0}",
+    "lives": "Vies: {0}",
+    "health": "Santé: {0}%",
+    "paused": "Pause",
+    "resume": "Reprendre",
+    "restart": "Recommencer",
+    "quitToMenu": "Retour au Menu",
+    "levelComplete": "Niveau Terminé!",
+    "gameOver": "Fin de Partie",
+    "victory": "Victoire!",
+    "timeRemaining": "Temps: {0}",
+    "combo": "Combo: {0}x"
+  },
+  "ui": {
+    "loading": "Chargement...",
+    "pressStart": "Appuyez pour Commencer",
+    "pressAnyKey": "Appuyez sur une touche",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "close": "Fermer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "audio": "Audio",
+    "music": "Musique",
+    "soundEffects": "Effets Sonores",
+    "volume": "Volume",
+    "language": "Langue",
+    "difficulty": "Difficulté",
+    "easy": "Facile",
+    "normal": "Normal",
+    "hard": "Difficile",
+    "controls": "Contrôles",
+    "graphics": "Graphiques",
+    "fullscreen": "Plein Écran"
+  },
+  "tutorial": {
+    "welcome": "Bienvenue au tutoriel!",
+    "movement": "Utilisez les flèches pour vous déplacer",
+    "jump": "Appuyez sur Espace pour sauter",
+    "attack": "Appuyez sur X pour attaquer",
+    "complete": "Tutoriel Terminé!"
+  }
+}

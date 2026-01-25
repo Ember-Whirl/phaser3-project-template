@@ -1,0 +1,51 @@
+{
+  "button": {
+    "idle": {
+      "frames": {
+        "key": "button",
+        "start": 0,
+        "end": 0
+      },
+      "frameRate": 1,
+      "repeat": 0
+    },
+    "hover": {
+      "frames": {
+        "key": "button",
+        "start": 1,
+        "end": 1
+      },
+      "frameRate": 1,
+      "repeat": 0
+    },
+    "pressed": {
+      "frames": {
+        "key": "button",
+        "start": 2,
+        "end": 2
+      },
+      "frameRate": 1,
+      "repeat": 0
+    }
+  },
+  "panel": {
+    "slideIn": {
+      "frames": {
+        "key": "panel",
+        "start": 0,
+        "end": 5
+      },
+      "frameRate": 15,
+      "repeat": 0
+    },
+    "slideOut": {
+      "frames": {
+        "key": "panel",
+        "start": 5,
+        "end": 0
+      },
+      "frameRate": 15,
+      "repeat": 0
+    }
+  }
+}
