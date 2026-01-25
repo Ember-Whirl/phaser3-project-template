@@ -1,4 +1,6 @@
 import { Scene } from 'phaser';
+import ResponsiveManager from '../managers/ResponsiveManager.js';
+import ProgressBar from '../ui/components/ProgressBar.js';
 
 export class Preloader extends Scene
 {
@@ -9,22 +11,36 @@ export class Preloader extends Scene
 
     init ()
     {
+        //  Initialize responsive manager
+        ResponsiveManager.init(this);
+
+        const { width, height } = this.scale;
+
         //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
+        const bg = this.add.image(width / 2, height / 2, 'background');
+        bg.setDisplaySize(width, height);
 
-        //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+        //  Create progress bar using ProgressBar component
+        const barWidth = Math.min(468, width - 100);
+        this.progressBar = new ProgressBar(this, width / 2, height / 2, {
+            width: barWidth,
+            height: 32,
+            fillColor: 0xffffff,
+            backgroundColor: 0x222222,
+            showLabel: true,
+            labelFormat: 'percent'
+        });
 
-        //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
+        //  Track progress bar for auto-repositioning
+        ResponsiveManager.trackElement(this.progressBar, 'center', { x: 0, y: 0 });
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
-
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 4 + (460 * progress);
-
+            this.progressBar.setValue(progress, true);
         });
+
+        //  Setup resize listener
+        this.scale.on('resize', this.onResize, this);
     }
 
     preload ()
@@ -42,5 +58,17 @@ export class Preloader extends Scene
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('MainMenu');
+    }
+
+    onResize (gameSize)
+    {
+        //  ResponsiveManager auto-updates tracked elements
+        //  Add custom resize logic here if needed
+    }
+
+    shutdown ()
+    {
+        //  Clean up resize listener
+        this.scale.off('resize', this.onResize, this);
     }
 }

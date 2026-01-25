@@ -1,3 +1,5 @@
+import ResponsiveManager from '../../managers/ResponsiveManager.js';
+
 /**
  * ProgressBar Component
  * Animated progress bar for health, loading, etc.
@@ -32,7 +34,12 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
             animated: config.animated !== undefined ? config.animated : true,
             animDuration: config.animDuration || 300,
             showLabel: config.showLabel !== undefined ? config.showLabel : false,
-            labelFormat: config.labelFormat || 'percent' // 'percent' or 'fraction'
+            labelFormat: config.labelFormat || 'percent', // 'percent' or 'fraction'
+            // Responsive options
+            alignment: config.alignment || null,
+            margin: config.margin || { x: 20, y: 20 },
+            autoReposition: config.autoReposition !== false,
+            responsiveScale: config.responsiveScale || false
         };
 
         this.currentValue = 1.0;
@@ -81,6 +88,17 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
         scene.add.existing(this);
 
         this.updateDisplay();
+
+        // Auto-position if alignment provided
+        if (this.config.alignment) {
+            this.reposition();
+
+            if (this.config.autoReposition) {
+                ResponsiveManager.trackElement(this, this.config.alignment, this.config.margin, {
+                    autoOrigin: false // Container origin is always 0.5, 0.5
+                });
+            }
+        }
     }
 
     /**
@@ -213,9 +231,52 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
     }
 
     /**
+     * Reposition based on alignment
+     */
+    reposition() {
+        if (!this.config.alignment) return;
+
+        const pos = ResponsiveManager.getAlignmentPosition(
+            this.config.alignment,
+            this.config.margin
+        );
+
+        this.x = pos.x;
+        this.y = pos.y;
+
+        return this;
+    }
+
+    /**
+     * Set alignment and auto-reposition
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     */
+    setAlignment(alignment, margin) {
+        this.config.alignment = alignment;
+        this.config.margin = margin || this.config.margin;
+        this.reposition();
+
+        // Update tracking if auto-reposition is enabled
+        if (this.config.autoReposition) {
+            ResponsiveManager.untrackElement(this);
+            ResponsiveManager.trackElement(this, alignment, this.config.margin, {
+                autoOrigin: false
+            });
+        }
+
+        return this;
+    }
+
+    /**
      * Cleanup
      */
     destroy(fromScene) {
+        // Untrack from responsive manager
+        if (this.config.alignment && this.config.autoReposition) {
+            ResponsiveManager.untrackElement(this);
+        }
+
         if (this.tween) {
             this.tween.stop();
             this.tween = null;

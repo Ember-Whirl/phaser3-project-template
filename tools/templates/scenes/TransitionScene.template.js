@@ -1,4 +1,6 @@
 import { Scene } from 'phaser';
+import ResponsiveManager from '../managers/ResponsiveManager.js';
+import UIBuilder from '../ui/UIBuilder.js';
 
 export default class {{SCENE_NAME}} extends Scene {
     constructor() {
@@ -10,19 +12,20 @@ export default class {{SCENE_NAME}} extends Scene {
     }
 
     create() {
+        // Initialize responsive manager
+        ResponsiveManager.init(this);
+
         const { width, height } = this.scale;
+        const ui = new UIBuilder(this);
 
         // Add background
         const background = this.add.rectangle(0, 0, width, height, 0x000000)
             .setOrigin(0)
             .setAlpha(0);
 
-        // Add transition text
-        const text = this.add.text(width / 2, height / 2, 'Loading...', {
-            fontFamily: 'Arial',
-            fontSize: '32px',
-            color: '#ffffff'
-        }).setOrigin(0.5).setAlpha(0);
+        // Add transition text with alignment
+        const text = ui.textAt('center', 'Loading...', { x: 0, y: 0 }, 'heading');
+        text.setAlpha(0);
 
         // Fade in animation
         this.tweens.add({
@@ -45,6 +48,9 @@ export default class {{SCENE_NAME}} extends Scene {
                 });
             }
         });
+
+        // Setup resize listener
+        this.scale.on('resize', this.onResize, this);
     }
 
     transitionToNextScene() {
@@ -70,5 +76,14 @@ export default class {{SCENE_NAME}} extends Scene {
 
     update(time, delta) {
         // Transition update logic here
+    }
+
+    onResize(gameSize) {
+        // ResponsiveManager auto-updates tracked elements
+    }
+
+    shutdown() {
+        // Clean up resize listener
+        this.scale.off('resize', this.onResize, this);
     }
 }

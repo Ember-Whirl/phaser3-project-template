@@ -4,9 +4,16 @@ A comprehensive, production-ready Phaser 3 template with webpack 5, featuring mu
 
 **[This Template is also available as a TypeScript version.](https://github.com/phaserjs/template-webpack-ts)**
 
-## What's New in v3.4.0 (2026 Update)
+## What's New in v3.5.0 (2026 Update)
 
 This template has been completely modernized with powerful features for rapid game development:
+
+### 📱 Responsive System (NEW in v3.5.0)
+- **ResponsiveManager** - Centralized responsive layout management
+- **Alignment-Based Positioning** - 9 semantic alignments (top-left, center, bottom-right, etc.)
+- **Auto-Repositioning** - Elements automatically adjust when screen resizes
+- **Orientation Detection** - Portrait/landscape detection with orientation-specific layouts
+- **Safe Area Support** - Handle mobile notches and safe zones
 
 ### 🎮 Multi-Platform Portal Support
 - **Poki & CrazyGames SDK Integration** - Deploy to major game portals with one command
@@ -421,6 +428,132 @@ export default class Game extends Scene {
     }
 }
 ```
+
+### 6. Responsive System
+
+The template includes a comprehensive responsive system for adaptive layouts across different screen sizes and orientations.
+
+**Features**:
+- Automatic screen resize handling
+- Alignment-based positioning (9 semantic alignments)
+- Orientation detection (portrait/landscape)
+- Safe area support for mobile devices
+- Auto-repositioning of UI elements
+
+**Quick Start**:
+
+```javascript
+import ResponsiveManager from './managers/ResponsiveManager';
+import UIBuilder from './ui/UIBuilder';
+
+create() {
+    // Initialize responsive manager
+    ResponsiveManager.init(this);
+
+    const ui = new UIBuilder(this);
+
+    // Alignment-based positioning
+    ui.buttonAt('center', 'Play', { x: 0, y: 0 })
+        .onClick(() => this.scene.start('Game'));
+
+    ui.textAt('top-center', 'Game Title', { x: 0, y: 40 }, 'heading');
+
+    ui.panelAt('bottom-right', { x: 20, y: 20 }, {
+        width: 300,
+        height: 200
+    });
+
+    // Setup resize listener
+    this.scale.on('resize', this.onResize, this);
+}
+
+onResize(gameSize) {
+    // ResponsiveManager auto-updates tracked elements
+}
+
+shutdown() {
+    this.scale.off('resize', this.onResize, this);
+}
+```
+
+**Available Alignments**:
+- `top-left`, `top-center`, `top-right`
+- `center-left`, `center`, `center-right`
+- `bottom-left`, `bottom-center`, `bottom-right`
+
+**Margin**: Use `{ x: 20, y: 20 }` or single number `20` for uniform margin.
+
+**ResponsiveManager API**:
+
+```javascript
+// Get position for alignment
+const pos = ResponsiveManager.getAlignmentPosition('top-right', { x: 20, y: 20 });
+
+// Track element for auto-repositioning
+ResponsiveManager.trackElement(button, 'center', { x: 0, y: 0 });
+
+// Orientation checks
+if (ResponsiveManager.isPortrait()) {
+    // Portrait-specific layout
+}
+
+// Get safe area (mobile notches)
+const safe = ResponsiveManager.getSafeArea();
+
+// Scale value based on screen
+const spacing = ResponsiveManager.scale(20);
+```
+
+**UIBuilder with Responsive Methods**:
+
+```javascript
+const ui = new UIBuilder(this);
+
+// Create with alignments
+ui.buttonAt('top-right', 'Settings', { x: 20, y: 20 });
+ui.textAt('bottom-center', 'Score: 0', { x: 0, y: -50 }, 'score');
+ui.panelAt('center', { x: 0, y: 0 }, { width: 400 });
+
+// Position existing element
+ui.positionAt(existingSprite, 'center-left', 40);
+```
+
+**UI Components with Alignment**:
+
+All UI components (Button, Panel, ProgressBar) support alignment configuration:
+
+```javascript
+// Button with alignment
+const button = new Button(this, 0, 0, 'Play', {
+    alignment: 'center',
+    margin: { x: 0, y: 50 },
+    autoReposition: true  // Auto-track with ResponsiveManager
+});
+
+// Update alignment dynamically
+button.setAlignment('bottom-right', { x: 20, y: 20 });
+```
+
+**Game Configuration**:
+
+The template is configured with responsive scale settings in `src/game/main.js`:
+
+```javascript
+scale: {
+    mode: Phaser.Scale.FIT,  // Maintains aspect ratio
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 1024,
+    height: 768,
+    min: { width: 320, height: 240 },
+    max: { width: 2048, height: 1536 },
+    autoRound: true
+}
+```
+
+**Scale Mode Options**:
+- `FIT` - Maintains aspect ratio, may show letterboxing (recommended for most games)
+- `ENVELOP` - Fills entire screen, may crop content
+- `RESIZE` - Game canvas resizes to container (most responsive, requires careful layout)
 
 ---
 

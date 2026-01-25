@@ -2,6 +2,7 @@ import Button from './components/Button.js';
 import Panel from './components/Panel.js';
 import ProgressBar from './components/ProgressBar.js';
 import theme from './themes/defaultTheme.js';
+import ResponsiveManager from '../managers/ResponsiveManager.js';
 
 /**
  * UIBuilder
@@ -113,11 +114,154 @@ export default class UIBuilder {
     }
 
     /**
+     * Position element using alignment
+     * @param {Phaser.GameObjects.GameObject} element - Element to position
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     * @param {object} config - Additional config { autoOrigin, track }
+     * @returns {Phaser.GameObjects.GameObject} Element for chaining
+     *
+     * @example
+     * ui.positionAt(sprite, 'top-right', { x: 20, y: 20 });
+     */
+    positionAt(element, alignment, margin = 20, config = {}) {
+        const pos = ResponsiveManager.getAlignmentPosition(alignment, margin);
+
+        element.x = pos.x;
+        element.y = pos.y;
+
+        if (config.autoOrigin !== false && element.setOrigin) {
+            element.setOrigin(pos.origin.x, pos.origin.y);
+        }
+
+        if (config.track !== false) {
+            ResponsiveManager.trackElement(element, alignment, margin, config);
+        }
+
+        return element;
+    }
+
+    /**
+     * Create button with alignment
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {string} text - Button text
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     * @param {object} config - Button configuration
+     * @returns {Button} Button instance
+     *
+     * @example
+     * ui.buttonAt('center', 'Play', { x: 0, y: 50 })
+     *   .onClick(() => this.scene.start('Game'));
+     */
+    buttonAt(alignment, text, margin = 20, config = {}) {
+        const pos = ResponsiveManager.getAlignmentPosition(alignment, margin);
+        const button = new Button(this.scene, pos.x, pos.y, text, config);
+
+        if (button.setOrigin && config.autoOrigin !== false) {
+            button.setOrigin(pos.origin.x, pos.origin.y);
+        }
+
+        ResponsiveManager.trackElement(button, alignment, margin, {
+            autoOrigin: config.autoOrigin !== false
+        });
+
+        this.elements.push(button);
+        return button;
+    }
+
+    /**
+     * Create panel with alignment
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     * @param {object} config - Panel configuration
+     * @returns {Panel} Panel instance
+     *
+     * @example
+     * ui.panelAt('center', { x: 0, y: 0 }, { width: 400, height: 300 });
+     */
+    panelAt(alignment, margin = 20, config = {}) {
+        const pos = ResponsiveManager.getAlignmentPosition(alignment, margin);
+        const panel = new Panel(this.scene, pos.x, pos.y, config);
+
+        if (panel.setOrigin && config.autoOrigin !== false) {
+            panel.setOrigin(pos.origin.x, pos.origin.y);
+        }
+
+        ResponsiveManager.trackElement(panel, alignment, margin, {
+            autoOrigin: config.autoOrigin !== false
+        });
+
+        this.elements.push(panel);
+        return panel;
+    }
+
+    /**
+     * Create progress bar with alignment
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     * @param {object} config - ProgressBar configuration
+     * @returns {ProgressBar} ProgressBar instance
+     *
+     * @example
+     * ui.progressBarAt('top-center', { x: 0, y: 20 }, { width: 400 });
+     */
+    progressBarAt(alignment, margin = 20, config = {}) {
+        const pos = ResponsiveManager.getAlignmentPosition(alignment, margin);
+        const bar = new ProgressBar(this.scene, pos.x, pos.y, config);
+
+        if (bar.setOrigin && config.autoOrigin !== false) {
+            bar.setOrigin(pos.origin.x, pos.origin.y);
+        }
+
+        ResponsiveManager.trackElement(bar, alignment, margin, {
+            autoOrigin: config.autoOrigin !== false
+        });
+
+        this.elements.push(bar);
+        return bar;
+    }
+
+    /**
+     * Create text with alignment
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {string} text - Text content
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     * @param {string} style - Style preset: 'heading', 'body', 'caption'
+     * @returns {Phaser.GameObjects.Text} Text object
+     *
+     * @example
+     * ui.textAt('top-center', 'Game Title', { x: 0, y: 40 }, 'heading');
+     */
+    textAt(alignment, text, margin = 20, style = 'body') {
+        const pos = ResponsiveManager.getAlignmentPosition(alignment, margin);
+        const textObj = this.text(pos.x, pos.y, text, style);
+
+        textObj.setOrigin(pos.origin.x, pos.origin.y);
+        ResponsiveManager.trackElement(textObj, alignment, margin, { autoOrigin: false });
+
+        return textObj;
+    }
+
+    /**
+     * Get responsive value based on screen size
+     * @param {number} value - Value to scale
+     * @param {boolean} scaleFactor - Whether to apply scale factor
+     * @returns {number} Scaled value
+     *
+     * @example
+     * const spacing = ui.responsive(20); // Returns scaled value
+     */
+    responsive(value, scaleFactor = true) {
+        return scaleFactor ? ResponsiveManager.scale(value) : value;
+    }
+
+    /**
      * Layout helpers - Center an element
      * @param {Phaser.GameObjects.GameObject} element - Element to center
      * @param {string} direction - 'horizontal', 'vertical', or 'both'
+     * @param {boolean} track - Whether to track element for auto-repositioning
      */
-    center(element, direction = 'both') {
+    center(element, direction = 'both', track = true) {
         const { width, height } = this.scene.scale;
 
         if (direction === 'horizontal' || direction === 'both') {
@@ -128,6 +272,10 @@ export default class UIBuilder {
             element.y = height / 2;
         }
 
+        if (track) {
+            ResponsiveManager.trackElement(element, 'center', { x: 0, y: 0 });
+        }
+
         return element;
     }
 
@@ -136,8 +284,9 @@ export default class UIBuilder {
      * @param {Phaser.GameObjects.GameObject} element - Element to align
      * @param {string} position - 'top', 'bottom', 'left', 'right', or combinations
      * @param {number} margin - Margin from edge
+     * @param {boolean} track - Whether to track element for auto-repositioning
      */
-    align(element, position, margin = 20) {
+    align(element, position, margin = 20, track = true) {
         const { width, height } = this.scene.scale;
 
         if (position.includes('top')) {
@@ -162,6 +311,26 @@ export default class UIBuilder {
 
         if (position.includes('center-y')) {
             element.y = height / 2;
+        }
+
+        // Convert position string to alignment format for tracking
+        if (track) {
+            let alignment = '';
+            if (position.includes('top')) alignment += 'top';
+            else if (position.includes('bottom')) alignment += 'bottom';
+            else if (position.includes('center-y')) alignment += 'center';
+
+            if (alignment && (position.includes('left') || position.includes('right') || position.includes('center-x'))) {
+                alignment += '-';
+            }
+
+            if (position.includes('left')) alignment += 'left';
+            else if (position.includes('right')) alignment += 'right';
+            else if (position.includes('center-x')) alignment += 'center';
+
+            if (!alignment) alignment = 'center';
+
+            ResponsiveManager.trackElement(element, alignment, margin);
         }
 
         return element;
