@@ -32,11 +32,11 @@ module.exports = {
             },
             {
                 test: [/\.vert$/, /\.frag$/],
-                use: "raw-loader"
+                type: "asset/source"
             },
             {
                 test: /\.(gif|png|jpe?g|svg|xml|glsl)$/i,
-                use: "file-loader"
+                type: "asset/resource"
             }
         ]
     },
@@ -44,10 +44,16 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
+                    compress: {
+                        drop_console: true,
+                        pure_funcs: ['console.info', 'console.debug']
+                    },
                     output: {
                         comments: false
-                    }
-                }
+                    },
+                    mangle: true
+                },
+                extractComments: false
             })
         ]
     },

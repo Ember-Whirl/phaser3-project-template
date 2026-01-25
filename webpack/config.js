@@ -22,13 +22,33 @@ module.exports = {
             },
             {
                 test: [/\.vert$/, /\.frag$/],
-                use: "raw-loader"
+                type: "asset/source"
             },
             {
                 test: /\.(gif|png|jpe?g|svg|xml|glsl)$/i,
-                use: "file-loader"
+                type: "asset/resource"
             }
         ]
+    },
+    cache: {
+        type: 'filesystem',
+        buildDependencies: {
+            config: [__filename]
+        }
+    },
+    devServer: {
+        hot: true,
+        open: true,
+        port: 8080,
+        static: {
+            directory: path.join(__dirname, '../public')
+        },
+        client: {
+            overlay: {
+                errors: true,
+                warnings: false
+            }
+        }
     },
     plugins: [
         new CleanWebpackPlugin({

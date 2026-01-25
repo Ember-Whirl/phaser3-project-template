@@ -1,12 +1,17 @@
 {
     "name": "template-webpack",
-    "version": "3.3.0",
+    "version": "3.4.0",
     "main": "src/main.js",
     "scripts": {
-        "dev": "node log.js dev & webpack-dev-server --config webpack/config.js --open",
-        "build": "node log.js build & webpack --config webpack/config.prod.js",
-        "dev-nolog": "webpack-dev-server --config webpack/config.js --open",
-        "build-nolog": "webpack --config webpack/config.prod.js"
+        "dev": "node log.js dev && webpack serve --config webpack/config.js",
+        "build": "node log.js build && webpack --config webpack/config.prod.js",
+        "dev-nolog": "webpack serve --config webpack/config.js",
+        "build-nolog": "webpack --config webpack/config.prod.js",
+        "preview": "npm run build && npx serve dist",
+        "build:poki": "webpack --config webpack/config.poki.js",
+        "build:crazygames": "webpack --config webpack/config.crazygames.js",
+        "build:all-portals": "npm run build:poki && npm run build:crazygames",
+        "generate:scene": "node tools/generators/scene-generator.js"
     },
     "repository": {
         "type": "git",
@@ -19,19 +24,29 @@
         "url": "https://github.com/phaserjs/template-webpack/issues"
     },
     "homepage": "https://github.com/phaserjs/template-webpack#readme",
+    "engines": {
+        "node": ">=18.12.0",
+        "npm": ">=9.0.0"
+    },
+    "browserslist": [
+        "defaults",
+        "last 2 versions",
+        "not dead",
+        "not IE 11",
+        "not op_mini all",
+        "> 0.5%"
+    ],
     "devDependencies": {
-        "@babel/core": "^7.26.10",
-        "@babel/preset-env": "^7.26.9",
+        "@babel/core": "^7.28.6",
+        "@babel/preset-env": "^7.28.6",
         "babel-loader": "^10.0.0",
         "clean-webpack-plugin": "^4.0.0",
-        "copy-webpack-plugin": "^13.0.0",
-        "file-loader": "^6.2.0",
-        "html-webpack-plugin": "^5.6.3",
-        "raw-loader": "^4.0.2",
-        "terser-webpack-plugin": "^5.3.14",
-        "webpack": "^5.99.6",
+        "copy-webpack-plugin": "^13.0.1",
+        "html-webpack-plugin": "^5.6.6",
+        "terser-webpack-plugin": "^5.3.16",
+        "webpack": "^5.104.1",
         "webpack-cli": "^6.0.1",
-        "webpack-dev-server": "^5.2.1",
+        "webpack-dev-server": "^5.2.3",
         "webpack-merge": "^6.0.0"
     },
     "dependencies": {
