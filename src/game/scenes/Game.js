@@ -30,7 +30,7 @@ export class Game extends Scene
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         });
-        ui.positionAt(gameText, 'center', { x: 0, y: 0 });
+        ui.positionAt(gameText, 'center', { x: 300, y: 0 });
 
         this.input.once('pointerdown', () => {
             this.scene.start('GameOver');

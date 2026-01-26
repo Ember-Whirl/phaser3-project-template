@@ -129,17 +129,21 @@ class ResponsiveManager {
         // Apply margin based on alignment
         // Left alignments: add margin
         // Right alignments: subtract margin
-        // Center alignments: no margin adjustment
+        // Center alignments: add as offset
         if (alignConfig.x === 0) {
             x += normalizedMargin.x + safe.left;
         } else if (alignConfig.x === 1) {
             x -= normalizedMargin.x + safe.right;
+        } else if (alignConfig.x === 0.5) {
+            x += normalizedMargin.x;
         }
 
         if (alignConfig.y === 0) {
             y += normalizedMargin.y + safe.top;
         } else if (alignConfig.y === 1) {
             y -= normalizedMargin.y + safe.bottom;
+        } else if (alignConfig.y === 0.5) {
+            y += normalizedMargin.y;
         }
 
         return {
