@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import ResponsiveManager from '../managers/ResponsiveManager.js';
 import UIBuilder from '../ui/UIBuilder.js';
+import Button from '../ui/components/Button.js';
 
 export class MainMenu extends Scene
 {
@@ -33,14 +34,31 @@ export class MainMenu extends Scene
         });
         ui.positionAt(titleText, 'center', { x: 0, y: 0 });
 
-        //  Click to start text - positioned at bottom
-        const startText = this.add.text(0, 0, 'Click to Start', {
-            fontFamily: 'Arial', fontSize: 24, color: '#ffffff',
-            align: 'center'
+        //  Button Test button
+        const buttonTestBtn = new Button(this, width / 2, height / 2 + 60, 'Button Test', {
+            width: 250,
+            height: 60,
+            backgroundColor: 0x4a90e2,
+            hoverColor: 0x5aa0f2,
+            pressedColor: 0x3a80d2,
+            fontSize: '28px'
         });
-        ui.positionAt(startText, 'bottom-center', { x: 0, y: -50 });
 
-        this.input.once('pointerdown', () => {
+        buttonTestBtn.onClick(() => {
+            this.scene.start('ButtonTest');
+        });
+
+        //  Main game button
+        const playButton = new Button(this, width / 2, height / 2 + 140, 'Play Game', {
+            width: 250,
+            height: 60,
+            backgroundColor: 0x4caf50,
+            hoverColor: 0x5cbf60,
+            pressedColor: 0x3c9f40,
+            fontSize: '28px'
+        });
+
+        playButton.onClick(() => {
             this.scene.start('Game');
         });
 

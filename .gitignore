@@ -13,3 +13,15 @@ node_modules/
 # Build
 dist/
 /npm-debug.log
+
+# Generated texture atlases (auto-generated during production builds)
+# Keep manifest.json for development, but ignore generated atlas files
+src/assets/atlases/*.png
+src/assets/atlases/*.json
+!src/assets/atlases/manifest.json
+*.tps.bak
+
+# Environment variables (contains sensitive data like license keys)
+.env
+.env.local
+.env.production

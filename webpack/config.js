@@ -40,9 +40,16 @@ module.exports = {
         hot: true,
         open: true,
         port: 8080,
-        static: {
-            directory: path.join(__dirname, '../public')
-        },
+        static: [
+            {
+                directory: path.join(__dirname, '../public'),
+                publicPath: '/'
+            },
+            {
+                directory: path.join(__dirname, '../src/assets'),
+                publicPath: '/assets'
+            }
+        ],
         client: {
             overlay: {
                 errors: true,

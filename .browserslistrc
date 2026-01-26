@@ -1,8 +1,0 @@
-# Modern browsers for 2026
-# Using Baseline widely available + modern defaults
-defaults
-last 2 versions
-not dead
-not IE 11
-not op_mini all
-> 0.5%

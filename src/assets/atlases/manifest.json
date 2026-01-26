@@ -1,0 +1,33 @@
+{
+  "atlases": {
+    "kenney-ui": [
+      "kenney-ui"
+    ]
+  },
+  "images": {
+    "kenney-ui": [
+      "kenney_ui_basic_set/arrow_basic_e",
+      "kenney_ui_basic_set/arrow_basic_n",
+      "kenney_ui_basic_set/button_rectangle_flat",
+      "kenney_ui_basic_set/button_rectangle_gradient",
+      "kenney_ui_basic_set/button_round_flat",
+      "kenney_ui_basic_set/button_square_flat",
+      "kenney_ui_basic_set/check_round_color",
+      "kenney_ui_basic_set/check_round_grey",
+      "kenney_ui_basic_set/check_square_color_checkmark",
+      "kenney_ui_basic_set/check_square_grey",
+      "kenney_ui_basic_set/divider",
+      "kenney_ui_basic_set/icon_checkmark",
+      "kenney_ui_basic_set/icon_circle",
+      "kenney_ui_basic_set/icon_cross",
+      "kenney_ui_basic_set/icon_play_outline",
+      "kenney_ui_basic_set/icon_square",
+      "kenney_ui_basic_set/input_rectangle",
+      "kenney_ui_basic_set/slide_hangle",
+      "kenney_ui_basic_set/slide_horizontal_color",
+      "kenney_ui_basic_set/slide_horizontal_grey",
+      "kenney_ui_basic_set/star",
+      "kenney_ui_basic_set/star_outline"
+    ]
+  }
+}

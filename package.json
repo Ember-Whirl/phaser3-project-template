@@ -4,13 +4,14 @@
     "main": "src/main.js",
     "scripts": {
         "dev": "node log.js dev && webpack serve --config webpack/config.js",
-        "build": "node log.js build && webpack --config webpack/config.prod.js",
+        "build": "node log.js build && npm run pack && webpack --config webpack/config.prod.js",
         "dev-nolog": "webpack serve --config webpack/config.js",
-        "build-nolog": "webpack --config webpack/config.prod.js",
+        "build-nolog": "npm run pack && webpack --config webpack/config.prod.js",
         "preview": "npm run build && npx serve dist",
-        "build:poki": "webpack --config webpack/config.poki.js",
-        "build:crazygames": "webpack --config webpack/config.crazygames.js",
+        "build:poki": "npm run pack && webpack --config webpack/config.poki.js",
+        "build:crazygames": "npm run pack && webpack --config webpack/config.crazygames.js",
         "build:all-portals": "npm run build:poki && npm run build:crazygames",
+        "pack": "node scripts/pack-textures.js",
         "generate:scene": "node tools/generators/scene-generator.js"
     },
     "repository": {
