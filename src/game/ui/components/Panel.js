@@ -3,7 +3,7 @@ import ResponsiveManager from '../../managers/ResponsiveManager.js';
 
 /**
  * Panel Component
- * Reusable panel container for UI elements
+ * Reusable panel container using NineSlice for scalable image-based UI
  *
  * Usage:
  *   import Panel from './ui/components/Panel';
@@ -11,7 +11,6 @@ import ResponsiveManager from '../../managers/ResponsiveManager.js';
  *   const panel = new Panel(scene, x, y, {
  *       width: 400,
  *       height: 300,
- *       backgroundColor: 0x222222,
  *       padding: 20
  *   });
  *
@@ -27,15 +26,21 @@ export default class Panel extends Phaser.GameObjects.Container {
         this.config = {
             width: config.width || 300,
             height: config.height || 200,
-            backgroundColor: config.backgroundColor || 0x222222,
-            backgroundAlpha: config.backgroundAlpha !== undefined ? config.backgroundAlpha : 0.9,
-            borderRadius: config.borderRadius || 10,
-            borderWidth: config.borderWidth || 2,
-            borderColor: config.borderColor || 0x444444,
+            // NineSlice texture settings
+            texture: config.texture || 'kenney-ui',
+            frame: config.frame || 'input_rectangle.png',
+            // NineSlice corner sizes (pixels to preserve at corners)
+            sliceLeft: config.sliceLeft || 12,
+            sliceRight: config.sliceRight || 12,
+            sliceTop: config.sliceTop || 12,
+            sliceBottom: config.sliceBottom || 12,
+            // Panel settings
             padding: config.padding || 15,
             title: config.title || null,
             titleColor: config.titleColor || '#ffffff',
             titleSize: config.titleSize || '24px',
+            // Tint for panel color
+            tint: config.tint || 0xffffff,
             // Responsive options
             alignment: config.alignment || null,
             margin: config.margin || { x: 20, y: 20 },
@@ -45,17 +50,23 @@ export default class Panel extends Phaser.GameObjects.Container {
 
         this.content = [];
 
-        // Create background
-        this.background = scene.add.rectangle(
+        // Create NineSlice background
+        this.background = scene.add.nineslice(
             0, 0,
+            this.config.texture,
+            this.config.frame,
             this.config.width,
             this.config.height,
-            this.config.backgroundColor,
-            this.config.backgroundAlpha
+            this.config.sliceLeft,
+            this.config.sliceRight,
+            this.config.sliceTop,
+            this.config.sliceBottom
         );
+        this.background.setOrigin(0.5);
 
-        if (this.config.borderWidth > 0) {
-            this.background.setStrokeStyle(this.config.borderWidth, this.config.borderColor);
+        // Apply tint if specified
+        if (this.config.tint !== 0xffffff) {
+            this.background.setTint(this.config.tint);
         }
 
         this.add(this.background);
@@ -181,6 +192,25 @@ export default class Panel extends Phaser.GameObjects.Container {
 
             this.add(this.titleText);
         }
+        return this;
+    }
+
+    /**
+     * Resize the panel
+     * @param {number} width - New width
+     * @param {number} height - New height
+     */
+    setPanelSize(width, height) {
+        this.config.width = width;
+        this.config.height = height;
+        this.background.setSize(width, height);
+        this.setSize(width, height);
+
+        // Update title position if exists
+        if (this.titleText) {
+            this.titleText.setY(-height / 2 + this.config.padding + 10);
+        }
+
         return this;
     }
 

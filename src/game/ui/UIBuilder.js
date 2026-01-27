@@ -1,6 +1,7 @@
 import Button from './components/Button.js';
 import Panel from './components/Panel.js';
 import ProgressBar from './components/ProgressBar.js';
+import UIContainer from './components/UIContainer.js';
 import theme from './themes/defaultTheme.js';
 import ResponsiveManager from '../managers/ResponsiveManager.js';
 
@@ -66,6 +67,56 @@ export default class UIBuilder {
         const bar = new ProgressBar(this.scene, x, y, config);
         this.elements.push(bar);
         return bar;
+    }
+
+    /**
+     * Create a UIContainer for layout management
+     * @param {number} x - X position
+     * @param {number} y - Y position
+     * @param {object} config - UIContainer configuration
+     * @returns {UIContainer} UIContainer instance
+     *
+     * @example
+     * const container = ui.container(400, 300, {
+     *     width: 600,
+     *     height: 80,
+     *     layout: 'horizontal',
+     *     spacing: 20
+     * });
+     * container.addChild(button1, { anchor: 'start' });
+     * container.addChild(button2, { anchor: 'center' });
+     * container.addChild(button3, { anchor: 'end' });
+     */
+    container(x, y, config = {}) {
+        const container = new UIContainer(this.scene, x, y, config);
+        this.elements.push(container);
+        return container;
+    }
+
+    /**
+     * Create a UIContainer with alignment
+     * @param {string} alignment - Alignment: 'top-left', 'center', 'bottom-right', etc.
+     * @param {object|number} margin - Margin from edges { x, y } or number
+     * @param {object} config - UIContainer configuration
+     * @returns {UIContainer} UIContainer instance
+     *
+     * @example
+     * const container = ui.containerAt('bottom-center', { x: 0, y: 30 }, {
+     *     width: 600,
+     *     height: 80,
+     *     layout: 'horizontal'
+     * });
+     */
+    containerAt(alignment, margin = 20, config = {}) {
+        const pos = ResponsiveManager.getAlignmentPosition(alignment, margin);
+        const container = new UIContainer(this.scene, pos.x, pos.y, config);
+
+        ResponsiveManager.trackElement(container, alignment, margin, {
+            autoOrigin: false
+        });
+
+        this.elements.push(container);
+        return container;
     }
 
     /**

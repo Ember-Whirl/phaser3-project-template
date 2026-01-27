@@ -62,6 +62,20 @@ export class MainMenu extends Scene
             this.scene.start('Game');
         });
 
+        //  UI Tests button
+        const uiTestsButton = new Button(this, width / 2, height / 2 + 220, 'UI Tests', {
+            width: 250,
+            height: 60,
+            backgroundColor: 0x9b59b6,
+            hoverColor: 0xab69c6,
+            pressedColor: 0x8b49a6,
+            fontSize: '28px'
+        });
+
+        uiTestsButton.onClick(() => {
+            this.scene.start('UITestButtons');
+        });
+
         //  Setup resize listener
         this.scale.on('resize', this.onResize, this);
     }

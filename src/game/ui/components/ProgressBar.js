@@ -2,16 +2,14 @@ import ResponsiveManager from '../../managers/ResponsiveManager.js';
 
 /**
  * ProgressBar Component
- * Animated progress bar for health, loading, etc.
+ * Animated progress bar using NineSlice for scalable image-based UI
  *
  * Usage:
  *   import ProgressBar from './ui/components/ProgressBar';
  *
  *   const healthBar = new ProgressBar(scene, x, y, {
  *       width: 200,
- *       height: 20,
- *       fillColor: 0x00ff00,
- *       backgroundColor: 0x333333
+ *       height: 20
  *   });
  *
  *   healthBar.setValue(0.75); // 75%
@@ -25,16 +23,25 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
         this.config = {
             width: config.width || 200,
             height: config.height || 20,
-            fillColor: config.fillColor || 0x00ff00,
-            backgroundColor: config.backgroundColor || 0x333333,
-            borderWidth: config.borderWidth || 2,
-            borderColor: config.borderColor || 0x000000,
-            borderRadius: config.borderRadius || 4,
+            // NineSlice texture settings
+            texture: config.texture || 'kenney-ui',
+            backgroundFrame: config.backgroundFrame || 'slide_horizontal_grey.png',
+            fillFrame: config.fillFrame || 'slide_horizontal_color.png',
+            // NineSlice corner sizes (pixels to preserve at corners)
+            sliceLeft: config.sliceLeft || 6,
+            sliceRight: config.sliceRight || 6,
+            sliceTop: config.sliceTop || 4,
+            sliceBottom: config.sliceBottom || 4,
+            // Bar settings
             padding: config.padding || 2,
             animated: config.animated !== undefined ? config.animated : true,
             animDuration: config.animDuration || 300,
             showLabel: config.showLabel !== undefined ? config.showLabel : false,
             labelFormat: config.labelFormat || 'percent', // 'percent' or 'fraction'
+            // Tint colors for value states
+            tintHigh: config.tintHigh || 0x00ff00,      // Green for >= 50%
+            tintMedium: config.tintMedium || 0xff8800,  // Orange for 25-50%
+            tintLow: config.tintLow || 0xff0000,        // Red for < 25%
             // Responsive options
             alignment: config.alignment || null,
             margin: config.margin || { x: 20, y: 20 },
@@ -45,31 +52,41 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
         this.currentValue = 1.0;
         this.targetValue = 1.0;
 
-        // Create background
-        this.background = scene.add.rectangle(
+        // Calculate inner dimensions
+        const fillWidth = this.config.width - (this.config.padding * 2);
+        const fillHeight = this.config.height - (this.config.padding * 2);
+        this.maxFillWidth = fillWidth;
+
+        // Create NineSlice background
+        this.background = scene.add.nineslice(
             0, 0,
+            this.config.texture,
+            this.config.backgroundFrame,
             this.config.width,
             this.config.height,
-            this.config.backgroundColor
+            this.config.sliceLeft,
+            this.config.sliceRight,
+            this.config.sliceTop,
+            this.config.sliceBottom
         );
-
-        if (this.config.borderWidth > 0) {
-            this.background.setStrokeStyle(this.config.borderWidth, this.config.borderColor);
-        }
+        this.background.setOrigin(0.5);
 
         this.add(this.background);
 
-        // Create fill bar
-        const fillWidth = this.config.width - (this.config.padding * 2);
-        const fillHeight = this.config.height - (this.config.padding * 2);
-
-        this.fillBar = scene.add.rectangle(
+        // Create NineSlice fill bar
+        this.fillBar = scene.add.nineslice(
             -this.config.width / 2 + this.config.padding,
             0,
+            this.config.texture,
+            this.config.fillFrame,
             fillWidth,
             fillHeight,
-            this.config.fillColor
-        ).setOrigin(0, 0.5);
+            this.config.sliceLeft,
+            this.config.sliceRight,
+            this.config.sliceTop,
+            this.config.sliceBottom
+        );
+        this.fillBar.setOrigin(0, 0.5);
 
         this.add(this.fillBar);
 
@@ -77,8 +94,10 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
         if (this.config.showLabel) {
             this.label = scene.add.text(0, 0, this.getLabel(), {
                 fontFamily: 'Arial',
-                fontSize: `${this.config.height * 0.6}px`,
-                color: '#ffffff'
+                fontSize: `${Math.max(12, this.config.height * 0.6)}px`,
+                color: '#ffffff',
+                stroke: '#000000',
+                strokeThickness: 2
             }).setOrigin(0.5);
 
             this.add(this.label);
@@ -150,17 +169,24 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
      * Update the visual display
      */
     updateDisplay() {
-        const fillWidth = (this.config.width - (this.config.padding * 2)) * this.currentValue;
-        this.fillBar.width = Math.max(0, fillWidth);
+        // Calculate fill width based on current value
+        const fillWidth = Math.max(this.config.sliceLeft + this.config.sliceRight + 1,
+            this.maxFillWidth * this.currentValue);
 
-        // Update color based on value
+        // Update NineSlice size
+        this.fillBar.setSize(fillWidth, this.fillBar.height);
+
+        // Update tint based on value
         if (this.currentValue < 0.25) {
-            this.fillBar.setFillStyle(0xff0000); // Red for low
+            this.fillBar.setTint(this.config.tintLow);
         } else if (this.currentValue < 0.5) {
-            this.fillBar.setFillStyle(0xff8800); // Orange for medium-low
+            this.fillBar.setTint(this.config.tintMedium);
         } else {
-            this.fillBar.setFillStyle(this.config.fillColor); // Original color
+            this.fillBar.setTint(this.config.tintHigh);
         }
+
+        // Hide fill bar if value is 0
+        this.fillBar.setVisible(this.currentValue > 0);
 
         // Update label
         if (this.config.showLabel && this.label) {
@@ -228,6 +254,27 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
      */
     isFull() {
         return this.currentValue === 1;
+    }
+
+    /**
+     * Resize the progress bar
+     * @param {number} width - New width
+     * @param {number} height - New height
+     */
+    setBarSize(width, height) {
+        this.config.width = width;
+        this.config.height = height;
+
+        const fillHeight = height - (this.config.padding * 2);
+        this.maxFillWidth = width - (this.config.padding * 2);
+
+        this.background.setSize(width, height);
+        this.fillBar.setSize(this.maxFillWidth * this.currentValue, fillHeight);
+        this.fillBar.setX(-width / 2 + this.config.padding);
+
+        this.setSize(width, height);
+
+        return this;
     }
 
     /**

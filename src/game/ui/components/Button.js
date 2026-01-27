@@ -3,15 +3,14 @@ import ResponsiveManager from '../../managers/ResponsiveManager.js';
 
 /**
  * Button Component
- * Reusable button with hover effects and click handling
+ * Reusable button using NineSlice for scalable image-based UI
  *
  * Usage:
  *   import Button from './ui/components/Button';
  *
  *   const button = new Button(scene, x, y, 'Play', {
- *       backgroundColor: 0x4a4a4a,
- *       hoverColor: 0x6a6a6a,
- *       textColor: '#ffffff'
+ *       width: 200,
+ *       height: 60
  *   });
  *
  *   button.onClick(() => {
@@ -27,16 +26,22 @@ export default class Button extends Phaser.GameObjects.Container {
         this.config = {
             width: config.width || 200,
             height: config.height || 60,
-            backgroundColor: config.backgroundColor || 0x4a4a4a,
-            hoverColor: config.hoverColor || 0x6a6a6a,
-            pressedColor: config.pressedColor || 0x3a3a3a,
+            // NineSlice texture settings
+            texture: config.texture || 'kenney-ui',
+            frame: config.frame || 'button_rectangle_flat.png',
+            // NineSlice corner sizes (pixels to preserve at corners)
+            sliceLeft: config.sliceLeft || 12,
+            sliceRight: config.sliceRight || 12,
+            sliceTop: config.sliceTop || 12,
+            sliceBottom: config.sliceBottom || 12,
+            // Text settings
             textColor: config.textColor || '#ffffff',
             fontSize: config.fontSize || '24px',
             fontFamily: config.fontFamily || 'Arial',
-            borderRadius: config.borderRadius || 8,
-            borderWidth: config.borderWidth || 0,
-            borderColor: config.borderColor || 0xffffff,
-            padding: config.padding || 10,
+            // Tint colors for states
+            tintNormal: config.tintNormal || 0xffffff,
+            tintHover: config.tintHover || 0xcccccc,
+            tintPressed: config.tintPressed || 0x999999,
             // Responsive options
             alignment: config.alignment || null,
             margin: config.margin || { x: 20, y: 20 },
@@ -49,18 +54,19 @@ export default class Button extends Phaser.GameObjects.Container {
         this.isEnabled = true;
         this.clickCallback = null;
 
-        // Create background
-        this.background = scene.add.rectangle(
+        // Create NineSlice background
+        this.background = scene.add.nineslice(
             0, 0,
+            this.config.texture,
+            this.config.frame,
             this.config.width,
             this.config.height,
-            this.config.backgroundColor
+            this.config.sliceLeft,
+            this.config.sliceRight,
+            this.config.sliceTop,
+            this.config.sliceBottom
         );
-
-        // Add border if specified
-        if (this.config.borderWidth > 0) {
-            this.background.setStrokeStyle(this.config.borderWidth, this.config.borderColor);
-        }
+        this.background.setOrigin(0.5);
 
         this.add(this.background);
 
@@ -68,7 +74,8 @@ export default class Button extends Phaser.GameObjects.Container {
         this.buttonText = scene.add.text(0, 0, text, {
             fontFamily: this.config.fontFamily,
             fontSize: this.config.fontSize,
-            color: this.config.textColor
+            color: this.config.textColor,
+            align: 'center'
         }).setOrigin(0.5);
 
         this.add(this.buttonText);
@@ -105,7 +112,7 @@ export default class Button extends Phaser.GameObjects.Container {
         if (!this.isEnabled) return;
 
         this.isHovered = true;
-        this.background.setFillStyle(this.config.hoverColor);
+        this.background.setTint(this.config.tintHover);
 
         // Scale up slightly
         tweenPresets.scalePulse(this.scene, this, 1.05, 100);
@@ -118,7 +125,7 @@ export default class Button extends Phaser.GameObjects.Container {
         if (!this.isEnabled) return;
 
         this.isHovered = false;
-        this.background.setFillStyle(this.config.backgroundColor);
+        this.background.clearTint();
 
         // Reset scale
         this.setScale(1);
@@ -131,7 +138,7 @@ export default class Button extends Phaser.GameObjects.Container {
         if (!this.isEnabled) return;
 
         this.isPressed = true;
-        this.background.setFillStyle(this.config.pressedColor);
+        this.background.setTint(this.config.tintPressed);
 
         // Press effect
         tweenPresets.buttonPress(this.scene, this);
@@ -146,14 +153,14 @@ export default class Button extends Phaser.GameObjects.Container {
         this.isPressed = false;
 
         if (this.isHovered) {
-            this.background.setFillStyle(this.config.hoverColor);
+            this.background.setTint(this.config.tintHover);
 
             // Trigger click callback
             if (this.clickCallback) {
                 this.clickCallback();
             }
         } else {
-            this.background.setFillStyle(this.config.backgroundColor);
+            this.background.clearTint();
         }
     }
 
@@ -210,6 +217,19 @@ export default class Button extends Phaser.GameObjects.Container {
      */
     hide(duration = 300) {
         tweenPresets.fadeOut(this.scene, this, duration);
+        return this;
+    }
+
+    /**
+     * Resize the button
+     * @param {number} width - New width
+     * @param {number} height - New height
+     */
+    setButtonSize(width, height) {
+        this.config.width = width;
+        this.config.height = height;
+        this.background.setSize(width, height);
+        this.setSize(width, height);
         return this;
     }
 

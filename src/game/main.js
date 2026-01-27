@@ -4,6 +4,18 @@ import { GameOver } from './scenes/GameOver';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
 import { ButtonTest } from './scenes/ButtonTest';
+import {
+    UITestButtons,
+    UITestPanels,
+    UITestProgressBars,
+    UITestTextStyles,
+    UITestButtonVariations,
+    UITestPanelVariations,
+    UITestProgressBarVariations,
+    UITestComponentCombinations,
+    UITestContainers,
+    UITestContainerAlignments
+} from './scenes/tests';
 import { AUTO, Game } from 'phaser';
 
 // Find out more information about the Game Config at:
@@ -27,7 +39,17 @@ const config = {
         MainMenu,
         MainGame,
         GameOver,
-        ButtonTest
+        ButtonTest,
+        UITestButtons,
+        UITestPanels,
+        UITestProgressBars,
+        UITestTextStyles,
+        UITestButtonVariations,
+        UITestPanelVariations,
+        UITestProgressBarVariations,
+        UITestComponentCombinations,
+        UITestContainers,
+        UITestContainerAlignments
     ]
 };
 
