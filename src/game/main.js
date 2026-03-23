@@ -3,29 +3,14 @@ import { Game as MainGame } from './scenes/Game';
 import { GameOver } from './scenes/GameOver';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
-import { ButtonTest } from './scenes/ButtonTest';
-import {
-    UITestButtons,
-    UITestPanels,
-    UITestProgressBars,
-    UITestTextStyles,
-    UITestButtonVariations,
-    UITestPanelVariations,
-    UITestProgressBarVariations,
-    UITestComponentCombinations,
-    UITestContainers,
-    UITestContainerAlignments
-} from './scenes/tests';
 import { AUTO, Game } from 'phaser';
 
-// Find out more information about the Game Config at:
-// https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const config = {
     type: AUTO,
     width: 1024,
     height: 768,
     parent: 'game-container',
-    backgroundColor: '#028af8',
+    backgroundColor: '#1a1a2e',
     scale: {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -38,25 +23,12 @@ const config = {
         Preloader,
         MainMenu,
         MainGame,
-        GameOver,
-        ButtonTest,
-        UITestButtons,
-        UITestPanels,
-        UITestProgressBars,
-        UITestTextStyles,
-        UITestButtonVariations,
-        UITestPanelVariations,
-        UITestProgressBarVariations,
-        UITestComponentCombinations,
-        UITestContainers,
-        UITestContainerAlignments
+        GameOver
     ]
 };
 
 const StartGame = (parent) => {
-
     return new Game({ ...config, parent });
-
 }
 
 export default StartGame;
