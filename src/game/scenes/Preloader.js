@@ -17,8 +17,8 @@ export class Preloader extends Scene
         const { width, height } = this.scale;
 
         //  We loaded this image in our Boot Scene, so we can display it here
-        const bg = this.add.image(width / 2, height / 2, 'background');
-        bg.setDisplaySize(width, height);
+        this.bg = this.add.image(width / 2, height / 2, 'background');
+        this.bg.setDisplaySize(width, height);
 
         //  Create progress bar using ProgressBar component
         const barWidth = Math.min(468, width - 100);
@@ -41,6 +41,7 @@ export class Preloader extends Scene
 
         //  Setup resize listener
         this.scale.on('resize', this.onResize, this);
+        this.events.on('shutdown', this.shutdown, this);
     }
 
     preload ()
@@ -62,7 +63,7 @@ export class Preloader extends Scene
         this.load.once('complete', () => {
             this.loadAssetsFromManifest();
             this.manifestAssetsLoaded = true;
-            
+
             //  Listen for when ALL assets (including manifest assets) finish loading
             //  Use 'on' instead of 'once' because we need it to fire after load.start()
             this.load.on('complete', () => {
@@ -175,8 +176,16 @@ export class Preloader extends Scene
 
     onResize (gameSize)
     {
-        //  ResponsiveManager auto-updates tracked elements
-        //  Add custom resize logic here if needed
+        if (!this.scene.isActive('Preloader')) return;
+        const { width, height } = gameSize;
+
+        //  Resize background to fill new dimensions
+        if (this.bg) {
+            this.bg.setPosition(width / 2, height / 2);
+            this.bg.setDisplaySize(width, height);
+        }
+
+        //  ResponsiveManager auto-updates tracked elements (progress bar)
     }
 
     shutdown ()

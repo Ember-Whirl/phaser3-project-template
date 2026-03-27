@@ -8,6 +8,16 @@ export default class Bubble extends Phaser.GameObjects.Container {
         this.lifetime = config.lifetime || 10000;
         this.spawnTime = scene.time.now;
         this.isPopped = false;
+        this.inflating = false; // true while inflate animation plays — freezes physics
+
+        // Tier system
+        this.tier = config.tier || 'basic';
+
+        // Lucky bubble
+        this.isLucky = config.isLucky || false;
+        if (this.isLucky) {
+            this.color = 0xFFD700; // Golden override
+        }
 
         // Mass scales with area (r^2), so big bubbles are much heavier
         this.mass = this.radius * this.radius;
@@ -21,16 +31,27 @@ export default class Bubble extends Phaser.GameObjects.Container {
         this.wobbleSpeed = 1.5 + Math.random() * 1.5;
         this.wobbleAmplitude = 8 + Math.random() * 12;
 
+        // Lucky glow pulse state
+        this.glowPhase = 0;
+
         // Draw the bubble
         this.gfx = scene.add.graphics();
         this.drawBubble();
         this.add(this.gfx);
 
+        // Sparkle graphics for lucky bubbles
+        if (this.isLucky) {
+            this.sparkleGfx = scene.add.graphics();
+            this.sparklePhase = Math.random() * Math.PI * 2;
+            this.add(this.sparkleGfx);
+        }
+
         // Value text (shown on hover)
-        this.valueText = scene.add.text(0, 0, `$${this.value}`, {
+        const valueLabel = this.isLucky ? `$${this.value} x2!` : `$${this.value}`;
+        this.valueText = scene.add.text(0, 0, valueLabel, {
             fontFamily: 'Arial',
             fontSize: `${Math.max(12, this.radius * 0.6)}px`,
-            color: '#ffffff',
+            color: this.isLucky ? '#ffd700' : '#ffffff',
             stroke: '#000000',
             strokeThickness: 2,
             align: 'center'
@@ -64,20 +85,24 @@ export default class Bubble extends Phaser.GameObjects.Container {
         scene.add.existing(this);
     }
 
+    getPopValue() {
+        return this.isLucky ? this.value * 2 : this.value;
+    }
+
     drawBubble() {
         const r = this.radius;
         const c = this.color;
 
         // Main bubble body
-        this.gfx.fillStyle(c, 0.5);
+        this.gfx.fillStyle(c, this.isLucky ? 0.65 : 0.5);
         this.gfx.fillCircle(0, 0, r);
 
         // Bubble outline
-        this.gfx.lineStyle(2, c, 0.8);
+        this.gfx.lineStyle(this.isLucky ? 3 : 2, c, this.isLucky ? 1.0 : 0.8);
         this.gfx.strokeCircle(0, 0, r);
 
         // Highlight / shine
-        this.gfx.fillStyle(0xffffff, 0.4);
+        this.gfx.fillStyle(0xffffff, this.isLucky ? 0.5 : 0.4);
         this.gfx.fillCircle(-r * 0.25, -r * 0.3, r * 0.3);
     }
 
@@ -87,8 +112,10 @@ export default class Bubble extends Phaser.GameObjects.Container {
 
         this.disableInteractive();
 
-        // Emit event so game scene can add money
-        this.emit('popped', this.value);
+        const popValue = this.getPopValue();
+
+        // Emit event so game scene can add money and handle cascade
+        this.emit('popped', popValue, this);
 
         // Pop animation - expand and fade
         this.scene.tweens.add({
@@ -108,11 +135,13 @@ export default class Bubble extends Phaser.GameObjects.Container {
     }
 
     spawnPopParticles() {
-        const count = 6;
+        const count = this.isLucky ? 10 : 6;
+        const particleColor = this.isLucky ? 0xFFD700 : this.color;
+
         for (let i = 0; i < count; i++) {
             const angle = (i / count) * Math.PI * 2;
             const particle = this.scene.add.graphics();
-            particle.fillStyle(this.color, 0.7);
+            particle.fillStyle(particleColor, 0.7);
             particle.fillCircle(0, 0, this.radius * 0.15);
             particle.setPosition(this.x, this.y);
 
@@ -121,7 +150,7 @@ export default class Bubble extends Phaser.GameObjects.Container {
                 x: this.x + Math.cos(angle) * this.radius * 2.5,
                 y: this.y + Math.sin(angle) * this.radius * 2.5,
                 alpha: 0,
-                duration: 300,
+                duration: this.isLucky ? 450 : 300,
                 ease: 'Quad.easeOut',
                 onComplete: () => {
                     particle.destroy();
@@ -132,6 +161,7 @@ export default class Bubble extends Phaser.GameObjects.Container {
 
     update(time, delta) {
         if (this.isPopped) return;
+        if (this.inflating) return; // frozen at nozzle during inflate
 
         const dt = delta / 1000;
 
@@ -146,6 +176,28 @@ export default class Bubble extends Phaser.GameObjects.Container {
         // Gentle friction so things slow down over time
         this.vx *= 0.998;
         this.vy *= 0.998;
+
+        // Lucky bubble: pulsing glow
+        if (this.isLucky) {
+            this.glowPhase += dt * 3;
+            const pulse = 0.85 + Math.sin(this.glowPhase) * 0.15;
+            this.gfx.setAlpha(pulse);
+
+            // Sparkle particles orbiting
+            if (this.sparkleGfx) {
+                this.sparklePhase += dt * 2.5;
+                this.sparkleGfx.clear();
+                for (let i = 0; i < 3; i++) {
+                    const angle = this.sparklePhase + (i * Math.PI * 2 / 3);
+                    const dist = this.radius * 0.75;
+                    const sx = Math.cos(angle) * dist;
+                    const sy = Math.sin(angle) * dist;
+                    const sparkleAlpha = 0.5 + Math.sin(this.sparklePhase * 2 + i) * 0.3;
+                    this.sparkleGfx.fillStyle(0xffffff, sparkleAlpha);
+                    this.sparkleGfx.fillCircle(sx, sy, 2.5);
+                }
+            }
+        }
 
         // Check lifetime
         const age = time - this.spawnTime;

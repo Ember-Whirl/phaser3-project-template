@@ -1,0 +1,66 @@
+export const OBSTACLE_DEFS = [
+    {
+        id: 'fan',
+        name: 'Wind Fan',
+        baseCost: 50,
+        costMultiplier: 1.3,
+        maxOwned: 3,
+        color: 0x66ccff,
+        effectWidth: 80,
+        effectHeight: 200,
+        strength: 200,
+        direction: { x: 0, y: -1 },
+    },
+    {
+        id: 'gravityWell',
+        name: 'Gravity Well',
+        baseCost: 200,
+        costMultiplier: 1.4,
+        maxOwned: 2,
+        color: 0x9933ff,
+        effectRadius: 180,
+        coreRadius: 25,
+        strength: 12000,
+    },
+    {
+        id: 'spikeyWall',
+        name: 'Spikey Wall',
+        baseCost: 150,
+        costMultiplier: 1.25,
+        maxOwned: 4,
+        color: 0xff4444,
+        wallWidth: 120,
+        wallHeight: 20,
+        spikeCount: 8,
+        spikeLength: 15,
+    },
+    {
+        id: 'nailGun',
+        name: 'Nail Gun',
+        baseCost: 500,
+        costMultiplier: 1.5,
+        maxOwned: 2,
+        color: 0xff8800,
+        fireRate: 1.5,
+        nailSpeed: 350,
+        nailRadius: 6,
+        nailLifetime: 3000,
+    },
+    {
+        id: 'nail',
+        name: 'Popping Nail',
+        baseCost: 300,
+        costMultiplier: 1.35,
+        maxOwned: 3,
+        color: 0xcccccc,
+        nailLength: 50,
+        tipRadius: 10,
+        animationType: 'swing',
+        animSpeed: 2.0,
+        animAmplitude: 60,
+    }
+];
+
+export function getObstacleCost(def, owned) {
+    return Math.floor(def.baseCost * Math.pow(def.costMultiplier, owned));
+}
