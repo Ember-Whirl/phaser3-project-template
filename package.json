@@ -11,6 +11,8 @@
         "build:poki": "npm run pack && webpack --config webpack/config.poki.js",
         "build:crazygames": "npm run pack && webpack --config webpack/config.crazygames.js",
         "build:all-portals": "npm run build:poki && npm run build:crazygames",
+        "upload:poki": "npx @poki/cli upload",
+        "build-and-upload:poki": "npm run build:poki && npm run upload:poki",
         "pack": "node scripts/pack-textures.js",
         "generate:scene": "node tools/generators/scene-generator.js"
     },
@@ -40,6 +42,7 @@
     "devDependencies": {
         "@babel/core": "^7.28.6",
         "@babel/preset-env": "^7.28.6",
+        "@poki/cli": "^0.1.17",
         "babel-loader": "^10.0.0",
         "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^13.0.1",

@@ -112,6 +112,10 @@ export default class Bubble extends Phaser.GameObjects.Container {
 
         this.disableInteractive();
 
+        // Play a random pop sound
+        const popIndex = Phaser.Math.Between(0, 2);
+        this.scene.sound.play(`bubble-pop${popIndex}`);
+
         const popValue = this.getPopValue();
 
         // Emit event so game scene can add money and handle cascade
@@ -144,6 +148,11 @@ export default class Bubble extends Phaser.GameObjects.Container {
             particle.fillStyle(particleColor, 0.7);
             particle.fillCircle(0, 0, this.radius * 0.15);
             particle.setPosition(this.x, this.y);
+
+            // Add to the same container as this bubble so coordinates match
+            if (this.parentContainer) {
+                this.parentContainer.add(particle);
+            }
 
             this.scene.tweens.add({
                 targets: particle,

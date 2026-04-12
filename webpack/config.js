@@ -69,7 +69,8 @@ module.exports = {
             "typeof PLUGIN_3D": JSON.stringify(false),
             "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
             "typeof PLUGIN_FBINSTANT": JSON.stringify(false),
-            "typeof FEATURE_SOUND": JSON.stringify(true)
+            "typeof FEATURE_SOUND": JSON.stringify(true),
+            __platform__: JSON.stringify('Web')
         }),
         new HtmlWebpackPlugin({
             template: "./index.html"

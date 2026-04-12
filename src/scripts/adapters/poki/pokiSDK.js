@@ -40,6 +40,16 @@ class PokiSDK {
     }
 
     /**
+     * Call when game loading is complete
+     * Required by Poki - signals the game is ready to play
+     */
+    gameLoadingFinished() {
+        if (!this.sdkLoaded) return;
+        this.SDK.gameLoadingFinished();
+        console.log('[Poki] Game loading finished');
+    }
+
+    /**
      * Call when gameplay starts
      * Stops ads from showing and starts tracking metrics
      */
