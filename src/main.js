@@ -1,9 +1,7 @@
 import StartGame from './game/main';
-import PortalManager from './scripts/adapters/portals/portalManager';
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
 
-    await PortalManager.init();
     StartGame('game-container');
 
 });

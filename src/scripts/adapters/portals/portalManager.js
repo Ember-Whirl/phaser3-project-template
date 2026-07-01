@@ -257,19 +257,12 @@ class PortalManager {
     }
 
     /**
-     * Notify the portal that game loading is complete
-     * Call this when all assets are loaded and game is ready to play
+     * Platform-specific: Game loading complete (CrazyGames only)
+     * Call this when game is ready to remove loading screen
      */
-    gameLoadingFinished() {
-        if (!this.activeSDK) return;
-
-        switch (this.platform) {
-            case 'poki':
-                PokiSDK.gameLoadingFinished();
-                break;
-            case 'crazygames':
-                CrazySDK.gameLoadingStop();
-                break;
+    gameLoadingStop() {
+        if (this.platform === 'crazygames' && this.activeSDK) {
+            this.activeSDK.gameLoadingStop();
         }
     }
 

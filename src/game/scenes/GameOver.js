@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import ResponsiveManager from '../managers/ResponsiveManager.js';
 import UIBuilder from '../ui/UIBuilder.js';
-import PortalManager from '../../scripts/adapters/portals/portalManager';
 
 export class GameOver extends Scene
 {
@@ -12,8 +11,6 @@ export class GameOver extends Scene
 
     create ()
     {
-        PortalManager.gameplayStop();
-
         //  Initialize responsive manager
         ResponsiveManager.init(this);
 

@@ -1,5 +1,4 @@
 import { Scene } from 'phaser';
-import PortalManager from '../../scripts/adapters/portals/portalManager';
 
 export class MainMenu extends Scene {
     constructor() {
@@ -7,7 +6,6 @@ export class MainMenu extends Scene {
     }
 
     create() {
-        PortalManager.gameplayStop();
         const { width, height } = this.scale;
 
         // Background
