@@ -20,9 +20,9 @@ export class GameOver extends Scene
         this.cameras.main.setBackgroundColor(0xff0000);
 
         //  Background - fill entire screen
-        this.bg = this.add.image(width / 2, height / 2, 'background');
-        this.bg.setAlpha(0.5);
-        this.bg.setDisplaySize(width, height);
+        const bg = this.add.image(width / 2, height / 2, 'background');
+        bg.setAlpha(0.5);
+        bg.setDisplaySize(width, height);
 
         //  Game Over text - centered
         const gameOverText = this.add.text(0, 0, 'Game Over', {
@@ -45,21 +45,11 @@ export class GameOver extends Scene
 
         //  Setup resize listener
         this.scale.on('resize', this.onResize, this);
-        this.events.on('shutdown', this.shutdown, this);
     }
 
     onResize (gameSize)
     {
-        if (!this.scene.isActive('GameOver')) return;
-        const { width, height } = gameSize;
-
-        //  Resize background to fill new dimensions
-        if (this.bg) {
-            this.bg.setPosition(width / 2, height / 2);
-            this.bg.setDisplaySize(width, height);
-        }
-
-        //  ResponsiveManager auto-updates tracked elements (text)
+        //  ResponsiveManager auto-updates tracked elements
     }
 
     shutdown ()

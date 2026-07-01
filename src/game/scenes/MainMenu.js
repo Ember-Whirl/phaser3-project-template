@@ -10,8 +10,9 @@ export class MainMenu extends Scene {
 
         // Background
         this.cameras.main.setBackgroundColor(0x1a1a2e);
-        this.bgGraphics = this.add.graphics();
-        this.drawBackground(width, height);
+        const bg = this.add.graphics();
+        bg.fillGradientStyle(0x0f0c29, 0x0f0c29, 0x302b63, 0x24243e, 1);
+        bg.fillRect(0, 0, width, height);
 
         // Decorative floating bubbles in background
         this.decorBubbles = [];
@@ -42,10 +43,9 @@ export class MainMenu extends Scene {
         }
 
         // Title
-        const scaledTitleSize = Math.max(32, Math.min(64, width * 0.06));
-        this.titleText = this.add.text(width / 2, height * 0.25, 'Idle Bubbles', {
+        this.add.text(width / 2, height * 0.25, 'Idle Bubbles', {
             fontFamily: 'Arial Black',
-            fontSize: `${scaledTitleSize}px`,
+            fontSize: '64px',
             color: '#87ceeb',
             stroke: '#000000',
             strokeThickness: 6,
@@ -53,61 +53,47 @@ export class MainMenu extends Scene {
         }).setOrigin(0.5);
 
         // Subtitle
-        const scaledSubSize = Math.max(14, Math.min(22, width * 0.022));
-        const subtitleOffset = scaledTitleSize * 0.95;
-        this.subtitleText = this.add.text(width / 2, height * 0.25 + subtitleOffset, 'Pop bubbles. Get rich.', {
+        this.add.text(width / 2, height * 0.25 + 60, 'Pop bubbles. Get rich.', {
             fontFamily: 'Arial',
-            fontSize: `${scaledSubSize}px`,
+            fontSize: '22px',
             color: '#aaaacc',
             align: 'center'
         }).setOrigin(0.5);
 
         // Play button (drawn with graphics)
-        const btnW = Math.max(160, Math.min(220, width * 0.2));
-        const btnH = Math.max(44, Math.min(60, height * 0.08));
+        const btnW = 220;
+        const btnH = 60;
         const btnX = width / 2;
         const btnY = height * 0.55;
 
-        this.btnBg = this.add.graphics();
-        this.drawButton(this.btnBg, btnX, btnY, btnW, btnH, 0x4caf50, false);
+        const btnBg = this.add.graphics();
+        this.drawButton(btnBg, btnX, btnY, btnW, btnH, 0x4caf50, false);
 
-        const scaledBtnFont = Math.max(18, Math.min(30, width * 0.03));
-        this.btnText = this.add.text(btnX, btnY, 'PLAY', {
+        const btnText = this.add.text(btnX, btnY, 'PLAY', {
             fontFamily: 'Arial Black',
-            fontSize: `${scaledBtnFont}px`,
+            fontSize: '30px',
             color: '#ffffff',
             align: 'center'
         }).setOrigin(0.5);
 
-        this.btnZone = this.add.zone(btnX, btnY, btnW, btnH)
+        const btnZone = this.add.zone(btnX, btnY, btnW, btnH)
             .setInteractive({ useHandCursor: true });
 
-        // Store button dimensions for resize
-        this.btnW = btnW;
-        this.btnH = btnH;
-
-        this.btnZone.on('pointerover', () => {
-            this.btnBg.clear();
-            this.drawButton(this.btnBg, this.btnText.x, this.btnText.y, this.btnW, this.btnH, 0x5cbf60, true);
+        btnZone.on('pointerover', () => {
+            btnBg.clear();
+            this.drawButton(btnBg, btnX, btnY, btnW, btnH, 0x5cbf60, true);
         });
 
-        this.btnZone.on('pointerout', () => {
-            this.btnBg.clear();
-            this.drawButton(this.btnBg, this.btnText.x, this.btnText.y, this.btnW, this.btnH, 0x4caf50, false);
+        btnZone.on('pointerout', () => {
+            btnBg.clear();
+            this.drawButton(btnBg, btnX, btnY, btnW, btnH, 0x4caf50, false);
         });
 
-        this.btnZone.on('pointerdown', () => {
+        btnZone.on('pointerdown', () => {
             this.scene.start('Game');
         });
 
         this.scale.on('resize', this.onResize, this);
-        this.events.on('shutdown', this.shutdown, this);
-    }
-
-    drawBackground(width, height) {
-        this.bgGraphics.clear();
-        this.bgGraphics.fillGradientStyle(0x0f0c29, 0x0f0c29, 0x302b63, 0x24243e, 1);
-        this.bgGraphics.fillRect(0, 0, width, height);
     }
 
     drawButton(gfx, x, y, w, h, color, hovered) {
@@ -135,49 +121,8 @@ export class MainMenu extends Scene {
         });
     }
 
-    onResize(gameSize) {
-        if (!this.scene.isActive('MainMenu')) return;
-        const { width, height } = gameSize;
-
-        // Redraw background
-        this.drawBackground(width, height);
-
-        // Reposition title with scaled font
-        const scaledTitleSize = Math.max(32, Math.min(64, width * 0.06));
-        this.titleText.setPosition(width / 2, height * 0.25);
-        this.titleText.setFontSize(scaledTitleSize);
-
-        // Reposition subtitle
-        const scaledSubSize = Math.max(14, Math.min(22, width * 0.022));
-        const subtitleOffset = scaledTitleSize * 0.95;
-        this.subtitleText.setPosition(width / 2, height * 0.25 + subtitleOffset);
-        this.subtitleText.setFontSize(scaledSubSize);
-
-        // Reposition play button
-        const btnW = Math.max(160, Math.min(220, width * 0.2));
-        const btnH = Math.max(44, Math.min(60, height * 0.08));
-        const btnX = width / 2;
-        const btnY = height * 0.55;
-
-        this.btnW = btnW;
-        this.btnH = btnH;
-
-        this.btnBg.clear();
-        this.drawButton(this.btnBg, btnX, btnY, btnW, btnH, 0x4caf50, false);
-
-        const scaledBtnFont = Math.max(18, Math.min(30, width * 0.03));
-        this.btnText.setPosition(btnX, btnY);
-        this.btnText.setFontSize(scaledBtnFont);
-
-        this.btnZone.setPosition(btnX, btnY);
-        this.btnZone.setSize(btnW, btnH);
-
-        // Update decorative bubble originX bounds for new width
-        this.decorBubbles.forEach(b => {
-            if (b.originX > width - 60) {
-                b.originX = Phaser.Math.Between(60, width - 60);
-            }
-        });
+    onResize() {
+        // Could rebuild UI here if needed
     }
 
     shutdown() {
